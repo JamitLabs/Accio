@@ -1,7 +1,7 @@
 import XCTest
 
-import AccioTests
+import AccioKitTests
 
 var tests = [XCTestCaseEntry]()
-tests += AccioTests.allTests()
+tests += AccioKitTests.allTests()
 XCTMain(tests)
