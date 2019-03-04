@@ -8,9 +8,12 @@ final class CarthageBuilderService {
 
         let platformBuildDir = "\(framework.directory)/Carthage/Build/\(platform)"
 
-        return FrameworkProduct(
+        let frameworkProduct = FrameworkProduct(
             frameworkDirPath: "\(platformBuildDir)/\(framework.scheme).framework",
             symbolsFilePath: "\(platformBuildDir)/\(framework.scheme).dSYM"
         )
+
+        try FrameworkCachingService.shared.cache(product: frameworkProduct, framework: framework, platform: platform)
+        return frameworkProduct
     }
 }
