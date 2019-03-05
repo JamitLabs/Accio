@@ -6,10 +6,11 @@ public class InstallCommand: Command {
     public let name: String = "install"
     public let shortDescription: String = "Installs the already resolved dependencies"
 
-    let target = Parameter()
+    let sharedCachePath = Key<String>("-c", "--shared-cache-path", description: "Path used by multiple users for caching built products")
+    let targetPlatform = Key<String>("-p", "--target-platform", description: "Specify the target platform to build for – one of iOS, tvOS, macOS or watchOS")
 
     var platform: Platform {
-        return Platform.with(target: target.value)
+        return Platform.with(target: targetPlatform.value ?? Platform.iOS.rawValue)
     }
 
     // MARK: - Initializers
@@ -18,7 +19,7 @@ public class InstallCommand: Command {
     // MARK: - Instance Methods
     public func execute() throws {
         try DependencyResolverService.shared.resolveDependencies()
-        let frameworkProducts = try CachedBuilderService.shared.frameworkProducts(platform: platform)
+        let frameworkProducts = try CachedBuilderService(sharedCachePath: sharedCachePath.value).frameworkProducts(platform: platform)
         try XcodeProjectIntegrationService.shared.updateDependencies(with: frameworkProducts)
     }
 }
