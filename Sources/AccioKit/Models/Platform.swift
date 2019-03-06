@@ -8,13 +8,13 @@ enum Platform: String {
 
     static func with(target: String) -> Platform {
         switch target.lowercased() {
-        case Platform.iOS.rawValue.lowercased(), "iphone", "ipad":
+        case Platform.iOS.rawValue.lowercased(), "iphone", "ipad", "iphoneos":
             return .iOS
 
-        case Platform.macOS.rawValue.lowercased(), "osx", "mac":
+        case Platform.macOS.rawValue.lowercased(), "osx", "mac", "macosx":
             return .macOS
 
-        case Platform.tvOS.rawValue.lowercased(), "appletv":
+        case Platform.tvOS.rawValue.lowercased(), "appletv", "appletvos":
             return .tvOS
 
         case Platform.watchOS.rawValue.lowercased(), "applewatch":

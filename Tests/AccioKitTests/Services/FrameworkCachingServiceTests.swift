@@ -21,6 +21,12 @@ class FrameworkCachingServiceTests: XCTestCase {
         try! bash("touch \(FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework.dSYM").path)")
     }
 
+    override func tearDown() {
+        super.tearDown()
+
+        try! bash("rm -rf \(Constants.dependenciesPath)")
+    }
+
     func testCachingProductWithoutSharedCachePath() {
         let frameworkCachingService = FrameworkCachingService(sharedCachePath: nil)
 

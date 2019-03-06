@@ -13,6 +13,7 @@ let package = Package(
         .package(url: "https://github.com/onevcat/Rainbow.git", .upToNextMajor(from: "3.1.4")),
         .package(url: "https://github.com/jakeheis/SwiftCLI.git", .upToNextMajor(from: "5.2.2")),
         .package(url: "https://github.com/kareman/SwiftShell.git", .upToNextMajor(from: "4.1.2")),
+        .package(url: "https://github.com/tuist/xcodeproj.git", .upToNextMajor(from: "6.6.0")),
     ],
     targets: [
         .target(
@@ -26,6 +27,7 @@ let package = Package(
                 "Rainbow",
                 "SwiftCLI",
                 "SwiftShell",
+                "xcodeproj"
             ]
         ),
         .testTarget(
