@@ -19,7 +19,7 @@ public class InstallCommand: Command {
     // MARK: - Instance Methods
     public func execute() throws {
         try DependencyResolverService.shared.resolveDependencies()
-        let frameworkProducts = try CachedBuilderService(sharedCachePath: sharedCachePath.value).frameworkProducts(platform: platform)
-        try XcodeProjectIntegrationService.shared.updateDependencies(with: frameworkProducts)
+        let frameworkProductsPerTarget = try CachedBuilderService(sharedCachePath: sharedCachePath.value).frameworkProductsPerTarget(platform: platform)
+        try XcodeProjectIntegrationService.shared.updateDependencies(with: frameworkProductsPerTarget)
     }
 }
