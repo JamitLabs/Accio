@@ -12,7 +12,7 @@ class ManifestReaderServiceTests: XCTestCase {
                 import PackageDescription
 
                 let package = Package(
-                    name: "App",
+                    name: "TestProject",
                     products: [],
                     dependencies: [
                         .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "2.8.0")),
@@ -24,7 +24,7 @@ class ManifestReaderServiceTests: XCTestCase {
                     ],
                     targets: [
                         .target(
-                            name: "App",
+                            name: "TestProject-iOS",
                             dependencies: [
                               "HandySwift",
                               "HandyUIKit",
@@ -41,15 +41,22 @@ class ManifestReaderServiceTests: XCTestCase {
         )
     }
 
+    private var xcodeProjectResource: Resource {
+        return Resource(
+            url: testResourcesDir.appendingPathComponent("TestProject.xcodeproj/project.pbxproj"),
+            contents: ResourceData.iOSProjectFileContents
+        )
+    }
+
     func testReadManifest() {
-        resourcesLoaded([manifestResource]) {
+        resourcesLoaded([manifestResource, xcodeProjectResource]) {
             let manifest = try! ManifestReaderService(workingDirectory: testResourcesDir.path).readManifest()
 
-            XCTAssertEqual(manifest.projectName, "App")
+            XCTAssertEqual(manifest.projectName, "TestProject")
             XCTAssertEqual(manifest.frameworksPerTarget.count, 1)
-            XCTAssertEqual(manifest.frameworksPerTarget.keys.first, "App")
+            XCTAssertEqual(manifest.frameworksPerTarget.keys.first?.name, "TestProject-iOS")
 
-            let foundFrameworks = manifest.frameworksPerTarget["App"]!
+            let foundFrameworks = manifest.frameworksPerTarget.first!.value
             XCTAssertEqual(foundFrameworks.count, 6)
 
             XCTAssertEqual(foundFrameworks[0].scheme, "HandySwift")

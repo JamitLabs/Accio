@@ -2,5 +2,5 @@ import Foundation
 
 struct Manifest {
     let projectName: String
-    let frameworksPerTarget: [String: [Framework]]
+    let frameworksPerTarget: [Target: [Framework]]
 }

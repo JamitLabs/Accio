@@ -9,8 +9,8 @@ final class CachedBuilderService {
         self.carthageBuilderService = CarthageBuilderService(frameworkCachingService: frameworkCachingService)
     }
 
-    func frameworkProductsPerTarget(platform: Platform) throws -> [String: [FrameworkProduct]] {
-        var frameworkProductsPerTarget: [String: [FrameworkProduct]] = [:]
+    func frameworkProductsPerTarget(platform: Platform) throws -> [Target: [FrameworkProduct]] {
+        var frameworkProductsPerTarget: [Target: [FrameworkProduct]] = [:]
 
         let manifest = try ManifestReaderService.shared.readManifest()
 

@@ -17,17 +17,8 @@ final class FrameworkCachingService {
         let localCachedFrameworkDir = "\(localCacheDir.appendingPathComponent(productFrameworkDir).path)"
         let localCachedSymbolsFile = "\(localCacheDir.appendingPathComponent(productSymbolsFile).path)"
 
-        let dependenciesPlatformPath = "\(Constants.dependenciesPath)/\(platform.rawValue)"
-        let frameworkDirPath = "\(dependenciesPlatformPath)/\(productFrameworkDir)"
-        let symbolsFilePath = "\(dependenciesPlatformPath)/\(productSymbolsFile)"
-
         if FileManager.default.fileExists(atPath: localCachedFrameworkDir) && FileManager.default.fileExists(atPath: localCachedSymbolsFile) {
-            try bash("mkdir -p \(dependenciesPlatformPath)")
-
-            try bash("cp -R \(localCachedFrameworkDir) \(frameworkDirPath)")
-            try bash("cp -R \(localCachedSymbolsFile) \(symbolsFilePath)")
-
-            return FrameworkProduct(frameworkDirPath: frameworkDirPath, symbolsFilePath: symbolsFilePath)
+            return FrameworkProduct(frameworkDirPath: localCachedFrameworkDir, symbolsFilePath: localCachedSymbolsFile)
         }
 
         if let sharedCachePath = sharedCachePath {
@@ -37,10 +28,7 @@ final class FrameworkCachingService {
             let sharedCachedSymbolsFile = "\(sharedCacheDir.appendingPathComponent(productSymbolsFile).path)"
 
             if FileManager.default.fileExists(atPath: sharedCachedFrameworkDir) && FileManager.default.fileExists(atPath: sharedCachedSymbolsFile) {
-                try bash("cp -R \(sharedCachedFrameworkDir) \(Constants.dependenciesPath)/\(platform.rawValue)/\(productFrameworkDir)")
-                try bash("cp -R \(sharedCachedSymbolsFile) \(Constants.dependenciesPath)/\(platform.rawValue)/\(productSymbolsFile)")
-
-                return FrameworkProduct(frameworkDirPath: frameworkDirPath, symbolsFilePath: symbolsFilePath)
+                return FrameworkProduct(frameworkDirPath: sharedCachedFrameworkDir, symbolsFilePath: sharedCachedSymbolsFile)
             }
         }
 
