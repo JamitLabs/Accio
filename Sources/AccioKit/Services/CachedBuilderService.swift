@@ -9,33 +9,25 @@ final class CachedBuilderService {
         self.carthageBuilderService = CarthageBuilderService(frameworkCachingService: frameworkCachingService)
     }
 
-    func frameworkProductsPerTarget(platform: Platform) throws -> [Target: [FrameworkProduct]] {
-        var frameworkProductsPerTarget: [Target: [FrameworkProduct]] = [:]
+    func frameworkProducts(target: Target, frameworks: [Framework]) throws -> [FrameworkProduct] {
+        var frameworkProducts: [FrameworkProduct] = []
 
-        let manifest = try ManifestReaderService.shared.readManifest()
+        for framework in frameworks {
+            if let cachedFrameworkProduct = try frameworkCachingService.cachedProduct(framework: framework, platform: target.platform) {
+                frameworkProducts.append(cachedFrameworkProduct)
+            } else {
+                switch InstallationTypeDetectorService.shared.detectInstallationType(for: framework) {
+                case .swiftPackageManager:
+                    try XcodeProjectGeneratorService.shared.generateXcodeProject(framework: framework)
+                    fallthrough
 
-        for (target, frameworks) in manifest.frameworksPerTarget {
-            var frameworkProducts: [FrameworkProduct] = []
-
-            for framework in frameworks {
-                if let cachedFrameworkProduct = try frameworkCachingService.cachedProduct(framework: framework, platform: platform) {
-                    frameworkProducts.append(cachedFrameworkProduct)
-                } else {
-                    switch InstallationTypeDetectorService.shared.detectInstallationType(for: framework) {
-                    case .swiftPackageManager:
-                        try XcodeProjectGeneratorService.shared.generateXcodeProject(framework: framework)
-                        fallthrough
-
-                    case .carthage:
-                        let frameworkProduct = try carthageBuilderService.build(framework: framework, platform: platform)
-                        frameworkProducts.append(frameworkProduct)
-                    }
+                case .carthage:
+                    let frameworkProduct = try carthageBuilderService.build(framework: framework, platform: target.platform)
+                    frameworkProducts.append(frameworkProduct)
                 }
             }
-
-            frameworkProductsPerTarget[target] = frameworkProducts
         }
 
-        return frameworkProductsPerTarget
+        return frameworkProducts
     }
 }

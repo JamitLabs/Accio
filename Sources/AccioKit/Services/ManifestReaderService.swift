@@ -76,15 +76,11 @@ final class ManifestReaderService: SyntaxVisitor {
 
         let checkoutsDirPath = "\(workingDirectory)/\(Constants.buildPath)/checkouts"
         let checkoutDirNames = try! FileManager.default.contentsOfDirectory(atPath: checkoutsDirPath)
-        let xcodeProjectPath = URL(fileURLWithPath: workingDirectory).appendingPathComponent("\(projectName).xcodeproj").path
 
-        var frameworksPerTarget: [Target: [Framework]] = [:]
+        var frameworksPerTargetName: [String: [Framework]] = [:]
 
         for (targetName, dependencies) in targetsDependenciesTuples {
-            let platform = try! PlatformDetectorService.shared.detectPlatform(xcodeProjectPath: xcodeProjectPath, scheme: targetName)
-            let target = Target(name: targetName, platform: platform)
-
-            frameworksPerTarget[target] = dependencies.map { dependency in
+            frameworksPerTargetName[targetName] = dependencies.map { dependency in
                 let dependencyDirectoryNamePrefix = dependenciesUrls.first { $0.contains(dependency) }!.components(separatedBy: "/").last!
                 let directoryName = checkoutDirNames.first { $0.hasPrefix(dependencyDirectoryNamePrefix) }!
 
@@ -100,7 +96,7 @@ final class ManifestReaderService: SyntaxVisitor {
             }
         }
 
-        manifest = Manifest(projectName: projectName, frameworksPerTarget: frameworksPerTarget)
+        manifest = Manifest(projectName: projectName, frameworksPerTargetName: frameworksPerTargetName)
     }
 }
 

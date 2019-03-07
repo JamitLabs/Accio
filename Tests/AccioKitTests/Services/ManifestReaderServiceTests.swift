@@ -53,10 +53,10 @@ class ManifestReaderServiceTests: XCTestCase {
             let manifest = try! ManifestReaderService(workingDirectory: testResourcesDir.path).readManifest()
 
             XCTAssertEqual(manifest.projectName, "TestProject")
-            XCTAssertEqual(manifest.frameworksPerTarget.count, 1)
-            XCTAssertEqual(manifest.frameworksPerTarget.keys.first?.name, "TestProject-iOS")
+            XCTAssertEqual(manifest.frameworksPerTargetName.count, 1)
+            XCTAssertEqual(manifest.frameworksPerTargetName.keys.first, "TestProject-iOS")
 
-            let foundFrameworks = manifest.frameworksPerTarget.first!.value
+            let foundFrameworks = manifest.frameworksPerTargetName.first!.value
             XCTAssertEqual(foundFrameworks.count, 6)
 
             XCTAssertEqual(foundFrameworks[0].scheme, "HandySwift")
