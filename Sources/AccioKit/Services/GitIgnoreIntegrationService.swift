@@ -23,6 +23,8 @@ final class GitIgnoreIntegrationService {
 
         var gitignoreContents: String = try String(contentsOfFile: gitignoreUrl.path)
         if !gitignoreContents.contains("\n\(Constants.dependenciesPath)/\n") || !gitignoreContents.contains("\n\(Constants.buildPath)/\n") {
+            print("Adding .gitignore entries for build & dependencies directories.", level: .info)
+
             if !gitignoreContents.isBlank {
                 gitignoreContents += "\n\n"
             }

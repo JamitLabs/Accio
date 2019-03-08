@@ -27,14 +27,16 @@ final class ManifestReaderService: SyntaxVisitor {
         }
 
         let sourceFile: SourceFileSyntax = try SyntaxTreeParser.parse(packageManifestUrl)
-
         manifest = nil
+
+        print("Reading package manifest ...", level: .info)
         visit(sourceFile)
 
         guard let manifest = manifest else {
             throw ManifestReaderError.manifestIncomplete
         }
 
+        print("Found \(manifest.frameworksPerTargetName.count) targets in package manifest.", level: .info)
         return manifest
     }
 

@@ -8,7 +8,9 @@ final class CarthageBuilderService {
     }
 
     func build(framework: Framework, platform: Platform) throws -> FrameworkProduct {
+        print("Building scheme \(framework.scheme) with Carthage ...", level: .info)
         try bash("carthage update --project-directory \(framework.directory) --platform \(platform.rawValue)")
+        print("Completed building scheme \(framework.scheme) with Carthage.", level: .info)
 
         let platformBuildDir = "\(framework.directory)/Carthage/Build/\(platform)"
 
