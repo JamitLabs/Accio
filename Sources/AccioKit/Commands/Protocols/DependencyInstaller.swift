@@ -14,7 +14,7 @@ extension DependencyInstaller {
         let manifest = try ManifestReaderService.shared.readManifest()
 
         guard !manifest.frameworksPerTargetName.isEmpty else {
-            print("No targets specified in manifest file. Please add at least one target to the 'targets' array.", level: .warning)
+            print("No targets specified in manifest file. Please add at least one target to the 'targets' array in Package.swift.", level: .warning)
             throw DependencyInstallerError.noTargetsInManifest
         }
 
@@ -24,7 +24,7 @@ extension DependencyInstaller {
     func buildFrameworksAndIntegrateWithXcode(manifest: Manifest, sharedCachePath: String?) throws {
         for (targetName, frameworks) in manifest.frameworksPerTargetName {
             guard !frameworks.isEmpty else {
-                print("No dependencies specified for target '\(targetName)'. Please add at least one dependency scheme to the 'dependencies' array of the target.", level: .warning)
+                print("No dependencies specified for target '\(targetName)'. Please add at least one dependency scheme to the 'dependencies' array of the target in Package.swift.", level: .warning)
                 continue
             }
 

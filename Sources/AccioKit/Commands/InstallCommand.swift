@@ -16,6 +16,7 @@ public class InstallCommand: Command {
         try DependencyResolverService.shared.resolveDependencies()
         let manifest = try loadManifest()
         try buildFrameworksAndIntegrateWithXcode(manifest: manifest, sharedCachePath: sharedCachePath.value)
+        print("Successfully installed dependencies.", level: .info)
     }
 }
 

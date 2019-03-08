@@ -9,14 +9,14 @@ final class CarthageBuilderService {
 
     func build(framework: Framework, platform: Platform) throws -> FrameworkProduct {
         print("Building scheme \(framework.scheme) with Carthage ...", level: .info)
-        try bash("carthage update --project-directory \(framework.directory) --platform \(platform.rawValue)")
+        try bash("carthage build --project-directory \(framework.directory) --platform \(platform.rawValue) --no-skip-current")
         print("Completed building scheme \(framework.scheme) with Carthage.", level: .info)
 
         let platformBuildDir = "\(framework.directory)/Carthage/Build/\(platform)"
 
         let frameworkProduct = FrameworkProduct(
             frameworkDirPath: "\(platformBuildDir)/\(framework.scheme).framework",
-            symbolsFilePath: "\(platformBuildDir)/\(framework.scheme).dSYM"
+            symbolsFilePath: "\(platformBuildDir)/\(framework.scheme).framework.dSYM"
         )
 
         try frameworkCachingService.cache(product: frameworkProduct, framework: framework, platform: platform)

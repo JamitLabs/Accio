@@ -16,6 +16,7 @@ public class UpdateCommand: Command {
         try DependencyResolverService.shared.updateDependencies()
         let manifest = try loadManifest()
         try buildFrameworksAndIntegrateWithXcode(manifest: manifest, sharedCachePath: sharedCachePath.value)
+        print("Successfully updated dependencies.", level: .info)
     }
 }
 

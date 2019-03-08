@@ -5,7 +5,7 @@ final class XcodeProjectGeneratorService {
 
     func generateXcodeProject(framework: Framework) throws {
         print("Generating Xcode project at \(framework.xcodeProjectPath) using SwiftPM ...", level: .info)
-        try bash("swift package generate-xcodeproj --package-path \(framework.directory)")
+        try bash("swift package --package-path \(framework.directory) generate-xcodeproj")
         print("Generated Xcode project at \(framework.xcodeProjectPath) using SwiftPM.", level: .info)
     }
 }

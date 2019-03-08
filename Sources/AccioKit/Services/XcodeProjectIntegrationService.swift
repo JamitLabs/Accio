@@ -17,7 +17,7 @@ final class XcodeProjectIntegrationService {
     }
 
     func updateDependencies(of target: Target, in projectName: String, with frameworkProducts: [FrameworkProduct]) throws {
-        print("Linking build products with targets in Xcode project ...", level: .info)
+        print("Relinking build products with targets in Xcode project ...", level: .info)
 
         let dependenciesPlatformPath = "\(workingDirectory)/\(Constants.dependenciesPath)/\(target.platform.rawValue)"
         let copiedFrameworkProducts: [FrameworkProduct] = try copyFrameworkProducts(frameworkProducts, to: dependenciesPlatformPath)
@@ -61,21 +61,27 @@ final class XcodeProjectIntegrationService {
         let platformGroup = try dependenciesGroup.group(named: target.platform.rawValue) ?? dependenciesGroup.addGroup(named: target.platform.rawValue, options: .withoutFolder)[0]
 
         let frameworksToAdd = frameworkProducts.filter { product in !platformGroup.children.compactMap { $0.path }.contains { $0.hasSuffix(product.frameworkDirUrl.lastPathComponent) } }
-        let frameworkNames = frameworksToAdd.map { $0.frameworkDirUrl.lastPathComponent.components(separatedBy: ".").first! }
         let platformGroupName = "\(Constants.xcodeDependenciesGroup)/\(platformGroup.name!)"
-        print("Adding frameworks \(frameworkNames) to group '\(platformGroupName)' in project navigator & linking with target '\(target.name)'.", level: .info)
 
-        for frameworkToAdd in frameworksToAdd {
-            let frameworkFileRef = try platformGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
-            _ = try frameworksBuildPhase.add(file: frameworkFileRef)
+        if !frameworksToAdd.isEmpty {
+            let frameworkNames = frameworksToAdd.map { $0.frameworkDirUrl.lastPathComponent.components(separatedBy: ".").first! }
+            print("Adding frameworks \(frameworkNames) to group '\(platformGroupName)' in project navigator & linking with target '\(target.name)'.", level: .info)
+
+            for frameworkToAdd in frameworksToAdd {
+                let frameworkFileRef = try platformGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
+                _ = try frameworksBuildPhase.add(file: frameworkFileRef)
+            }
         }
 
         let filesToRemove = platformGroup.children.filter { fileRef in !frameworkProducts.contains { $0.frameworkDirPath.hasSuffix(fileRef.name!) } }
-        let fileNames = filesToRemove.map { $0.name! }
-        print("Removing references \(fileNames) from group '\(platformGroupName)' and unlinking from target '\(target.name)'.", level: .info)
 
-        for fileToRemove in filesToRemove {
-            platformGroup.children.removeAll { $0 === fileToRemove }
+        if !filesToRemove.isEmpty {
+            let fileNames = filesToRemove.map { $0.name! }
+            print("Removing references \(fileNames) from group '\(platformGroupName)' and unlinking from target '\(target.name)'.", level: .info)
+
+            for fileToRemove in filesToRemove {
+                platformGroup.children.removeAll { $0 === fileToRemove }
+            }
         }
 
         var copyBuildScript: PBXShellScriptBuildPhase! = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as? PBXShellScriptBuildPhase
@@ -86,7 +92,7 @@ final class XcodeProjectIntegrationService {
         }
 
         pbxproj.add(object: copyBuildScript)
-        print("Updating input paths in copy build script phase '\(Constants.copyBuildScript)' for target '\(target.name)'.", level: .info)
+        print("Updating input paths in copy build script phase '\(Constants.copyBuildScript)' for target '\(target.name)' ...", level: .info)
         copyBuildScript.inputPaths = platformGroup.children.map { "$(SRCROOT)/\($0.path!)" }
 
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
