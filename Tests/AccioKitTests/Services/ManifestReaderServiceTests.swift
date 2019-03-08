@@ -46,8 +46,16 @@ class ManifestReaderServiceTests: XCTestCase {
         )
     }
 
+    override func setUp() {
+        super.setUp()
+
+        try! bash("rm -rf \(testResourcesDir.path)")
+        try! bash("mkdir \(testResourcesDir.path)")
+    }
+
     func testReadManifest() {
         resourcesLoaded([manifestResource, xcodeProjectResource]) {
+            try! DependencyResolverService(workingDirectory: testResourcesDir.path).resolveDependencies()
             let manifest = try! ManifestReaderService(workingDirectory: testResourcesDir.path).readManifest()
 
             XCTAssertEqual(manifest.projectName, "TestProject")

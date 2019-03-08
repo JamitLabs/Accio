@@ -18,6 +18,7 @@ final class ManifestReaderService: SyntaxVisitor {
         self.workingDirectory = workingDirectory
     }
 
+    /// NOTE: Dependencies must already be resolved for this to work. Use DependencyResolverService to do so.
     func readManifest() throws -> Manifest {
         let packageManifestUrl = URL(fileURLWithPath: workingDirectory).appendingPathComponent("Package.swift")
 
