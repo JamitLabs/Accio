@@ -31,5 +31,7 @@ public class InitCommand: Command {
 
         try ManifestCreatorService.shared.createManifestFromDefaultTemplateIfNeeded(projectName: projectName, targetNames: targetNames)
         try GitIgnoreIntegrationService.shared.addIgnoreEntriesIfNeeded()
+
+        print("Successfully initialized project.", level: .info)
     }
 }

@@ -21,6 +21,7 @@ final class ManifestCreatorService {
         let manifestTemplate = self.manifestTemplate(projectName: projectName, targetsContents: targetsContents)
 
         FileManager.default.createFile(atPath: packageManifestPath, contents: manifestTemplate.data(using: .utf8), attributes: nil)
+        print("Created manifest file Package.swift from template.", level: .info)
     }
 
     private func manifestTemplate(projectName: String, targetsContents: String) -> String {

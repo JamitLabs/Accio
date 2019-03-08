@@ -14,14 +14,9 @@ public class InstallCommand: Command {
     // MARK: - Instance Methods
     public func execute() throws {
         try DependencyResolverService.shared.resolveDependencies()
-        let manifest = try ManifestReaderService.shared.readManifest()
-
-        for (targetName, frameworks) in manifest.frameworksPerTargetName {
-            let platform = try PlatformDetectorService.shared.detectPlatform(projectName: manifest.projectName, targetName: targetName)
-            let target = Target(name: targetName, platform: platform)
-
-            let frameworkProducts = try CachedBuilderService(sharedCachePath: sharedCachePath.value).frameworkProducts(target: target, frameworks: frameworks)
-            try XcodeProjectIntegrationService.shared.updateDependencies(of: target, in: manifest.projectName, with: frameworkProducts)
-        }
+        let manifest = try loadManifest()
+        try buildFrameworksAndIntegrateWithXcode(manifest: manifest, sharedCachePath: sharedCachePath.value)
     }
 }
+
+extension InstallCommand: DependencyInstaller {}

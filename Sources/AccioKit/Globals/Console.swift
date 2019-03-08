@@ -45,6 +45,9 @@ func print(_ message: String, level: PrintLevel) {
 /// - Parameters:
 ///   - command: The bash command to be executed on the command line.
 func bash(_ command: String) throws {
-    print("⏳ Executing '\(command.italic.lightYellow)'".bold)
+    if GlobalOptions.verbose.value {
+        print("⏳ Executing '\(command.italic.lightYellow)'".bold)
+    }
+
     try runAndPrint(bash: command)
 }
