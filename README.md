@@ -13,8 +13,8 @@
              alt="Codebeat Badge">
     </a>
     <a href="https://github.com/JamitLabs/Accio/releases">
-        <img src="https://img.shields.io/badge/Version-0.0.0-blue.svg"
-             alt="Version: 0.0.0">
+        <img src="https://img.shields.io/badge/Version-0.1.0-blue.svg"
+             alt="Version: 0.1.0">
     </a>
     <img src="https://img.shields.io/badge/Swift-4.2-FFAC45.svg"
          alt="Swift: 4.2">
@@ -41,16 +41,24 @@ A dependency manager driven by SwiftPM that works for iOS/tvOS/watchOS/macOS pro
 ## Requirements
 
 - Xcode 10+ and Swift 4.2+
+- Carthage 0.32+
 - Xcode Command Line Tools (see [here](http://stackoverflow.com/a/9329325/3451975) for installation instructions)
 
 ## Installation
 
-### Using [Mint](https://github.com/yonaskolb/Mint):
+### Using [Homebrew](https://brew.sh):
 
-To **install** the latest version of Accio simply run this command:
+To **install** Accio the first time, run these commands:
 
-```shell
-$ mint install JamitLabs/Accio
+```bash
+brew tap JamitLabs/Accio https://github.com/JamitLabs/Accio.git
+brew install accio
+```
+
+To **update** it to the latest version, run this instead:
+
+```bash
+brew upgrade accio
 ```
 
 ## Usage
