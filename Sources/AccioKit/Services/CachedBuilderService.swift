@@ -16,7 +16,7 @@ final class CachedBuilderService {
             if let cachedFrameworkProduct = try frameworkCachingService.cachedProduct(framework: framework, platform: target.platform) {
                 frameworkProducts.append(cachedFrameworkProduct)
             } else {
-                switch InstallationTypeDetectorService.shared.detectInstallationType(for: framework) {
+                switch try InstallationTypeDetectorService.shared.detectInstallationType(for: framework) {
                 case .swiftPackageManager:
                     try XcodeProjectGeneratorService.shared.generateXcodeProject(framework: framework)
                     fallthrough
