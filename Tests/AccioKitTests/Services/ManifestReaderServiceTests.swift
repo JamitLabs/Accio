@@ -20,7 +20,6 @@ class ManifestReaderServiceTests: XCTestCase {
                         .package(url: "https://github.com/Flinesoft/Imperio.git", .upToNextMajor(from: "3.0.0")),
                         .package(url: "https://github.com/JamitLabs/MungoHealer.git", .upToNextMajor(from: "0.3.0")),
                         .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", .upToNextMajor(from: "1.6.2")),
-                        .package(url: "https://github.com/radex/SwiftyUserDefaults.git", .upToNextMajor(from: "4.0.0-beta.1"))
                     ],
                     targets: [
                         .target(
@@ -31,7 +30,6 @@ class ManifestReaderServiceTests: XCTestCase {
                               "Imperio",
                               "MungoHealer",
                               "SwiftyBeaver",
-                              "SwiftyUserDefaults"
                             ]
                         )
                     ]
@@ -57,7 +55,7 @@ class ManifestReaderServiceTests: XCTestCase {
             XCTAssertEqual(manifest.frameworksPerTargetName.keys.first, "TestProject-iOS")
 
             let foundFrameworks = manifest.frameworksPerTargetName.first!.value
-            XCTAssertEqual(foundFrameworks.count, 6)
+            XCTAssertEqual(foundFrameworks.count, 5)
 
             XCTAssertEqual(foundFrameworks[0].scheme, "HandySwift")
             XCTAssert(foundFrameworks[0].directory.contains("checkouts/HandySwift.git-"))
@@ -83,11 +81,6 @@ class ManifestReaderServiceTests: XCTestCase {
             XCTAssert(foundFrameworks[4].directory.contains("checkouts/SwiftyBeaver.git-"))
             XCTAssert(foundFrameworks[4].xcodeProjectPath.contains("SwiftyBeaver.xcodeproj"))
             XCTAssertEqual(foundFrameworks[4].commit.count, 40)
-
-            XCTAssertEqual(foundFrameworks[5].scheme, "SwiftyUserDefaults")
-            XCTAssert(foundFrameworks[5].directory.contains("checkouts/SwiftyUserDefaults.git-"))
-            XCTAssert(foundFrameworks[5].xcodeProjectPath.contains("SwiftyUserDefaults.xcodeproj"))
-            XCTAssertEqual(foundFrameworks[5].commit.count, 40)
         }
     }
 }

@@ -15,7 +15,6 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
                 .package(url: "https://github.com/Flinesoft/Imperio.git", .upToNextMajor(from: "3.0.0")),
                 .package(url: "https://github.com/JamitLabs/MungoHealer.git", .upToNextMajor(from: "0.3.0")),
                 .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", .upToNextMajor(from: "1.6.2")),
-                .package(url: "https://github.com/radex/SwiftyUserDefaults.git", .upToNextMajor(from: "4.0.0-beta.1"))
             ],
             targets: [
                 .target(
@@ -26,7 +25,6 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
                       "Imperio",
                       "MungoHealer",
                       "SwiftyBeaver",
-                      "SwiftyUserDefaults"
                     ]
                 )
             ]
@@ -51,8 +49,7 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
             "HandyUIKit": InstallationType.carthage,
             "Imperio": InstallationType.carthage,
             "MungoHealer": InstallationType.swiftPackageManager,
-            "SwiftyBeaver": InstallationType.swiftPackageManager,
-            "SwiftyUserDefaults": InstallationType.swiftPackageManager
+            "SwiftyBeaver": InstallationType.swiftPackageManager
         ]
 
         let checkoutsDir = testResourcesDir.appendingPathComponent(".accio/checkouts")

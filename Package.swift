@@ -34,7 +34,7 @@ let package = Package(
         ),
         .testTarget(
             name: "AccioKitTests",
-            dependencies: ["AccioKit", "HandySwift"]
+            dependencies: ["AccioKit", "HandySwift", "xcodeproj"]
         )
     ]
 )

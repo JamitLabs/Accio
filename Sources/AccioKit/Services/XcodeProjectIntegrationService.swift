@@ -4,6 +4,7 @@ import xcodeproj
 
 enum XcodeProjectIntegrationError: Error {
     case targetNotFound
+    case frameworksBuildPhaseNotFound
 }
 
 final class XcodeProjectIntegrationService {
@@ -19,7 +20,6 @@ final class XcodeProjectIntegrationService {
         let dependenciesPlatformPath = "\(workingDirectory)/\(Constants.dependenciesPath)/\(target.platform.rawValue)"
         let copiedFrameworkProducts: [FrameworkProduct] = try copyFrameworkProducts(frameworkProducts, to: dependenciesPlatformPath)
         try linkFrameworks(copiedFrameworkProducts, with: target, in: projectName)
-        try updateBuildPhase(of: target, in: projectName, with: copiedFrameworkProducts)
     }
 
     private func copyFrameworkProducts(_ frameworkProducts: [FrameworkProduct], to targetPath: String) throws -> [FrameworkProduct] {
@@ -42,24 +42,42 @@ final class XcodeProjectIntegrationService {
     private func linkFrameworks(_ frameworkProducts: [FrameworkProduct], with target: Target, in projectName: String) throws {
         let xcodeProjectPath = "\(workingDirectory)/\(projectName).xcodeproj"
         let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
+        let pbxproj = projectFile.pbxproj
 
-        guard let targetObject = projectFile.pbxproj.targets(named: target.name).first else {
+        guard let targetObject = pbxproj.targets(named: target.name).first else {
             print("Could not find any target named '\(target.name)' at Xcode project path '\(xcodeProjectPath)'.", level: .error)
             throw XcodeProjectIntegrationError.targetNotFound
         }
 
-        // TODO: not yet implemented
-    }
-
-    private func updateBuildPhase(of target: Target, in projectName: String, with frameworkProducts: [FrameworkProduct]) throws {
-        let xcodeProjectPath = "\(workingDirectory)/\(projectName).xcodeproj"
-        let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
-
-        guard let targetObject = projectFile.pbxproj.targets(named: target.name).first else {
-            print("Could not find any target named '\(target.name)' at Xcode project path '\(xcodeProjectPath)'.", level: .error)
-            throw XcodeProjectIntegrationError.targetNotFound
+        guard let frameworksBuildPhase = targetObject.buildPhases.first(where: { $0.buildPhase == .frameworks }) as? PBXFrameworksBuildPhase else {
+            print("Could not find frameworks build phase for target '\(target.name)' at Xcode project path '\(xcodeProjectPath)'.", level: .error)
+            throw XcodeProjectIntegrationError.frameworksBuildPhaseNotFound
         }
 
-        // TODO: not yet implemented
+        let rootGroup = try pbxproj.rootGroup()!
+        let dependenciesGroup = try rootGroup.group(named: Constants.xcodeDependenciesGroup) ?? rootGroup.addGroup(named: Constants.xcodeDependenciesGroup, options: .withoutFolder)[0]
+        let platformGroup = try dependenciesGroup.group(named: target.platform.rawValue) ?? dependenciesGroup.addGroup(named: target.platform.rawValue, options: .withoutFolder)[0]
+
+        let frameworksToAdd = frameworkProducts.filter { product in !platformGroup.children.compactMap { $0.path }.contains { $0.hasSuffix(product.frameworkDirUrl.lastPathComponent) } }
+        for frameworkToAdd in frameworksToAdd {
+            let frameworkFileRef = try platformGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
+            _ = try frameworksBuildPhase.add(file: frameworkFileRef)
+        }
+
+        let filesToRemove = platformGroup.children.filter { fileRef in !frameworkProducts.contains { $0.frameworkDirPath.hasSuffix(fileRef.name!) } }
+        for fileToRemove in filesToRemove {
+            platformGroup.children.removeAll { $0 === fileToRemove }
+        }
+
+        var copyBuildScript: PBXShellScriptBuildPhase! = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as? PBXShellScriptBuildPhase
+        if copyBuildScript == nil {
+            copyBuildScript = PBXShellScriptBuildPhase(name: Constants.copyBuildScript, shellScript: "/usr/local/bin/carthage copy-frameworks")
+            targetObject.buildPhases.append(copyBuildScript)
+        }
+
+        pbxproj.add(object: copyBuildScript)
+        copyBuildScript.inputPaths = platformGroup.children.map { "$(SRCROOT)/\($0.path!)" }
+
+        try projectFile.write(path: Path(xcodeProjectPath), override: true)
     }
 }
