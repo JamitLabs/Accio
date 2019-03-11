@@ -37,16 +37,18 @@
 
 A dependency manager driven by SwiftPM that works for iOS/tvOS/watchOS/macOS projects.
 
+***Important Note:***
+*This project is currently a **work on progress.** While the API should already be stable, this tool might not work in many cases yet. Version 1.0.0 will be released once we feel it is ready for most projects.*
 
 ## Requirements
 
 - Xcode 10+ and Swift 4.2+
-- Carthage 0.32+
 - Xcode Command Line Tools (see [here](http://stackoverflow.com/a/9329325/3451975) for installation instructions)
+- Carthage 0.32+ (install from [here](https://github.com/Carthage/Carthage))
 
 ## Installation
 
-### Using [Homebrew](https://brew.sh):
+### Via [Homebrew](https://brew.sh):
 
 To **install** Accio the first time, run these commands:
 
@@ -61,9 +63,112 @@ To **update** it to the latest version, run this instead:
 brew upgrade accio
 ```
 
+## Why should I use this?
+
+**TL;DR**: It's an improvement over Carthage, both regarding supported features & community openness. Also, it's targeted towards official SwiftPM's support for Apple platforms.
+
+<details>
+<summary>
+Detailed Explanation
+</summary>
+
+For developers on Apple platforms there are already well established dependency managers, namely [CocoaPods](https://github.com/CocoaPods/CocoaPods) & [Carthage](https://github.com/Carthage/Carthage). If you like how CocoaPods deals with things, you probably won't ever need to use Accio. It doesn't do anything that CocoaPods doesn't.
+
+But if you are like the many developers who prefer to use Carthage because it's written in Swift (not Ruby) and it doesn't create an Xcode workspace but is rather unintrusive, you might find that Accio solves some of the problems you might have come across with Carthage. Namely:
+
+1. Carthage doesn't support cached builds *across projects*
+2. Carthage always builds *all* shared schemes of a dependency
+3. You need to *manually* link/unlink dependencies at two different places (project hierarchy & copy build phase)
+
+While for some users these missing features might not make a huge difference at all, there's also many who really suffer from them. So adding these to Carthage might sound like the most obvious step to take from here and wouldn't need yet another tool. And there actually have been attempts to tackle each of the above issues within Carthage. But Carthage doesn't have a particularly welcoming community so they all failed. Apart from the fact that the project is written in [ReactiveSwift](https://github.com/ReactiveCocoa/ReactiveSwift), which is not bad in itself but still prevents many developers from being able to contribute new features, the main maintainer(s) don't take much responsibility in the concerns of the community. Here's what I mean:
+
+For example problem #2 is tracked in [this](https://github.com/Carthage/Carthage/issues/1227) issue since March 2016 and has many upvotes. But the maintainers seem not to care about it at all. There was even [this PR](https://github.com/Carthage/Carthage/pull/1990)  attempting to fix the issue that was very well received by the community and has (currently) 38 👍s and 14 ❤s. But after ignoring it for a year, the [main maintainers reaction](https://github.com/Carthage/Carthage/pull/1990#issuecomment-407409116) basically was "this is insufficient" and "I don't think we should solve this problem", earning 6 👎s for this comment alone. There was even an earlier approach to fix this issue in [this PR](https://github.com/Carthage/Carthage/pull/1616), but again, the main maintainer [basically said](https://github.com/Carthage/Carthage/pull/1616#issuecomment-271125684) "this is a minor case" and "Apple should fix this in Xcode".
+
+The manual linking problem (#3) was reported several times (for example [here](https://github.com/Carthage/Carthage/issues/1131), [here](https://github.com/Carthage/Carthage/issues/2605) and [here](https://github.com/Carthage/Carthage/issues/145)). While it might have been ["an intentional design decision"](https://github.com/Carthage/Carthage/issues/145#issuecomment-64676821) at the beginning, it is nowadays agreed on to be a bad decision (even by the [main maintainer](https://github.com/Carthage/Carthage/issues/1131#issuecomment-185209513)). But there's no solution to the problem implemented as of now. The most recent attempt to *kind of* fix this was in [this PR](https://github.com/Carthage/Carthage/issues/2477) which was opened in June 2018 and didn't make any real progress since.
+
+Problem #1 is tracked [here](https://github.com/Carthage/Carthage/issues/2400) since April 2018 and was actually tackled recently by [this PR](https://github.com/Carthage/Carthage/pull/2716). But only god knows if and when it will be merged.
+
+The unwelcomingness (is there such a word?) of the Carthage community is so much so that developers tended to rather write another tool than to add the feature to Carthage itself. [Rome](https://github.com/blender/Rome) which attempts to fix the caching problem and [Carting](https://github.com/artemnovichkov/Carting) trying to fix the linking problem are two such examples. But more tools means higher chances that something could break over time and also complicates the configuration for both each developer and also the CI setup. 
+
+That's why Accio was designed as the all-in-one tool for any improvements you might need for managing dependencies using Carthage. It's explicitly open for new features from the community as long as they improve aspects of dependency management for the Apple developer community. 
+
+Also the core of Accio was designed to use [SwiftPM](https://github.com/apple/swift-package-manager) as much as possible because we think it will at some point replace the need for an extra dependency manager completely. Until that time, making an open source project "Accio compliant" basically means adding a manifest file that exactly matches that of `SwiftPM`. This way Accio is trying to fill the gap between now and the time when Xcode properly supports `SwiftPM` for Apple platform projects (which we guess to be at WWDC 2020) and most Accio compatible projects might already be compatible out of the box.
+
+</details>
+
 ## Usage
 
-TODO: not yet written
+### Getting Started
+
+This section describes on how to get started with Accio.
+
+### Initialization
+
+To configure Accio in a new project, simply run the `init` command and provide both the name of the Xcode project file (without extension) and your App target(s) (separate multiple targets by a comma). For example:
+
+```bash
+accio init -p "XcodeProjectName" -t "AppTargetName"
+```
+
+This step will create a template `Package.swift` file and set some `.gitignore` entries to keep your repository clean.
+
+Run `accio init help` to get a list of all available options.
+
+#### Adding Dependencies 
+
+Accio uses the [official SwiftPM manifest format](https://github.com/apple/swift-package-manager/blob/master/Documentation/PackageDescriptionV4.md) for specifying dependencies. So in order to add a dependency, you will need to do two things:
+
+1. Add a `.package` entry to the `dependencies` array of your `Package`
+2. Add all scheme/library names you want to build to the `dependencies` section of the appropriate target(s)
+
+Here's an example `Package.swift` file with multiple dependencies specified:
+
+```swift
+// swift-tools-version:4.2
+import PackageDescription
+
+let package = Package(
+    name: "XcodeProjectName",
+    products: [],
+    dependencies: [
+        .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "2.8.0")),
+        .package(url: "https://github.com/Flinesoft/HandyUIKit.git", .upToNextMajor(from: "1.9.1")),
+        .package(url: "https://github.com/JamitLabs/MungoHealer.git", .upToNextMajor(from: "0.3.2")),
+        .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", .upToNextMajor(from: "1.6.2")),
+        .package(url: "https://github.com/radex/SwiftyUserDefaults.git", .upToNextMajor(from: "4.0.0-beta.1")),
+    ],
+    targets: [
+        .target(
+            name: "AppTargetName",
+            dependencies: [
+                "HandySwift",
+                "HandyUIKit",
+                "MungoHealer",
+                "SwiftyBeaver",
+                "SwiftyUserDefaults",
+            ]
+        ),
+    ]
+)
+```
+
+### Installing Dependencies
+
+To install the dependencies, you can use either the `install` or `update` command. The only difference is, that `install` won't update any dependency versions if they were already previously resolved. `update` will always update to the latest version within the specified range. For example:
+
+```bash
+accio install
+```
+
+When running this the first time in a project, this will do the following:
+
+1. Checkout all dependencies (using [SwiftPM](https://github.com/apple/swift-package-manager)) & build them (using [Carthage](https://github.com/Carthage/Carthage))
+2. Cache all build products to a local cache directory for future reuse in other projects
+3. Create a folder named `Dependencies` with the build products
+4. Create a group in Xcode named `Dependencies` with the build products correctly linked to the appropriate targets
+5. Add a copy build script phase named `Accio` to the configured targets & update the input paths appropriately
+
+On future runs, both `install` and `update` will make sure all these created directories & build scripts are kept up-to-date so you don't ever need to change them manually. Actually, you shouldn't change their contents, reordering is fine though.
 
 ## Contributing
 
