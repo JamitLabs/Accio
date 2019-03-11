@@ -90,9 +90,9 @@ Problem #1 is tracked [here](https://github.com/Carthage/Carthage/issues/2400) s
 
 The unwelcomingness (is there such a word?) of the Carthage community is so much so that developers tended to rather write another tool than to add the feature to Carthage itself. [Rome](https://github.com/blender/Rome) which attempts to fix the caching problem and [Carting](https://github.com/artemnovichkov/Carting) trying to fix the linking problem are two such examples. But more tools means higher chances that something could break over time and also complicates the configuration for both each developer and also the CI setup. 
 
-That's why Accio was designed as the all-in-one tool for any improvements you might need for managing dependencies using Carthage. It's explicitly open for new features from the community as long as they improve aspects of dependency management for the Apple developer community. 
+That's why Accio was designed as the all-in-one tool for any improvements you might need for managing dependencies using Carthage. It's explicitly open for new features from the community as long as they improve aspects of dependency management for the Apple developer community. Also, the implementation of Accio is pretty straight-forward, without the need to learn any reactive programming.
 
-Also the core of Accio was designed to use [SwiftPM](https://github.com/apple/swift-package-manager) as much as possible because we think it will at some point replace the need for an extra dependency manager completely. Until that time, making an open source project "Accio compliant" basically means adding a manifest file that exactly matches that of `SwiftPM`. This way Accio is trying to fill the gap between now and the time when Xcode properly supports `SwiftPM` for Apple platform projects (which we guess to be at WWDC 2020) and most Accio compatible projects might already be compatible out of the box.
+Also the core of Accio was designed to use [SwiftPM](https://github.com/apple/swift-package-manager) as much as possible because we think it will at some point replace the need for an extra dependency manager completely. Until that time, making an open source project "Accio compliant" basically means adding a manifest file that exactly matches that of `SwiftPM`. This way Accio is trying to fill the gap between now and the time when Xcode properly supports `SwiftPM` for Apple platform projects (which we guess to be at WWDC 2020) and most Accio compatible projects might already be compatible out of the box when the time comes.
 
 </details>
 
@@ -101,6 +101,15 @@ Also the core of Accio was designed to use [SwiftPM](https://github.com/apple/sw
 ### Getting Started
 
 This section describes on how to get started with Accio.
+
+### Deintegrating Carthage (optional)
+
+If you want to migrate your Carthage-driven project to Accio, here are the steps to deintegrate Carthage:
+
+1. Remove any linked dependency frameworks in the project hierarchy (this will automatically unlink from any targets)
+2. Delete the Carthage copy build phase
+3. Delete any files beginning with `Cartfile`
+4. Remove the `Carthage` directory entirely
 
 ### Initialization
 
@@ -160,7 +169,7 @@ To install the dependencies, you can use either the `install` or `update` comman
 accio install
 ```
 
-When running this the first time in a project, this will do the following:
+When running this the first time in a project, the following steps will be taken:
 
 1. Checkout all dependencies (using [SwiftPM](https://github.com/apple/swift-package-manager)) & build them (using [Carthage](https://github.com/Carthage/Carthage))
 2. Cache all build products to a local cache directory for future reuse in other projects
@@ -169,6 +178,18 @@ When running this the first time in a project, this will do the following:
 5. Add a copy build script phase named `Accio` to the configured targets & update the input paths appropriately
 
 On future runs, both `install` and `update` will make sure all these created directories & build scripts are kept up-to-date so you don't ever need to change them manually. Actually, you shouldn't change their contents, reordering is fine though.
+
+Additionally, for both install commands you can provide a path to a **shared cache** to copy the build products to on top of the local cache. For example:
+
+```bash
+accio install -c /Volumes/GoogleDrive/TeamShare/AccioCache
+```
+
+Specifying this can drastically cut your teams total dependencies building time since each commit of a dependency will be built only once by only one person in the team.
+
+*Please note that a **global cache** is planned to be added as an opt-in option in the near future for those who trust our CI setup regarding security. Details will follow.*
+
+Run `accio install help` or `accio update help` to get a list of all available options.
 
 ## Contributing
 
