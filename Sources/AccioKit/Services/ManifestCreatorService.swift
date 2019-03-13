@@ -51,7 +51,8 @@ final class ManifestCreatorService {
                             dependencies: [
                                 // add your dependencies scheme names here, for example:
                                 // \"Project\",
-                            ]
+                            ],
+                            path: \"\(targetName)\"
                         ),
 
                 """

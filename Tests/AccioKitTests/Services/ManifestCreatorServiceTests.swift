@@ -42,14 +42,16 @@ class ManifestCreatorServiceTests: XCTestCase {
                             dependencies: [
                                 // add your dependencies scheme names here, for example:
                                 // \"Project\",
-                            ]
+                            ],
+                            path: \"iOS-App\"
                         ),
                         .target(
                             name: \"tvOS-App\",
                             dependencies: [
                                 // add your dependencies scheme names here, for example:
                                 // \"Project\",
-                            ]
+                            ],
+                            path: \"tvOS-App\"
                         ),
                     ]
                 )

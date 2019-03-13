@@ -119,7 +119,7 @@ To configure Accio in a new project, simply run the `init` command and provide b
 accio init -p "XcodeProjectName" -t "AppTargetName"
 ```
 
-This step will create a template `Package.swift` file and set some `.gitignore` entries to keep your repository clean.
+This step will create a template `Package.swift` file and set some `.gitignore` entries to keep your repository clean. Please note that if your source code files aren't placed within directories named after the targets, you will need to explicitly set the `path` parameters within the targets in the `Package.swift` file to the correct paths.
 
 Run `accio init help` to get a list of all available options.
 
@@ -155,7 +155,8 @@ let package = Package(
                 "MungoHealer",
                 "SwiftyBeaver",
                 "SwiftyUserDefaults",
-            ]
+            ],
+            path: "AppTargetName"
         ),
     ]
 )
