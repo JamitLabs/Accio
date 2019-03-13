@@ -25,4 +25,14 @@ extension FileManager {
     func fileSizeInBytes(atPath path: String) throws -> Int64 {
         return Int64(try FileManager.default.attributesOfItem(atPath: path)[FileAttributeKey.size] as! UInt64)
     }
+
+    func isDirectory(atPath path: String) throws -> Bool {
+        var isDirectory: ObjCBool = false
+
+        if fileExists(atPath: path, isDirectory: &isDirectory) {
+            return isDirectory.boolValue
+        } else {
+            return false
+        }
+    }
 }

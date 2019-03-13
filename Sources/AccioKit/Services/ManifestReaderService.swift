@@ -89,7 +89,7 @@ final class ManifestReaderService: SyntaxVisitor {
 
         let checkoutsDirPath = "\(workingDirectory)/\(Constants.buildPath)/checkouts"
         let checkoutDependencyDirNames: [String] = try! FileManager.default.contentsOfDirectory(atPath: checkoutsDirPath)
-        let checkoutDependencyPaths: [String] = checkoutDependencyDirNames.map { "\(checkoutsDirPath)/\($0)" }
+        let checkoutDependencyPaths: [String] = checkoutDependencyDirNames.map { "\(checkoutsDirPath)/\($0)" }.filter { try! FileManager.default.isDirectory(atPath: $0) }
 
         var frameworksPerTargetName: [String: [Framework]] = [:]
 

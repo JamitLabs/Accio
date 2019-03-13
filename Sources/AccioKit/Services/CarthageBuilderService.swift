@@ -22,7 +22,7 @@ final class CarthageBuilderService {
         )
 
         guard FileManager.default.fileExists(atPath: frameworkProduct.frameworkDirPath) && FileManager.default.fileExists(atPath: frameworkProduct.symbolsFilePath) else {
-            print("Failed to build products to \(platformBuildDir)/\(framework.scheme)/.framework(.dSYM).", level: .error)
+            print("Failed to build products to \(platformBuildDir)/\(framework.scheme).framework(.dSYM).", level: .error)
             throw CarthageBuilderError.buildProductsMissing
         }
 
