@@ -65,7 +65,7 @@ class ManifestCreatorServiceTests: XCTestCase {
         resourcesLoaded([manifestResource, xcodeProjectResource, exampleSwiftFile]) {
             try! DependencyResolverService(workingDirectory: testResourcesDir.path).resolveDependencies()
             let dependencyGraph = try! DependencyResolverService(workingDirectory: testResourcesDir.path).dependencyGraph()
-            let manifest = try! ManifestHandlerService(workingDirectory: testResourcesDir.path).loadManifest()
+            let manifest = try! ManifestHandlerService(workingDirectory: testResourcesDir.path).loadManifest(isDependency: false)
 
             XCTAssertEqual(manifest.name, "TestProject")
             XCTAssertEqual(manifest.targets.count, 1)

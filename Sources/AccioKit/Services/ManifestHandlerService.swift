@@ -10,11 +10,11 @@ final class ManifestHandlerService {
         self.workingDirectory = workingDirectory
     }
 
-    func loadManifest() throws -> Manifest {
-        print("Reading package manifest ...", level: .info)
+    func loadManifest(isDependency: Bool) throws -> Manifest {
+        print("Reading package manifest at \(workingDirectory)/Package.swift ...", level: isDependency ? .verbose : .info)
         let contextSpecifiers = "--package-path \(workingDirectory) --build-path \(workingDirectory)/\(Constants.buildPath)"
         let manifestJson = run(bash: "swift package \(contextSpecifiers) dump-package").stdout
-        return try JSONDecoder().decode(Manifest.self, from: manifestJson.data(using: .utf8)!)
+        return try JSONDecoder.swiftPM.decode(Manifest.self, from: manifestJson.data(using: .utf8)!)
     }
 
     func createManifestFromDefaultTemplateIfNeeded(projectName: String, targetNames: [String]) throws {

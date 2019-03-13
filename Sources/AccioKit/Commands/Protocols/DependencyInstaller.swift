@@ -11,7 +11,7 @@ protocol DependencyInstaller {
 
 extension DependencyInstaller {
     func loadManifest() throws -> Manifest {
-        let manifest = try ManifestHandlerService.shared.loadManifest()
+        let manifest = try ManifestHandlerService.shared.loadManifest(isDependency: false)
 
         guard !manifest.targets.isEmpty else {
             print("No targets specified in manifest file. Please add at least one target to the 'targets' array in Package.swift.", level: .warning)

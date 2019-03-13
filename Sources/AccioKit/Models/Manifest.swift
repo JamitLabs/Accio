@@ -8,12 +8,18 @@ class Manifest: Decodable {
         }
 
         let name: String
-        let type: String
         let dependencies: [Dependency]
+    }
+
+    struct Product: Decodable {
+        let name: String
+        let productType: String
+        let targets: [String]
     }
 
     // MARK: - Properties
     let name: String
+    let products: [Product]
     let targets: [Target]
 }
 
