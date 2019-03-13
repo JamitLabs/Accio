@@ -4,7 +4,7 @@ import XCTest
 class FrameworkCachingServiceTests: XCTestCase {
     private let sharedCachePath: String = FileManager.userCacheDirUrl.appendingPathComponent("AccioTestSharedCache").path
 
-    private let testFramework = Framework(directory: "", scheme: "Example", commit: "aaa", graphDependencies: [])
+    private let testFramework = Framework(projectName: "TestProject", libraryName: "Example", projectDirectory: "", requiredFrameworks: [])
     private let testFrameworkProduct = FrameworkProduct(
         frameworkDirPath: FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework").path,
         symbolsFilePath: FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework.dSYM").path
@@ -30,8 +30,8 @@ class FrameworkCachingServiceTests: XCTestCase {
     func testCachingProductWithoutSharedCachePath() {
         let frameworkCachingService = FrameworkCachingService(sharedCachePath: nil)
 
-        let testFrameworkLocalCacheDir: String = "\(Constants.localCachePath)/\(testFramework.scheme)/\(testFramework.commit)/\(Platform.iOS.rawValue)"
-        let testFrameworkSharedCacheDir: String = "\(sharedCachePath)/\(testFramework.scheme)/\(testFramework.commit)/\(Platform.iOS.rawValue)"
+        let testFrameworkLocalCacheDir: String = "\(Constants.localCachePath)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
+        let testFrameworkSharedCacheDir: String = "\(sharedCachePath)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
 
         var cachedProduct: FrameworkProduct? = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
         XCTAssertNil(cachedProduct)
@@ -57,8 +57,8 @@ class FrameworkCachingServiceTests: XCTestCase {
     func testCachingProductWithSharedCachePath() {
         let frameworkCachingService = FrameworkCachingService(sharedCachePath: sharedCachePath)
 
-        let testFrameworkLocalCacheDir: String = "\(Constants.localCachePath)/\(testFramework.scheme)/\(testFramework.commit)/\(Platform.iOS.rawValue)"
-        let testFrameworkSharedCacheDir: String = "\(sharedCachePath)/\(testFramework.scheme)/\(testFramework.commit)/\(Platform.iOS.rawValue)"
+        let testFrameworkLocalCacheDir: String = "\(Constants.localCachePath)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
+        let testFrameworkSharedCacheDir: String = "\(sharedCachePath)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
 
         var cachedProduct: FrameworkProduct? = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
         XCTAssertNil(cachedProduct)

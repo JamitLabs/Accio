@@ -71,33 +71,33 @@ class ManifestCreatorServiceTests: XCTestCase {
             XCTAssertEqual(manifest.targets.count, 1)
             XCTAssertEqual(manifest.targets.first!.name, "TestProject-iOS")
 
-            let foundFrameworks = try! manifest.targets.first!.frameworks(dependencyGraph: dependencyGraph)
+            let foundFrameworks = try! manifest.appTargets.first!.frameworkDependencies(manifest: manifest, dependencyGraph: dependencyGraph)
             XCTAssertEqual(foundFrameworks.count, 5)
 
-            XCTAssertEqual(foundFrameworks[0].scheme, "HandySwift")
-            XCTAssert(foundFrameworks[0].directory.contains("checkouts/HandySwift.git-"))
+            XCTAssertEqual(foundFrameworks[0].libraryName, "HandySwift")
+            XCTAssert(foundFrameworks[0].projectDirectory.contains("checkouts/HandySwift.git-"))
             XCTAssert(foundFrameworks[0].xcodeProjectPath.contains("HandySwift.xcodeproj"))
-            XCTAssertEqual(foundFrameworks[0].commit.count, 40)
+            XCTAssertEqual(foundFrameworks[0].commitHash.count, 40)
 
-            XCTAssertEqual(foundFrameworks[1].scheme, "HandyUIKit")
-            XCTAssert(foundFrameworks[1].directory.contains("checkouts/HandyUIKit.git-"))
+            XCTAssertEqual(foundFrameworks[1].libraryName, "HandyUIKit")
+            XCTAssert(foundFrameworks[1].projectDirectory.contains("checkouts/HandyUIKit.git-"))
             XCTAssert(foundFrameworks[1].xcodeProjectPath.contains("HandyUIKit.xcodeproj"))
-            XCTAssertEqual(foundFrameworks[1].commit.count, 40)
+            XCTAssertEqual(foundFrameworks[1].commitHash.count, 40)
 
-            XCTAssertEqual(foundFrameworks[2].scheme, "Imperio")
-            XCTAssert(foundFrameworks[2].directory.contains("checkouts/Imperio.git-"))
+            XCTAssertEqual(foundFrameworks[2].libraryName, "Imperio")
+            XCTAssert(foundFrameworks[2].projectDirectory.contains("checkouts/Imperio.git-"))
             XCTAssert(foundFrameworks[2].xcodeProjectPath.contains("Imperio.xcodeproj"))
-            XCTAssertEqual(foundFrameworks[2].commit.count, 40)
+            XCTAssertEqual(foundFrameworks[2].commitHash.count, 40)
 
-            XCTAssertEqual(foundFrameworks[3].scheme, "MungoHealer")
-            XCTAssert(foundFrameworks[3].directory.contains("checkouts/MungoHealer.git-"))
+            XCTAssertEqual(foundFrameworks[3].libraryName, "MungoHealer")
+            XCTAssert(foundFrameworks[3].projectDirectory.contains("checkouts/MungoHealer.git-"))
             XCTAssert(foundFrameworks[3].xcodeProjectPath.contains("MungoHealer.xcodeproj"))
-            XCTAssertEqual(foundFrameworks[3].commit.count, 40)
+            XCTAssertEqual(foundFrameworks[3].commitHash.count, 40)
 
-            XCTAssertEqual(foundFrameworks[4].scheme, "SwiftyBeaver")
-            XCTAssert(foundFrameworks[4].directory.contains("checkouts/SwiftyBeaver.git-"))
+            XCTAssertEqual(foundFrameworks[4].libraryName, "SwiftyBeaver")
+            XCTAssert(foundFrameworks[4].projectDirectory.contains("checkouts/SwiftyBeaver.git-"))
             XCTAssert(foundFrameworks[4].xcodeProjectPath.contains("SwiftyBeaver.xcodeproj"))
-            XCTAssertEqual(foundFrameworks[4].commit.count, 40)
+            XCTAssertEqual(foundFrameworks[4].commitHash.count, 40)
         }
     }
 

@@ -62,7 +62,7 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
             let frameworkDirName = try! FileManager.default.contentsOfDirectory(atPath: checkoutsDir.path).first { $0.hasPrefix(frameworkName) }!
             let frameworkDir = checkoutsDir.appendingPathComponent(frameworkDirName)
 
-            let framework = Framework(directory: frameworkDir.path, scheme: frameworkName, commit: "aaa", graphDependencies: [])
+            let framework = Framework(projectName: "TestProject", libraryName: frameworkName, projectDirectory: frameworkDir.path, requiredFrameworks: [])
 
             let installationType = try! InstallationTypeDetectorService.shared.detectInstallationType(for: framework)
             XCTAssertEqual(installationType, expectedInstallationType, "Expected \(frameworkName) to be of type \(expectedInstallationType).")

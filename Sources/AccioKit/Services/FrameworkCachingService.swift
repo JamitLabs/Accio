@@ -8,17 +8,17 @@ final class FrameworkCachingService {
     }
 
     func cachedProduct(framework: Framework, platform: Platform) throws -> FrameworkProduct? {
-        let subpath = "\(framework.scheme)/\(framework.commit)/\(platform.rawValue)"
+        let subpath = "\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue)"
         let localCacheDir = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath)
 
-        let productFrameworkDir = "\(framework.scheme).framework"
-        let productSymbolsFile = "\(framework.scheme).framework.dSYM"
+        let productFrameworkDir = "\(framework.libraryName).framework"
+        let productSymbolsFile = "\(framework.libraryName).framework.dSYM"
 
         let localCachedFrameworkDir = "\(localCacheDir.appendingPathComponent(productFrameworkDir).path)"
         let localCachedSymbolsFile = "\(localCacheDir.appendingPathComponent(productSymbolsFile).path)"
 
         if FileManager.default.fileExists(atPath: localCachedFrameworkDir) && FileManager.default.fileExists(atPath: localCachedSymbolsFile) {
-            print("Found cached build product for \(framework.scheme) in local cache - skipping build.", level: .info)
+            print("Found cached build product for \(framework.libraryName) in local cache - skipping build.", level: .info)
             return FrameworkProduct(frameworkDirPath: localCachedFrameworkDir, symbolsFilePath: localCachedSymbolsFile)
         }
 
@@ -29,7 +29,7 @@ final class FrameworkCachingService {
             let sharedCachedSymbolsFile = "\(sharedCacheDir.appendingPathComponent(productSymbolsFile).path)"
 
             if FileManager.default.fileExists(atPath: sharedCachedFrameworkDir) && FileManager.default.fileExists(atPath: sharedCachedSymbolsFile) {
-                print("Found cached build products for \(framework.scheme) in shared cache - skipping build.", level: .info)
+                print("Found cached build products for \(framework.libraryName) in shared cache - skipping build.", level: .info)
                 return FrameworkProduct(frameworkDirPath: sharedCachedFrameworkDir, symbolsFilePath: sharedCachedSymbolsFile)
             }
         }
@@ -38,7 +38,7 @@ final class FrameworkCachingService {
     }
 
     func cache(product: FrameworkProduct, framework: Framework, platform: Platform) throws {
-        let subpath = "\(framework.scheme)/\(framework.commit)/\(platform.rawValue)"
+        let subpath = "\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue)"
         let localCacheDir = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath)
 
         try bash("mkdir -p \(localCacheDir.path)")
@@ -54,9 +54,9 @@ final class FrameworkCachingService {
             try bash("cp -R \(product.frameworkDirPath) \(sharedCacheDir.appendingPathComponent(product.frameworkDirUrl.lastPathComponent).path)")
             try bash("cp -R \(product.symbolsFilePath) \(sharedCacheDir.appendingPathComponent(product.symbolsFileUrl.lastPathComponent).path)")
 
-            print("Saved build products for \(framework.scheme) in local & shared cache.", level: .info)
+            print("Saved build products for \(framework.libraryName) in local & shared cache.", level: .info)
         } else {
-            print("Saved build products for \(framework.scheme) in local cache.", level: .info)
+            print("Saved build products for \(framework.libraryName) in local cache.", level: .info)
         }
     }
 }

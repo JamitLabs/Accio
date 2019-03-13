@@ -6,7 +6,7 @@ import XCTest
 class XcodeProjectIntegrationServiceTests: XCTestCase {
     private let testResourcesDir: URL = FileManager.userCacheDirUrl.appendingPathComponent("AccioTestResources")
     private let testFrameworkNames: [String] = ["HandySwift", "HandyUIKit", "MungoHealer", "Alamofire"]
-    private let testTarget: Manifest.Target = Manifest.Target(name: "TestProject-iOS", dependencies: [])
+    private let testTarget: AppTarget = AppTarget(projectName: "TestProject-iOS", targetName: "TestProject-iOS", dependentLibraryNames: [])
 
     private var xcodeProjectResource: Resource {
         return Resource(
@@ -68,7 +68,7 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
             // ensure build phase not yet updated
             XCTAssert(!targetObject.buildPhases.contains { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript })
 
-            try! xcodeProjectIntegrationService.updateDependencies(of: testTarget, for: .iOS, in: "TestProject", with: frameworkProducts)
+            try! xcodeProjectIntegrationService.updateDependencies(of: testTarget, for: .iOS, with: frameworkProducts)
 
             // test copyFrameworkProducts
             for frameworkProduct in copiedFrameworkProducts {

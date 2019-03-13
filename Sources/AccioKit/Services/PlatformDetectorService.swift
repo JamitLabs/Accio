@@ -16,13 +16,13 @@ final class PlatformDetectorService {
         self.workingDirectory = workingDirectory
     }
 
-    func detectPlatform(projectName: String, targetName: String) throws -> Platform {
-        let xcodeProjectPath = "\(workingDirectory)/\(projectName).xcodeproj"
+    func detectPlatform(of appTarget: AppTarget) throws -> Platform {
+        let xcodeProjectPath = "\(workingDirectory)/\(appTarget.projectName).xcodeproj"
         let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
         let rootProject = try projectFile.pbxproj.rootProject()
 
-        guard let targetObject = projectFile.pbxproj.targets(named: targetName).first else {
-            print("Could not find any target named '\(targetName)' at Xcode project path '\(xcodeProjectPath)'.", level: .error)
+        guard let targetObject = projectFile.pbxproj.targets(named: appTarget.targetName).first else {
+            print("Could not find any target named '\(appTarget.targetName)' at Xcode project path '\(xcodeProjectPath)'.", level: .error)
             throw PlatformDetectorError.targetNotFound
         }
 

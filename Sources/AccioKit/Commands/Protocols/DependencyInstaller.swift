@@ -22,15 +22,15 @@ extension DependencyInstaller {
     }
 
     func buildFrameworksAndIntegrateWithXcode(manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws {
-        for target in manifest.targets {
-            guard !target.dependencies.isEmpty else {
-                print("No dependencies specified for target '\(target.name)'. Please add at least one dependency scheme to the 'dependencies' array of the target in Package.swift.", level: .warning)
+        for appTarget in manifest.appTargets {
+            guard !appTarget.dependentLibraryNames.isEmpty else {
+                print("No dependencies specified for target '\(appTarget.targetName)'. Please add at least one dependency scheme to the 'dependencies' array of the target in Package.swift.", level: .warning)
                 continue
             }
 
-            let platform = try PlatformDetectorService.shared.detectPlatform(projectName: manifest.name, targetName: target.name)
-            let frameworkProducts = try CachedBuilderService(sharedCachePath: sharedCachePath).frameworkProducts(target: target, dependencyGraph: dependencyGraph, platform: platform)
-            try XcodeProjectIntegrationService.shared.updateDependencies(of: target, for: platform, in: manifest.name, with: frameworkProducts)
+            let platform = try PlatformDetectorService.shared.detectPlatform(of: appTarget)
+            let frameworkProducts = try CachedBuilderService(sharedCachePath: sharedCachePath).frameworkProducts(manifest: manifest, appTarget: appTarget, dependencyGraph: dependencyGraph, platform: platform)
+            try XcodeProjectIntegrationService.shared.updateDependencies(of: appTarget, for: platform, with: frameworkProducts)
         }
     }
 }
