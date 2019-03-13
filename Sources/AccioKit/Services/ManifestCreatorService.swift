@@ -1,7 +1,7 @@
 import Foundation
 
 final class ManifestCreatorService {
-    static let shared = ManifestCreatorService(workingDirectory: FileManager.default.currentDirectoryPath)
+    static let shared = ManifestCreatorService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
 
     private let workingDirectory: String
 

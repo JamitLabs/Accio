@@ -9,7 +9,7 @@ enum ManifestReaderError: Error {
 }
 
 final class ManifestReaderService: SyntaxVisitor {
-    static let shared = ManifestReaderService(workingDirectory: FileManager.default.currentDirectoryPath)
+    static let shared = ManifestReaderService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
 
     private let workingDirectory: String
     private var manifest: Manifest?

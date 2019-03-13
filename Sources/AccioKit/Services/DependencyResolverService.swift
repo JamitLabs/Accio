@@ -1,7 +1,7 @@
 import Foundation
 
 final class DependencyResolverService {
-    static let shared = DependencyResolverService(workingDirectory: FileManager.default.currentDirectoryPath)
+    static let shared = DependencyResolverService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
 
     private let workingDirectory: String
 

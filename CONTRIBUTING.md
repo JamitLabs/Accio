@@ -38,33 +38,19 @@ Alternatively you can also add `swiftlint` as a build script to the target `Acci
 ### Development Tips
 
 #### Debugging with Xcode
-To run the Accio tool right from within Xcode for testing, remove the line
+To run the Accio tool right from within Xcode for testing, replace the line
 
 ```swift
 cli.goAndExit()
 ```
 
-from the file at path `Sources/Accio/main.swift` and replace it with something like:
+from the file at path `Sources/Accio/main.swift` with something like:
 
 ```swift
-cli.debugGo(with: "accio install -v")
+cli.debugGo(with: "accio install -d /Users/You/path/to/a/demo/project -v")
 ```
 
-Now, when you choose the `Accio` scheme in Xcode and run the tool, you will see the command line output right within the Xcode console and can debug using breakpoints like you normally would.
-
-Beware though that the tool will run within the product build directory, which might look something like this:
-
-```
-/Users/YOU/Library/Developer/Xcode/DerivedData/Accio-aayvtbwcxecganalwqrvbfznkjke/Build/Products/Debug
-```
-
-You can print the exact directory of your Xcode by running:
-
-```swift
-FileManager.default.currentDirectoryPath
-```
-
-To test a specific Accio configuration just create an example project with dependencies to check.
+Note that the `-d` option specified the path from within to run Accio and `-v` makes sure the logging level is set to `verbose`.
 
 ### Commit Messages
 

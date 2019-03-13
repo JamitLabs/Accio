@@ -8,7 +8,7 @@ enum PlatformDetectorError: Error {
 }
 
 final class PlatformDetectorService {
-    static let shared = PlatformDetectorService(workingDirectory: FileManager.default.currentDirectoryPath)
+    static let shared = PlatformDetectorService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
 
     private let workingDirectory: String
 

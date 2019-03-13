@@ -8,7 +8,7 @@ enum XcodeProjectIntegrationError: Error {
 }
 
 final class XcodeProjectIntegrationService {
-    static let shared = XcodeProjectIntegrationService(workingDirectory: FileManager.default.currentDirectoryPath)
+    static let shared = XcodeProjectIntegrationService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
 
     private let workingDirectory: String
 
