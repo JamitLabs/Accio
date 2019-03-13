@@ -36,10 +36,15 @@ final class ManifestReaderService: SyntaxVisitor {
             throw ManifestReaderError.manifestIncomplete
         }
 
-        if manifest.frameworksPerTargetName.count == 1 {
-            print("Found \(manifest.frameworksPerTargetName.count) target in package manifest.", level: .info)
-        } else {
-            print("Found \(manifest.frameworksPerTargetName.count) targets in package manifest.", level: .info)
+        switch manifest.frameworksPerTargetName.count {
+        case 0:
+            print("No targets found in package manifest.", level: .info)
+
+        case 1:
+            print("Found 1 target in package manifest: \(manifest.frameworksPerTargetName.keys.first!)", level: .info)
+
+        default:
+            print("Found \(manifest.frameworksPerTargetName.count) targets in package manifest: \(manifest.frameworksPerTargetName.keys.sorted())", level: .info)
         }
 
         return manifest
