@@ -83,16 +83,17 @@ final class ManifestReaderService: SyntaxVisitor {
         }
 
         let checkoutsDirPath = "\(workingDirectory)/\(Constants.buildPath)/checkouts"
-        let checkoutDirNames = try! FileManager.default.contentsOfDirectory(atPath: checkoutsDirPath)
+        let checkoutDependencyDirNames: [String] = try! FileManager.default.contentsOfDirectory(atPath: checkoutsDirPath)
+        let checkoutDependencyPaths: [String] = checkoutDependencyDirNames.map { "\(checkoutsDirPath)/\($0)" }
 
         var frameworksPerTargetName: [String: [Framework]] = [:]
 
         for (targetName, dependencies) in targetsDependenciesTuples {
             frameworksPerTargetName[targetName] = dependencies.map { dependency in
-                let dependencyDirectoryNamePrefix = dependenciesUrls.first { $0.contains(dependency) }!.components(separatedBy: "/").last!
-                let directoryName = checkoutDirNames.first { $0.hasPrefix(dependencyDirectoryNamePrefix) }!
-
-                let checkoutProjectDir = "\(checkoutsDirPath)/\(directoryName)"
+                let checkoutProjectDir = checkoutDependencyPaths.first { dependencyProjectDir in
+                    let manifestContents = try! String(contentsOfFile: "\(dependencyProjectDir)/Package.swift")
+                    return manifestContents.contains("name: \"\(dependency)\"")
+                }!
                 let commitHash = run(bash: "git --git-dir \(checkoutProjectDir)/.git rev-parse HEAD").stdout
 
                 return Framework(
