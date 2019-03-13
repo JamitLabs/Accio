@@ -88,7 +88,7 @@ The manual linking problem (#3) was reported several times (for example [here](h
 
 Problem #1 is tracked [here](https://github.com/Carthage/Carthage/issues/2400) since April 2018 and was actually tackled recently by [this PR](https://github.com/Carthage/Carthage/pull/2716). But only god knows if and when it will be merged.
 
-The unwelcomingness (is there such a word?) of the Carthage community is so much so that developers tended to rather write another tool than to add the feature to Carthage itself. [Rome](https://github.com/blender/Rome) which attempts to fix the caching problem and [Carting](https://github.com/artemnovichkov/Carting) trying to fix the linking problem are two such examples. But more tools means higher chances that something could break over time and also complicates the configuration for both each developer and also the CI setup. 
+The unwelcomingness (is there such a word?) of the Carthage community is so much so that developers tended to rather write another tool than to add the feature to Carthage itself. [Rome](https://github.com/blender/Rome) which attempts to fix the caching problem and [Carting](https://github.com/artemnovichkov/Carting) trying to fix the linking problem are two such examples. But more tools means higher chances that something could break over time and also complicates the configuration for both each developer and also the CI setup.
 
 That's why Accio was designed as the all-in-one tool for any improvements you might need for managing dependencies using Carthage. It's explicitly open for new features from the community as long as they improve aspects of dependency management for the Apple developer community. Also, the implementation of Accio is pretty straight-forward, without the need to learn any reactive programming.
 
@@ -123,7 +123,7 @@ This step will create a template `Package.swift` file and set some `.gitignore` 
 
 Run `accio init help` to get a list of all available options.
 
-#### Adding Dependencies 
+#### Adding Dependencies
 
 Accio uses the [official SwiftPM manifest format](https://github.com/apple/swift-package-manager/blob/master/Documentation/PackageDescriptionV4.md) for specifying dependencies. So in order to add a dependency, you will need to do two things:
 
@@ -190,6 +190,16 @@ Specifying this can drastically cut your teams total dependencies building time 
 *Please note that a **global cache** is planned to be added as an opt-in option in the near future for those who trust our CI setup regarding security. Details will follow.*
 
 Run `accio install help` or `accio update help` to get a list of all available options.
+
+### Clearing local Cache
+
+Since Accio automatically caches any build products locally on your machine, this can result in the cache taking up quite some space after a while. So you might want to clear up the local cache from time to time by running the `clean` command:
+
+```bash
+accio clean
+```
+
+This will remove all build products from the cache and tell you how much file size was freed up. Please note that there's currently no way of clearing a shared cache to prevent any accidental deletes by a single team member. Please do this manually if your shared space gets too filled up.
 
 ## Contributing
 
