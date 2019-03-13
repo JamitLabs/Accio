@@ -18,7 +18,9 @@ class Manifest: Decodable {
 }
 
 extension Manifest.Target {
-    func frameworks(dependencyGraph: DependencyGraph) -> [Framework] {
-        return [] // TODO: not yet implemented
+    func frameworks(dependencyGraph: DependencyGraph) throws -> [Framework] {
+        return try dependencies.map { dependency in
+            return try Framework(targetDependency: dependency, dependencyGraph: dependencyGraph)
+        }
     }
 }

@@ -1,6 +1,10 @@
 import Foundation
 import SwiftShell
 
+enum DependencyResolverError: Error {
+    case dependencyGraphGenerationFailed
+}
+
 final class DependencyResolverService {
     static let shared = DependencyResolverService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
 
@@ -12,17 +16,33 @@ final class DependencyResolverService {
 
     func resolveDependencies() throws {
         print("Resolving dependencies ...", level: .info)
-        try bash("swift package --package-path \(contextSpecifiers()) resolve")
+        try bash("swift package \(contextSpecifiers()) resolve")
     }
 
     func updateDependencies() throws {
         print("Updating dependencies ...", level: .info)
-        try bash("swift package --package-path \(contextSpecifiers()) update")
+        try bash("swift package \(contextSpecifiers()) update")
     }
 
     func dependencyGraph() throws -> DependencyGraph {
         print("Generating dependency graph ...", level: .info)
-        let dependencyGraphJson = run(bash: "swift package \(contextSpecifiers()) show-dependencies --format json").stdout
+        let output = run(bash: "swift package \(contextSpecifiers()) show-dependencies --format json")
+
+        guard output.exitcode == 0 else {
+            print(output.stderror, level: .error)
+            throw DependencyResolverError.dependencyGraphGenerationFailed
+        }
+
+        let dependencyGraphJson: String = {
+            if output.stdout.hasPrefix("{") {
+                return output.stdout
+            } else {
+                let separator = "\n{"
+                return separator + output.stdout.components(separatedBy: separator).dropFirst().joined(separator: separator)
+            }
+        }()
+
+        print("Dependency graph JSON output is:\n\n\(dependencyGraphJson)\n\n", level: .verbose)
         return try JSONDecoder().decode(DependencyGraph.self, from: dependencyGraphJson.data(using: .utf8)!)
     }
 

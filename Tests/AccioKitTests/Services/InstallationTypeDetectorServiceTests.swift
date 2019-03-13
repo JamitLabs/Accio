@@ -27,7 +27,8 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
                         "Imperio",
                         "MungoHealer",
                         "SwiftyBeaver",
-                    ]
+                    ],
+                    path: "App"
                 )
             ]
         )
@@ -61,12 +62,7 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
             let frameworkDirName = try! FileManager.default.contentsOfDirectory(atPath: checkoutsDir.path).first { $0.hasPrefix(frameworkName) }!
             let frameworkDir = checkoutsDir.appendingPathComponent(frameworkDirName)
 
-            let framework = Framework(
-                commit: "aaa",
-                directory: frameworkDir.path,
-                xcodeProjectPath: frameworkDir.appendingPathComponent("\(frameworkName).xcodeproj").path,
-                scheme: frameworkName
-            )
+            let framework = Framework(graphDependency: DependencyGraph.Dependency(name: frameworkName, path: frameworkDir.path, dependencies: []))
 
             let installationType = try! InstallationTypeDetectorService.shared.detectInstallationType(for: framework)
             XCTAssertEqual(installationType, expectedInstallationType, "Expected \(frameworkName) to be of type \(expectedInstallationType).")

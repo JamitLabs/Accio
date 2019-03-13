@@ -12,7 +12,7 @@ final class CachedBuilderService {
     func frameworkProducts(target: Manifest.Target, dependencyGraph: DependencyGraph, platform: Platform) throws -> [FrameworkProduct] {
         var frameworkProducts: [FrameworkProduct] = []
 
-        for framework in target.frameworks(dependencyGraph: dependencyGraph) {
+        for framework in try target.frameworks(dependencyGraph: dependencyGraph) {
             if let cachedFrameworkProduct = try frameworkCachingService.cachedProduct(framework: framework, platform: platform) {
                 frameworkProducts.append(cachedFrameworkProduct)
             } else {

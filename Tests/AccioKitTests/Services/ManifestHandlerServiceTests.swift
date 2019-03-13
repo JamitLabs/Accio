@@ -1,7 +1,7 @@
 @testable import AccioKit
 import XCTest
 
-class ManifestReaderServiceTests: XCTestCase {
+class ManifestCreatorServiceTests: XCTestCase {
     private let testResourcesDir: URL = FileManager.userCacheDirUrl.appendingPathComponent("AccioTestResources")
 
     private var manifestResource: Resource {
@@ -30,7 +30,8 @@ class ManifestReaderServiceTests: XCTestCase {
                               "Imperio",
                               "MungoHealer",
                               "SwiftyBeaver",
-                            ]
+                            ],
+                            path: "TestProject-iOS"
                         )
                     ]
                 )
@@ -46,6 +47,13 @@ class ManifestReaderServiceTests: XCTestCase {
         )
     }
 
+    private var exampleSwiftFile: Resource {
+        return Resource(
+            url: testResourcesDir.appendingPathComponent("TestProject-iOS/Example.swift"),
+            contents: "class Example {}"
+        )
+    }
+
     override func setUp() {
         super.setUp()
 
@@ -53,16 +61,17 @@ class ManifestReaderServiceTests: XCTestCase {
         try! bash("mkdir \(testResourcesDir.path)")
     }
 
-    func testReadManifest() {
-        resourcesLoaded([manifestResource, xcodeProjectResource]) {
+    func testLoadManifest() {
+        resourcesLoaded([manifestResource, xcodeProjectResource, exampleSwiftFile]) {
             try! DependencyResolverService(workingDirectory: testResourcesDir.path).resolveDependencies()
-            let manifest = try! ManifestReaderService(workingDirectory: testResourcesDir.path).readManifest()
+            let dependencyGraph = try! DependencyResolverService(workingDirectory: testResourcesDir.path).dependencyGraph()
+            let manifest = try! ManifestHandlerService(workingDirectory: testResourcesDir.path).loadManifest()
 
-            XCTAssertEqual(manifest.projectName, "TestProject")
-            XCTAssertEqual(manifest.frameworksPerTargetName.count, 1)
-            XCTAssertEqual(manifest.frameworksPerTargetName.keys.first, "TestProject-iOS")
+            XCTAssertEqual(manifest.name, "TestProject")
+            XCTAssertEqual(manifest.targets.count, 1)
+            XCTAssertEqual(manifest.targets.first!.name, "TestProject-iOS")
 
-            let foundFrameworks = manifest.frameworksPerTargetName.first!.value
+            let foundFrameworks = try! manifest.targets.first!.frameworks(dependencyGraph: dependencyGraph)
             XCTAssertEqual(foundFrameworks.count, 5)
 
             XCTAssertEqual(foundFrameworks[0].scheme, "HandySwift")
@@ -89,6 +98,63 @@ class ManifestReaderServiceTests: XCTestCase {
             XCTAssert(foundFrameworks[4].directory.contains("checkouts/SwiftyBeaver.git-"))
             XCTAssert(foundFrameworks[4].xcodeProjectPath.contains("SwiftyBeaver.xcodeproj"))
             XCTAssertEqual(foundFrameworks[4].commit.count, 40)
+        }
+    }
+
+    func testCreateManifestWithoutExistingManifest() {
+        let manifestCreatorService = ManifestHandlerService(workingDirectory: testResourcesDir.path)
+
+        XCTAssertFalse(FileManager.default.fileExists(atPath: manifestResource.url.path))
+
+        try! manifestCreatorService.createManifestFromDefaultTemplateIfNeeded(projectName: "TestProject", targetNames: ["iOS-App", "tvOS-App"])
+
+        XCTAssertTrue(FileManager.default.fileExists(atPath: manifestResource.url.path))
+        XCTAssertEqual(
+            try! String(contentsOf: manifestResource.url),
+            """
+                // swift-tools-version:4.2
+                import PackageDescription
+
+                let package = Package(
+                    name: \"TestProject\",
+                    products: [],
+                    dependencies: [
+                        // add your dependencies here, for example:
+                        // .package(url: \"https://github.com/User/Project.git\", .upToNextMajor(from: \"1.0.0\")),
+                    ],
+                    targets: [
+                        .target(
+                            name: \"iOS-App\",
+                            dependencies: [
+                                // add your dependencies scheme names here, for example:
+                                // \"Project\",
+                            ],
+                            path: \"iOS-App\"
+                        ),
+                        .target(
+                            name: \"tvOS-App\",
+                            dependencies: [
+                                // add your dependencies scheme names here, for example:
+                                // \"Project\",
+                            ],
+                            path: \"tvOS-App\"
+                        ),
+                    ]
+                )
+
+                """
+        )
+    }
+
+    func testCreateManifestWitExistingManifest() {
+        let manifestCreatorService = ManifestHandlerService(workingDirectory: testResourcesDir.path)
+
+        resourcesLoaded([manifestResource]) {
+            XCTAssertTrue(FileManager.default.fileExists(atPath: manifestResource.url.path))
+            try! manifestCreatorService.createManifestFromDefaultTemplateIfNeeded(projectName: "TestProject", targetNames: ["iOS-App", "tvOS-App"])
+
+            XCTAssertTrue(FileManager.default.fileExists(atPath: manifestResource.url.path))
+            XCTAssertEqual(try! String(contentsOf: manifestResource.url), manifestResource.contents)
         }
     }
 }
