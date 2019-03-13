@@ -14,4 +14,15 @@ extension FileManager {
 
         createFile(atPath: path, contents: contents, attributes: attributes)
     }
+
+    func directorySizeInBytes(atPath path: String) throws -> Int64 {
+        let folderUrl = URL(fileURLWithPath: path)
+        let relativeFilePaths: [String] = try FileManager.default.subpathsOfDirectory(atPath: path)
+        let filePaths: [String] = relativeFilePaths.map { folderUrl.appendingPathComponent($0).path }
+        return try filePaths.reduce(0) { $0 + (try fileSizeInBytes(atPath: $1)) }
+    }
+
+    func fileSizeInBytes(atPath path: String) throws -> Int64 {
+        return Int64(try FileManager.default.attributesOfItem(atPath: path)[FileAttributeKey.size] as! UInt64)
+    }
 }
