@@ -9,11 +9,11 @@ final class CachedBuilderService {
         self.carthageBuilderService = CarthageBuilderService(frameworkCachingService: frameworkCachingService)
     }
 
-    func frameworkProducts(target: Target, frameworks: [Framework]) throws -> [FrameworkProduct] {
+    func frameworkProducts(target: Manifest.Target, dependencyGraph: DependencyGraph, platform: Platform) throws -> [FrameworkProduct] {
         var frameworkProducts: [FrameworkProduct] = []
 
-        for framework in frameworks {
-            if let cachedFrameworkProduct = try frameworkCachingService.cachedProduct(framework: framework, platform: target.platform) {
+        for framework in target.frameworks(dependencyGraph: dependencyGraph) {
+            if let cachedFrameworkProduct = try frameworkCachingService.cachedProduct(framework: framework, platform: platform) {
                 frameworkProducts.append(cachedFrameworkProduct)
             } else {
                 switch try InstallationTypeDetectorService.shared.detectInstallationType(for: framework) {
@@ -22,7 +22,7 @@ final class CachedBuilderService {
                     fallthrough
 
                 case .carthage:
-                    let frameworkProduct = try carthageBuilderService.build(framework: framework, platform: target.platform)
+                    let frameworkProduct = try carthageBuilderService.build(framework: framework, platform: platform)
                     frameworkProducts.append(frameworkProduct)
                 }
             }

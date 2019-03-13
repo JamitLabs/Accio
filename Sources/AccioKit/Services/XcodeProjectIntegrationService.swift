@@ -16,12 +16,12 @@ final class XcodeProjectIntegrationService {
         self.workingDirectory = workingDirectory
     }
 
-    func updateDependencies(of target: Target, in projectName: String, with frameworkProducts: [FrameworkProduct]) throws {
+    func updateDependencies(of target: Manifest.Target, for platform: Platform, in projectName: String, with frameworkProducts: [FrameworkProduct]) throws {
         print("Relinking build products with targets in Xcode project ...", level: .info)
 
-        let dependenciesPlatformPath = "\(workingDirectory)/\(Constants.dependenciesPath)/\(target.platform.rawValue)"
+        let dependenciesPlatformPath = "\(workingDirectory)/\(Constants.dependenciesPath)/\(platform.rawValue)"
         let copiedFrameworkProducts: [FrameworkProduct] = try copyFrameworkProducts(frameworkProducts, to: dependenciesPlatformPath)
-        try linkFrameworks(copiedFrameworkProducts, with: target, in: projectName)
+        try linkFrameworks(copiedFrameworkProducts, with: target, for: platform, in: projectName)
     }
 
     private func copyFrameworkProducts(_ frameworkProducts: [FrameworkProduct], to targetPath: String) throws -> [FrameworkProduct] {
@@ -41,7 +41,7 @@ final class XcodeProjectIntegrationService {
         return copiedFrameworkProducts
     }
 
-    private func linkFrameworks(_ frameworkProducts: [FrameworkProduct], with target: Target, in projectName: String) throws {
+    private func linkFrameworks(_ frameworkProducts: [FrameworkProduct], with target: Manifest.Target, for platform: Platform, in projectName: String) throws {
         let xcodeProjectPath = "\(workingDirectory)/\(projectName).xcodeproj"
         let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
         let pbxproj = projectFile.pbxproj
@@ -58,7 +58,7 @@ final class XcodeProjectIntegrationService {
 
         let rootGroup = try pbxproj.rootGroup()!
         let dependenciesGroup = try rootGroup.group(named: Constants.xcodeDependenciesGroup) ?? rootGroup.addGroup(named: Constants.xcodeDependenciesGroup, options: .withoutFolder)[0]
-        let platformGroup = try dependenciesGroup.group(named: target.platform.rawValue) ?? dependenciesGroup.addGroup(named: target.platform.rawValue, options: .withoutFolder)[0]
+        let platformGroup = try dependenciesGroup.group(named: platform.rawValue) ?? dependenciesGroup.addGroup(named: platform.rawValue, options: .withoutFolder)[0]
 
         let frameworksToAdd = frameworkProducts.filter { product in !platformGroup.children.compactMap { $0.path }.contains { $0.hasSuffix(product.frameworkDirUrl.lastPathComponent) } }
         let platformGroupName = "\(Constants.xcodeDependenciesGroup)/\(platformGroup.name!)"

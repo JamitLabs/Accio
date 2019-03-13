@@ -5,4 +5,5 @@ struct Framework {
     let directory: String
     let xcodeProjectPath: String
     let scheme: String
+    let dependencies: [Framework]
 }

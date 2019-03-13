@@ -29,7 +29,7 @@ public class InitCommand: Command {
             throw InitCommandError.missingTargetNames
         }
 
-        try ManifestCreatorService.shared.createManifestFromDefaultTemplateIfNeeded(projectName: projectName, targetNames: targetNames)
+        try ManifestHandlerService.shared.createManifestFromDefaultTemplateIfNeeded(projectName: projectName, targetNames: targetNames)
         try GitIgnoreIntegrationService.shared.addIgnoreEntriesIfNeeded()
 
         print("Successfully initialized project.", level: .info)

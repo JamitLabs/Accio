@@ -16,7 +16,7 @@ class ManifestCreatorServiceTests: XCTestCase {
     }
 
     func testCreateManifestWithoutExistingManifest() {
-        let manifestCreatorService = ManifestCreatorService(workingDirectory: testResourcesDir.path)
+        let manifestCreatorService = ManifestHandlerService(workingDirectory: testResourcesDir.path)
 
         XCTAssertFalse(FileManager.default.fileExists(atPath: manifest.url.path))
 
@@ -61,7 +61,7 @@ class ManifestCreatorServiceTests: XCTestCase {
     }
 
     func testCreateManifestWitExistingManifest() {
-        let manifestCreatorService = ManifestCreatorService(workingDirectory: testResourcesDir.path)
+        let manifestCreatorService = ManifestHandlerService(workingDirectory: testResourcesDir.path)
 
         resourcesLoaded([manifest]) {
             XCTAssertTrue(FileManager.default.fileExists(atPath: manifest.url.path))

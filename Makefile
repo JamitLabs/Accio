@@ -24,16 +24,10 @@ accio: $(SOURCES)
 install: accio
 	@install -d "$(bindir)" "$(libdir)"
 	@install "$(BUILDDIR)/release/accio" "$(bindir)"
-	@install "$(BUILDDIR)/release/libSwiftSyntax.dylib" "$(libdir)"
-	@install_name_tool -change \
-		"$(BUILDDIR)/x86_64-apple-macosx10.10/release/libSwiftSyntax.dylib" \
-		"$(libdir)/libSwiftSyntax.dylib" \
-		"$(bindir)/accio"
 
 .PHONY: uninstall
 uninstall:
 	@rm -rf "$(bindir)/accio"
-	@rm -rf "$(libdir)/libSwiftSyntax.dylib"
 
 .PHONY: clean
 distclean:
