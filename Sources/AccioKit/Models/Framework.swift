@@ -14,13 +14,15 @@ struct Framework {
     func xcodeProjectPath() throws -> String {
         let rootFileNames: [String] = ["\(projectName).xcworkspace", "\(projectName).xcodeproj"] + (try FileManager.default.contentsOfDirectory(atPath: projectDirectory))
 
-        let workspaceFileNames = rootFileNames.filter { $0.hasSuffix(".xcworkspace") }
-        let projectFileNames = rootFileNames.filter { $0.hasSuffix(".xcodeproj") }
+        let workspaceFileNames: [String] = rootFileNames.filter { $0.hasSuffix(".xcworkspace") }
+        let projectFileNames: [String] = rootFileNames.filter { $0.hasSuffix(".xcodeproj") }
 
-        let xcodeFileNames = workspaceFileNames + projectFileNames
-        return xcodeFileNames.first { xcodeFileName in
+        let xcodeFileNames: [String] = workspaceFileNames + projectFileNames
+        let foundXcodeFileName: String = try xcodeFileNames.first { xcodeFileName in
             let sharedSchemesDirPath = URL(fileURLWithPath: projectDirectory).appendingPathComponent("\(xcodeFileName)/xcshareddata/xcschemes").path
-            return FileManager.default.fileExists(atPath: sharedSchemesDirPath)
+            return try FileManager.default.fileExists(atPath: sharedSchemesDirPath) && !(try FileManager.default.contentsOfDirectory(atPath: sharedSchemesDirPath).isEmpty)
         }!
+
+        return URL(fileURLWithPath: projectDirectory).appendingPathComponent(foundXcodeFileName).path
     }
 }

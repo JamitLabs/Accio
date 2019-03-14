@@ -1,11 +1,18 @@
 import Foundation
 
+enum XcodeProjectSchemeHandlerError: Error {
+    case noSharedSchemesFound
+}
+
 final class XcodeProjectSchemeHandlerService {
     static let shared = XcodeProjectSchemeHandlerService()
 
     func removeUnnecessarySharedSchemes(from framework: Framework) throws {
         let xcodeSchemesDirectoryUrl = URL(fileURLWithPath: try framework.xcodeProjectPath()).appendingPathComponent("xcshareddata/xcschemes")
-        guard FileManager.default.fileExists(atPath: xcodeSchemesDirectoryUrl.path) else { return }
+        guard FileManager.default.fileExists(atPath: xcodeSchemesDirectoryUrl.path) else {
+            print("Could not find any shared schemes for framework '\(framework.libraryName)' in expected path \(xcodeSchemesDirectoryUrl.path)", level: .error)
+            throw XcodeProjectSchemeHandlerError.noSharedSchemesFound
+        }
 
         let allSchemeFileNames: [String] = try FileManager.default.contentsOfDirectory(atPath: xcodeSchemesDirectoryUrl.path).filter { $0.hasSuffix(".xcscheme") }
         guard allSchemeFileNames.count > 1 else {
