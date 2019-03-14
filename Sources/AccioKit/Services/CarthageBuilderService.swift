@@ -16,7 +16,7 @@ final class CarthageBuilderService {
         print("Building scheme \(framework.libraryName) with Carthage ...", level: .info)
 
         // link alerady built subdependencies from previous calls of this method
-        for requiredFramework in framework.requiredFrameworks {
+        for requiredFramework in framework.requiredFrameworks.flattenedDeepFirstOrder() {
             guard let requiredFrameworkProduct = alreadyBuiltFrameworkProducts.first(where: { $0.libraryName == requiredFramework.libraryName }) else {
                 print("Could not find required framework '\(requiredFramework.libraryName)'s build products in already built frameworks.", level: .error)
                 throw CarthageBuilderError.requiredBuildProductsMissing
