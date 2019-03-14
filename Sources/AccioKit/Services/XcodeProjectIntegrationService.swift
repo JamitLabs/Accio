@@ -92,6 +92,7 @@ final class XcodeProjectIntegrationService {
             }
         }
 
+        platformGroup.children.removeDuplicates()
         platformGroup.children.sort { $0.name! < $1.name! }
 
         var copyBuildScript: PBXShellScriptBuildPhase! = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as? PBXShellScriptBuildPhase
