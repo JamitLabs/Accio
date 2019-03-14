@@ -32,6 +32,14 @@ final class XcodeProjectIntegrationService {
             let frameworkDirPath = "\(targetPath)/\(frameworkProduct.frameworkDirUrl.lastPathComponent)"
             let symbolsFilePath = "\(targetPath)/\(frameworkProduct.symbolsFileUrl.lastPathComponent)"
 
+            if FileManager.default.fileExists(atPath: frameworkDirPath) {
+                try bash("rm -rf '\(frameworkDirPath)'")
+            }
+
+            if FileManager.default.fileExists(atPath: symbolsFilePath) {
+                try bash("rm -rf '\(symbolsFilePath)'")
+            }
+
             try bash("cp -R '\(frameworkProduct.frameworkDirPath)' '\(frameworkDirPath)'")
             try bash("cp -R '\(frameworkProduct.symbolsFilePath)' '\(symbolsFilePath)'")
 
@@ -65,7 +73,7 @@ final class XcodeProjectIntegrationService {
 
         if !frameworksToAdd.isEmpty {
             let frameworkNames = frameworksToAdd.map { $0.frameworkDirUrl.lastPathComponent.components(separatedBy: ".").first! }
-            print("Adding frameworks \(frameworkNames) to group '\(platformGroupName)' in project navigator & linking with target '\(appTarget.targetName)'.", level: .info)
+            print("Adding frameworks \(frameworkNames) to group '\(platformGroupName)' in project navigator & linking with target '\(appTarget.targetName)' ...", level: .info)
 
             for frameworkToAdd in frameworksToAdd {
                 let frameworkFileRef = try platformGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
@@ -77,12 +85,14 @@ final class XcodeProjectIntegrationService {
 
         if !filesToRemove.isEmpty {
             let fileNames = filesToRemove.map { $0.name! }
-            print("Removing references \(fileNames) from group '\(platformGroupName)' and unlinking from target '\(appTarget.targetName)'.", level: .info)
+            print("Removing references \(fileNames) from group '\(platformGroupName)' and unlinking from target '\(appTarget.targetName)' ...", level: .info)
 
             for fileToRemove in filesToRemove {
                 platformGroup.children.removeAll { $0 === fileToRemove }
             }
         }
+
+        platformGroup.children.sort { $0.name! < $1.name! }
 
         var copyBuildScript: PBXShellScriptBuildPhase! = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as? PBXShellScriptBuildPhase
         if copyBuildScript == nil {
