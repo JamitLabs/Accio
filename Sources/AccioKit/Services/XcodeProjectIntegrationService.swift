@@ -64,6 +64,14 @@ final class XcodeProjectIntegrationService {
             throw XcodeProjectIntegrationError.frameworksBuildPhaseNotFound
         }
 
+        // ensure the framework search path includes the dependencies path
+        for buildConfiguration in targetObject.buildConfigurationList!.buildConfigurations {
+            let frameworkSearchPaths: [String] = buildConfiguration.buildSettings["FRAMEWORK_SEARCH_PATHS"] as! [String]
+            if !frameworkSearchPaths.contains("$(PROJECT_DIR)/Dependencies/\(platform.rawValue)") {
+                buildConfiguration.buildSettings["FRAMEWORK_SEARCH_PATHS"] = frameworkSearchPaths + ["$(PROJECT_DIR)/Dependencies/\(platform.rawValue)"]
+            }
+        }
+
         let rootGroup = try pbxproj.rootGroup()!
         let dependenciesGroup = try rootGroup.group(named: Constants.xcodeDependenciesGroup) ?? rootGroup.addGroup(named: Constants.xcodeDependenciesGroup, options: .withoutFolder)[0]
         let platformGroup = try dependenciesGroup.group(named: platform.rawValue) ?? dependenciesGroup.addGroup(named: platform.rawValue, options: .withoutFolder)[0]
