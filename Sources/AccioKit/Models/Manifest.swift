@@ -12,6 +12,7 @@ class Manifest: Decodable {
         }
 
         let name: String
+        let type: String
         let dependencies: [Dependency]
     }
 
@@ -29,7 +30,7 @@ class Manifest: Decodable {
 
 extension Manifest {
     var appTargets: [AppTarget] {
-        return targets.map { AppTarget(projectName: name, targetName: $0.name, dependentLibraryNames: $0.dependencies.map { $0.name }) }
+        return targets.filter { $0.type == "regular" }.map { AppTarget(projectName: name, targetName: $0.name, dependentLibraryNames: $0.dependencies.map { $0.name }) }
     }
 
     func frameworkDependencies(ofLibrary libraryName: String, dependencyGraph: DependencyGraph) throws -> [Framework] {
@@ -41,7 +42,7 @@ extension Manifest {
         }
 
         let productsTargets: [Target] = targets.filter { product.targets.contains($0.name) }
-        let dependencyTargetNames: [String] = Array(Set(productsTargets.flatMap { $0.dependencies.map { $0.name } }))
+        let dependencyTargetNames: [String] = Array(Set(productsTargets.flatMap { $0.dependencies.map { $0.name } })).sorted()
 
         let projectTargetNames: [String] = targets.map { $0.name }
         let dependencyExternalLibraryNames: [String] = dependencyTargetNames.filter { !projectTargetNames.contains($0) }

@@ -13,6 +13,8 @@ class FrameworkCachingServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
+        Constants.useTestPaths = true
+
         try! bash("rm -rf '\(Constants.localCachePath)'")
         try! bash("rm -rf '\(sharedCachePath)'")
 
