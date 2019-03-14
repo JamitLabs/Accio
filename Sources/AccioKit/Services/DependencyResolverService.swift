@@ -42,7 +42,7 @@ final class DependencyResolverService {
             }
         }()
 
-        print("Dependency graph JSON output is:\n\n\(dependencyGraphJson)\n\n", level: .verbose)
+        print("Dependency graph JSON output is:\n\(dependencyGraphJson)", level: .verbose)
         return try JSONDecoder.swiftPM.decode(DependencyGraph.self, from: dependencyGraphJson.data(using: .utf8)!)
     }
 
