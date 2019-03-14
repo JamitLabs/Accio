@@ -10,7 +10,7 @@ enum Constants {
 
     static var localCachePath: String {
         if useTestPaths {
-            FileManager.userCacheDirUrl.appendingPathComponent("AccioTest/Cache").path
+            return FileManager.userCacheDirUrl.appendingPathComponent("AccioTest/Cache").path
         }
 
         return FileManager.userCacheDirUrl.appendingPathComponent("Accio/Cache").path

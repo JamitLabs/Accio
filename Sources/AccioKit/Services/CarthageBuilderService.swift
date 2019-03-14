@@ -14,7 +14,17 @@ final class CarthageBuilderService {
     func build(framework: Framework, platform: Platform) throws -> FrameworkProduct {
         print("Building scheme \(framework.libraryName) with Carthage ...", level: .info)
 
-        // TODO: subdependencies are currently not supported, should be built up front and copied to "\(framwork.directory)/Carthage/Build/\(platform.rawValue)"
+        for requiredFramework in framework.requiredFrameworks {
+            let requiredFrameworkProduct = requiredFramework.expectedFrameworkProduct(platform: platform)
+            let productsTargetDirectoryUrl = URL(fileURLWithPath: framework.projectDirectory).appendingPathComponent("Carthage/Build/\(platform.rawValue)")
+
+            print("Linking required frameworks build products '\(requiredFrameworkProduct.frameworkDirPath)(.dSYM)' into directory '\(productsTargetDirectoryUrl.path)' ...", level: .verbose)
+
+            try bash("mkdir -p '\(productsTargetDirectoryUrl.path)'")
+            try bash("ln -s '\(requiredFrameworkProduct.frameworkDirPath)' '\(productsTargetDirectoryUrl.appendingPathComponent("\(requiredFramework.libraryName).framework").path)'")
+            try bash("ln -s '\(requiredFrameworkProduct.symbolsFilePath)' '\(productsTargetDirectoryUrl.appendingPathComponent("\(requiredFramework.libraryName).framework.dSYM").path)'")
+        }
+
         try bash("carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current")
 
         let platformBuildDir = "\(framework.projectDirectory)/Carthage/Build/\(platform)"

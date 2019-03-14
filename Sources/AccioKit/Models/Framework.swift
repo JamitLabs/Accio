@@ -14,4 +14,11 @@ struct Framework {
     var xcodeProjectPath: String {
         return URL(fileURLWithPath: projectDirectory).appendingPathComponent("\(projectName).xcodeproj").path
     }
+
+    func expectedFrameworkProduct(platform: Platform) -> FrameworkProduct {
+        return FrameworkProduct(
+            frameworkDirPath: URL(fileURLWithPath: projectDirectory).appendingPathComponent("Carthage/Build/\(platform.rawValue)/\(libraryName).framework").path,
+            symbolsFilePath: URL(fileURLWithPath: projectDirectory).appendingPathComponent("Carthage/Build/\(platform.rawValue)/\(libraryName).framework.dSYM").path
+        )
+    }
 }
