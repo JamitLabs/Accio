@@ -11,7 +11,7 @@ extension AppTarget {
         var frameworks: [Framework] = []
 
         for libraryName in dependentLibraryNames {
-            frameworks += try manifest.frameworkDependencies(ofLibrary: libraryName, dependencyGraph: dependencyGraph)
+            frameworks.append(try dependencyGraph.framework(libraryName: libraryName))
         }
 
         return frameworks

@@ -57,8 +57,8 @@ class ManifestCreatorServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        try! bash("rm -rf \(testResourcesDir.path)")
-        try! bash("mkdir \(testResourcesDir.path)")
+        try! bash("rm -rf '\(testResourcesDir.path)'")
+        try! bash("mkdir '\(testResourcesDir.path)'")
     }
 
     func testLoadManifest() {

@@ -8,7 +8,7 @@ struct Framework {
     let requiredFrameworks: [Framework]
 
     var commitHash: String {
-        return run(bash: "git --git-dir \(projectDirectory)/.git rev-parse HEAD").stdout
+        return run(bash: "git --git-dir '\(projectDirectory)/.git' rev-parse HEAD").stdout
     }
 
     var xcodeProjectPath: String {

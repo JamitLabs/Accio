@@ -13,18 +13,18 @@ class FrameworkCachingServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        try! bash("rm -rf \(Constants.localCachePath)")
-        try! bash("rm -rf \(sharedCachePath)")
+        try! bash("rm -rf '\(Constants.localCachePath)'")
+        try! bash("rm -rf '\(sharedCachePath)'")
 
-        try! bash("mkdir -p \(FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework").path)")
-        try! bash("touch \(FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework/Example").path)")
-        try! bash("touch \(FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework.dSYM").path)")
+        try! bash("mkdir -p '\(FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework").path)'")
+        try! bash("touch '\(FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework/Example").path)'")
+        try! bash("touch '\(FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework.dSYM").path)'")
     }
 
     override func tearDown() {
         super.tearDown()
 
-        try! bash("rm -rf \(Constants.dependenciesPath)")
+        try! bash("rm -rf '\(Constants.dependenciesPath)'")
     }
 
     func testCachingProductWithoutSharedCachePath() {

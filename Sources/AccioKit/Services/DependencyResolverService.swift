@@ -47,6 +47,6 @@ final class DependencyResolverService {
     }
 
     private func contextSpecifiers() -> String {
-        return "--package-path \(workingDirectory) --build-path \(workingDirectory)/\(Constants.buildPath)"
+        return "--package-path '\(workingDirectory)' --build-path '\(workingDirectory)/\(Constants.buildPath)'"
     }
 }

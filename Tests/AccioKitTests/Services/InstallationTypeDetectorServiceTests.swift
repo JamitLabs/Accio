@@ -40,7 +40,7 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        try! bash("mkdir -p \(testResourcesDir.path)")
+        try! bash("mkdir -p '\(testResourcesDir.path)'")
 
         FileManager.default.createFile(atPath: testResourcesDir.appendingPathComponent("Package.swift").path, contents: manifestContents.data(using: .utf8))
         try! DependencyResolverService(workingDirectory: testResourcesDir.path).resolveDependencies()

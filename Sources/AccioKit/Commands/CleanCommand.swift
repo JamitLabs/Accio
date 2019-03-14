@@ -15,7 +15,7 @@ public class CleanCommand: Command {
         let localCacheDirectorySizeInBytes = try FileManager.default.directorySizeInBytes(atPath: Constants.localCachePath)
 
         print("Cleaning local cache ...", level: .info)
-        try bash("rm -rf \(Constants.localCachePath)")
+        try bash("rm -rf '\(Constants.localCachePath)'")
 
         let byteCountFormatter = ByteCountFormatter()
         let localCacheSizeString = byteCountFormatter.string(fromByteCount: localCacheDirectorySizeInBytes)

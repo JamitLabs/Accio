@@ -47,7 +47,7 @@ extension DependencyGraph.Dependency {
 
 extension DependencyGraph {
     func framework(libraryName: String) throws -> Framework {
-        guard let dependency = try dependencies.first(where: { try $0.manifest().products.contains { $0.name == libraryName } }) else {
+        guard let dependency = try deepFirstDependencies.first(where: { try $0.manifest().products.contains { $0.name == libraryName } }) else {
             print("DependencyGraph: Could not find library product with name '\(libraryName)' in package manifest for project '\(name)'.", level: .error)
             throw DependencyGraphError.libraryNotFound
         }

@@ -45,7 +45,7 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        try! bash("rm -rf \(testResourcesDir.path)")
+        try! bash("rm -rf '\(testResourcesDir.path)'")
     }
 
     func testUpdateDependencies() {

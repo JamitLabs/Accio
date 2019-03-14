@@ -15,7 +15,7 @@ final class CarthageBuilderService {
         print("Building scheme \(framework.libraryName) with Carthage ...", level: .info)
 
         // TODO: subdependencies are currently not supported, should be built up front and copied to "\(framwork.directory)/Carthage/Build/\(platform.rawValue)"
-        try bash("carthage build --project-directory \(framework.projectDirectory) --platform \(platform.rawValue) --no-skip-current")
+        try bash("carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current")
 
         let platformBuildDir = "\(framework.projectDirectory)/Carthage/Build/\(platform)"
         let frameworkProduct = FrameworkProduct(

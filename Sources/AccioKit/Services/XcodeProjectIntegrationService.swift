@@ -25,15 +25,15 @@ final class XcodeProjectIntegrationService {
     }
 
     private func copyFrameworkProducts(_ frameworkProducts: [FrameworkProduct], to targetPath: String) throws -> [FrameworkProduct] {
-        try bash("mkdir -p \(targetPath)")
+        try bash("mkdir -p '\(targetPath)'")
         var copiedFrameworkProducts: [FrameworkProduct] = []
 
         for frameworkProduct in frameworkProducts {
             let frameworkDirPath = "\(targetPath)/\(frameworkProduct.frameworkDirUrl.lastPathComponent)"
             let symbolsFilePath = "\(targetPath)/\(frameworkProduct.symbolsFileUrl.lastPathComponent)"
 
-            try bash("cp -R \(frameworkProduct.frameworkDirPath) \(frameworkDirPath)")
-            try bash("cp -R \(frameworkProduct.symbolsFilePath) \(symbolsFilePath)")
+            try bash("cp -R '\(frameworkProduct.frameworkDirPath)' '\(frameworkDirPath)'")
+            try bash("cp -R '\(frameworkProduct.symbolsFilePath)' '\(symbolsFilePath)'")
 
             copiedFrameworkProducts.append(FrameworkProduct(frameworkDirPath: frameworkDirPath, symbolsFilePath: symbolsFilePath))
         }
