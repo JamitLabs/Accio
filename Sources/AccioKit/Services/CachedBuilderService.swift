@@ -22,7 +22,7 @@ final class CachedBuilderService {
                     fallthrough
 
                 case .carthage:
-                    let frameworkProduct = try carthageBuilderService.build(framework: framework, platform: platform)
+                    let frameworkProduct = try carthageBuilderService.build(framework: framework, platform: platform, alreadyBuiltFrameworkProducts: frameworkProducts)
                     frameworkProducts.append(frameworkProduct)
                 }
             }
