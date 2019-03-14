@@ -24,4 +24,20 @@ enum Platform: String {
             return .iOS
         }
     }
+
+    var deploymentTargetBuildSetting: String {
+        switch self {
+        case .iOS:
+            return "IPHONEOS_DEPLOYMENT_TARGET"
+
+        case .macOS:
+            return "MACOSX_DEPLOYMENT_TARGET"
+
+        case .tvOS:
+            return "TVOS_DEPLOYMENT_TARGET"
+
+        case .watchOS:
+            return "WATCHOS_DEPLOYMENT_TARGET"
+        }
+    }
 }

@@ -18,9 +18,9 @@ struct Framework {
         let projectFileNames: [String] = rootFileNames.filter { $0.hasSuffix(".xcodeproj") }
 
         let xcodeFileNames: [String] = workspaceFileNames + projectFileNames
-        let foundXcodeFileName: String = try xcodeFileNames.first { xcodeFileName in
+        let foundXcodeFileName: String = xcodeFileNames.first { xcodeFileName in
             let sharedSchemesDirPath = URL(fileURLWithPath: projectDirectory).appendingPathComponent("\(xcodeFileName)/xcshareddata/xcschemes").path
-            return try FileManager.default.fileExists(atPath: sharedSchemesDirPath) && !(try FileManager.default.contentsOfDirectory(atPath: sharedSchemesDirPath).isEmpty)
+            return FileManager.default.fileExists(atPath: sharedSchemesDirPath)
         }!
 
         return URL(fileURLWithPath: projectDirectory).appendingPathComponent(foundXcodeFileName).path
