@@ -36,6 +36,9 @@ final class CarthageBuilderService {
         try XcodeProjectSchemeHandlerService.shared.removeUnnecessarySharedSchemes(from: framework)
         try bash("carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current")
 
+        // revert any changes to prevent issues when removing checked out dependency
+        try bash("git --git-dir '\(framework.projectDirectory)/.git' clean -fd")
+
         let platformBuildDir = "\(framework.projectDirectory)/Carthage/Build/\(platform)"
         let frameworkProduct = FrameworkProduct(
             frameworkDirPath: "\(platformBuildDir)/\(framework.libraryName).framework",
