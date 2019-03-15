@@ -5,7 +5,7 @@ final class InstallationTypeDetectorService {
     static let shared = InstallationTypeDetectorService()
 
     func detectInstallationType(for framework: Framework) throws -> InstallationType {
-        if try framework.containsXcodeProjectWithLibraryScheme() {
+        if !(try framework.sharedSchemePaths().isEmpty) {
             return .carthage
         } else {
             return .swiftPackageManager

@@ -66,7 +66,7 @@ final class XcodeProjectIntegrationService {
 
         // ensure the framework search path includes the dependencies path
         for buildConfiguration in targetObject.buildConfigurationList!.buildConfigurations {
-            let frameworkSearchPaths: [String] = buildConfiguration.buildSettings["FRAMEWORK_SEARCH_PATHS"] as! [String]
+            let frameworkSearchPaths: [String] = buildConfiguration.buildSettings["FRAMEWORK_SEARCH_PATHS"] as? [String] ?? ["$(inherited)"]
             if !frameworkSearchPaths.contains("$(PROJECT_DIR)/Dependencies/\(platform.rawValue)") {
                 buildConfiguration.buildSettings["FRAMEWORK_SEARCH_PATHS"] = frameworkSearchPaths + ["$(PROJECT_DIR)/Dependencies/\(platform.rawValue)"]
             }

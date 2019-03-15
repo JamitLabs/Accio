@@ -8,6 +8,15 @@ final class XcodeProjectGeneratorService {
     func generateXcodeProject(framework: Framework) throws {
         print("Generating Xcode project at \(framework.generatedXcodeProjectPath) using SwiftPM ...", level: .info)
 
+        let swiftPMBuildUrl: URL = URL(fileURLWithPath: framework.projectDirectory).appendingPathComponent(".build")
+        if FileManager.default.fileExists(atPath: swiftPMBuildUrl.path) {
+            try bash("rm -rf '\(swiftPMBuildUrl.path)'")
+        }
+
+        if FileManager.default.fileExists(atPath: framework.generatedXcodeProjectPath) {
+            try bash("rm -rf '\(framework.generatedXcodeProjectPath)'")
+        }
+
         try bash("swift package --package-path '\(framework.projectDirectory)' generate-xcodeproj")
         try setDeploymentTargets(framework: framework)
 

@@ -194,13 +194,15 @@ Run `accio install help` or `accio update help` to get a list of all available o
 
 ### Clearing local Cache
 
-Since Accio automatically caches any build products locally on your machine, this can result in the cache taking up quite some space after a while. So you might want to clear up the local cache from time to time by running the `clean` command:
+Since Accio automatically caches any build products locally on your machine, this can result in the cache taking up quite some space after a while. So you might want to clear up the local cache from time to time by running the `clear-cache` command:
 
 ```bash
-accio clean
+accio clear-cache
 ```
 
 This will remove all build products from the cache and tell you how much file size was freed up. Please note that there's currently no way of clearing a shared cache to prevent any accidental deletes by a single team member. Please do this manually if your shared space gets too filled up.
+
+Note: There is also a `clean` command which this should not be confused with. The `clean` command will only remove the files within the `.accio` build path leading to all dependencies being freshly checked out on next install.
 
 ## Contributing
 

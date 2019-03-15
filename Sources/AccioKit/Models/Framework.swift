@@ -16,7 +16,7 @@ struct Framework {
     }
 
     var generatedXcodeProjectPath: String {
-        return URL(fileURLWithPath: projectDirectory).appendingPathComponent(projectName).path
+        return URL(fileURLWithPath: projectDirectory).appendingPathComponent("\(projectName).xcodeproj").path
     }
 
     func xcodeProjectPaths() throws -> [String] {
@@ -35,10 +35,14 @@ struct Framework {
         return (rootProjectFilePaths + projectNameDirProjectFilePaths).filter { !$0.isAliasFile }
     }
 
-    func containsXcodeProjectWithLibraryScheme() throws -> Bool {
-        return try xcodeProjectPaths().contains { xcodeProjectPath -> Bool in
-            let schemesDirPath: String = URL(fileURLWithPath: xcodeProjectPath).appendingPathComponent("xcshareddata/xcschemes").path
-            return try FileManager.default.contentsOfDirectory(atPath: schemesDirPath).contains(libraryName)
+    func sharedSchemePaths() throws -> [String] {
+        return try xcodeProjectPaths().reduce([]) { result, xcodeProjectPath in
+            // TODO: doesn't find existing shared framework in AlignedCollectionViewFlowLayout project, debug
+            let schemesDirUrl: URL = URL(fileURLWithPath: xcodeProjectPath).appendingPathComponent("xcshareddata/xcschemes")
+            guard FileManager.default.fileExists(atPath: schemesDirUrl.path) else { return result }
+
+            let sharedSchemeFileNames: [String] = try FileManager.default.contentsOfDirectory(atPath: schemesDirUrl.path).filter { $0.hasSuffix(".xcscheme") }
+            return result + sharedSchemeFileNames.map { schemesDirUrl.appendingPathComponent($0).path }
         }
     }
 
