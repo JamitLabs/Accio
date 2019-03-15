@@ -5,10 +5,7 @@ final class InstallationTypeDetectorService {
     static let shared = InstallationTypeDetectorService()
 
     func detectInstallationType(for framework: Framework) throws -> InstallationType {
-        let frameworkRootFilesNames: [String] = try FileManager.default.contentsOfDirectory(atPath: framework.projectDirectory)
-        let frameworkRootFilePaths: [String] = frameworkRootFilesNames.map { URL(fileURLWithPath: framework.projectDirectory).appendingPathComponent($0).path }
-
-        if frameworkRootFilePaths.contains(where: { $0.hasSuffix(".xcodeproj") && !$0.isAliasFile }) {
+        if try framework.containsXcodeProjectWithLibraryScheme() {
             return .carthage
         } else {
             return .swiftPackageManager

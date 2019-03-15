@@ -1,6 +1,10 @@
 import Foundation
 import SwiftShell
 
+enum FrameworkError: Error {
+    case noSharedSchemes
+}
+
 struct Framework {
     let projectName: String
     let libraryName: String
@@ -11,18 +15,34 @@ struct Framework {
         return run(bash: "git -C '\(projectDirectory)' rev-parse HEAD").stdout
     }
 
-    func xcodeProjectPath() throws -> String {
-        let rootFileNames: [String] = ["\(projectName).xcworkspace", "\(projectName).xcodeproj"] + (try FileManager.default.contentsOfDirectory(atPath: projectDirectory))
+    var generatedXcodeProjectPath: String {
+        return URL(fileURLWithPath: projectDirectory).appendingPathComponent(projectName).path
+    }
 
-        let workspaceFileNames: [String] = rootFileNames.filter { $0.hasSuffix(".xcworkspace") }
-        let projectFileNames: [String] = rootFileNames.filter { $0.hasSuffix(".xcodeproj") }
+    func xcodeProjectPaths() throws -> [String] {
+        let projectDirUrl: URL = URL(fileURLWithPath: projectDirectory)
+        let rootProjectFileNames: [String] = try FileManager.default.contentsOfDirectory(atPath: projectDirectory).filter { pathIsProjectFile($0) }
+        let rootProjectFilePaths: [String] = rootProjectFileNames.map { projectDirUrl.appendingPathComponent($0).path }
 
-        let xcodeFileNames: [String] = workspaceFileNames + projectFileNames
-        let foundXcodeFileName: String = xcodeFileNames.first { xcodeFileName in
-            let sharedSchemesDirPath = URL(fileURLWithPath: projectDirectory).appendingPathComponent("\(xcodeFileName)/xcshareddata/xcschemes").path
-            return FileManager.default.fileExists(atPath: sharedSchemesDirPath)
-        }!
+        let projectNameDirUrl: URL = projectDirUrl.appendingPathComponent(projectName)
+        guard FileManager.default.fileExists(atPath: projectNameDirUrl.path) else {
+            return rootProjectFilePaths.filter { !$0.isAliasFile }
+        }
 
-        return URL(fileURLWithPath: projectDirectory).appendingPathComponent(foundXcodeFileName).path
+        let projectNameDirProjectFileNames: [String] = try FileManager.default.contentsOfDirectory(atPath: projectNameDirUrl.path).filter { pathIsProjectFile($0) }
+        let projectNameDirProjectFilePaths: [String] = projectNameDirProjectFileNames.map { projectNameDirUrl.appendingPathComponent($0).path }
+
+        return (rootProjectFilePaths + projectNameDirProjectFilePaths).filter { !$0.isAliasFile }
+    }
+
+    func containsXcodeProjectWithLibraryScheme() throws -> Bool {
+        return try xcodeProjectPaths().contains { xcodeProjectPath -> Bool in
+            let schemesDirPath: String = URL(fileURLWithPath: xcodeProjectPath).appendingPathComponent("xcshareddata/xcschemes").path
+            return try FileManager.default.contentsOfDirectory(atPath: schemesDirPath).contains(libraryName)
+        }
+    }
+
+    private func pathIsProjectFile(_ path: String) -> Bool {
+        return path.hasSuffix(".xcodeproj") || path.hasSuffix(".xcworkspace")
     }
 }

@@ -6,17 +6,17 @@ final class XcodeProjectGeneratorService {
     static let shared = XcodeProjectGeneratorService()
 
     func generateXcodeProject(framework: Framework) throws {
-        print("Generating Xcode project at \(framework.xcodeProjectPath) using SwiftPM ...", level: .info)
+        print("Generating Xcode project at \(framework.generatedXcodeProjectPath) using SwiftPM ...", level: .info)
 
         try bash("swift package --package-path '\(framework.projectDirectory)' generate-xcodeproj")
         try setDeploymentTargets(framework: framework)
 
-        print("Generated Xcode project at \(framework.xcodeProjectPath) using SwiftPM.", level: .info)
+        print("Generated Xcode project at \(framework.generatedXcodeProjectPath) using SwiftPM.", level: .info)
     }
 
     /// Swift 4.2 doesn't support specifying the platform deployment versions. This can be removed in Swift 5.
     func setDeploymentTargets(framework: Framework) throws {
-        let xcodeProjectPath: String = try framework.xcodeProjectPath()
+        let xcodeProjectPath: String = framework.generatedXcodeProjectPath
         let projectFile: XcodeProj = try XcodeProj(path: Path(xcodeProjectPath))
         let pbxproj: PBXProj = projectFile.pbxproj
 

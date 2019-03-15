@@ -57,7 +57,7 @@ class FrameworkTests: XCTestCase {
         try! bash("mkdir '\(testResourcesDir.path)'")
     }
 
-    func testXcodeProjectPath() {
+    func testXcodeProjectPaths() {
         resourcesLoaded([manifestResource, xcodeProjectResource, exampleSwiftFile]) {
             let manifest = try! ManifestHandlerService(workingDirectory: testResourcesDir.path).loadManifest(isDependency: false)
             let dependencyGraph = try! DependencyResolverService(workingDirectory: testResourcesDir.path).dependencyGraph()
@@ -67,7 +67,13 @@ class FrameworkTests: XCTestCase {
             let rxFramework: Framework = frameworks.last!
 
             XCTAssertEqual(rxFramework.libraryName, "RxSwift")
-            XCTAssertEqual(try! rxFramework.xcodeProjectPath(), "\(rxFramework.projectDirectory)/Rx.xcodeproj")
+            XCTAssertEqual(
+                try! rxFramework.xcodeProjectPaths().sorted(),
+                [
+                    "\(rxFramework.projectDirectory)/Rx.xcodeproj",
+                    "\(rxFramework.projectDirectory)/Rx.xcworkspace",
+                ]
+            )
         }
     }
 }

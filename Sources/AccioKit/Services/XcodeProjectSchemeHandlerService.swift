@@ -1,35 +1,29 @@
 import Foundation
 
-enum XcodeProjectSchemeHandlerError: Error {
-    case noSharedSchemesFound
-}
-
 final class XcodeProjectSchemeHandlerService {
     static let shared = XcodeProjectSchemeHandlerService()
 
     func removeUnnecessarySharedSchemes(from framework: Framework) throws {
-        let xcodeSchemesDirectoryUrl = URL(fileURLWithPath: try framework.xcodeProjectPath()).appendingPathComponent("xcshareddata/xcschemes")
-        guard FileManager.default.fileExists(atPath: xcodeSchemesDirectoryUrl.path) else {
-            print("Could not find any shared schemes for framework '\(framework.libraryName)' in expected path \(xcodeSchemesDirectoryUrl.path)", level: .error)
-            throw XcodeProjectSchemeHandlerError.noSharedSchemesFound
-        }
+        if try framework.containsXcodeProjectWithLibraryScheme() {
+            print("Found shared scheme with exact name '\(framework.libraryName)' – removing others ...", level: .verbose)
 
-        let allSchemeFileNames: [String] = try FileManager.default.contentsOfDirectory(atPath: xcodeSchemesDirectoryUrl.path).filter { $0.hasSuffix(".xcscheme") }
-        guard allSchemeFileNames.count > 1 else {
-            print("Only one shared scheme found – skipping check for unnecessary shared schemes", level: .verbose)
-            return
-        }
+            for xcodeProjectPath in try framework.xcodeProjectPaths() {
+                let sharedSchemePathsToRemove: [String] = try sharedSchemePaths(in: xcodeProjectPath).filter { $0 != framework.libraryName }
+                guard !sharedSchemePathsToRemove.isEmpty else { continue }
 
-        let allSchemeNames: [String] = allSchemeFileNames.map { $0.replacingOccurrences(of: ".xcscheme", with: "") }
-        if allSchemeNames.contains(framework.libraryName) {
-            let schemeNamesToRemove: [String] = allSchemeNames.filter({ $0 != framework.libraryName })
-            print("Found shared scheme with exact name '\(framework.libraryName)' – removing others: \(schemeNamesToRemove)", level: .verbose)
-
-            for schemeNameToRemove in schemeNamesToRemove {
-                try bash("rm -f '\(xcodeSchemesDirectoryUrl.appendingPathComponent("\(schemeNameToRemove).xcscheme").path)'")
+                print("Removing unnecessary shared schemes \(sharedSchemePathsToRemove) from project at \(xcodeProjectPath)", level: .verbose)
+                for sharedSchemePathToRemove in sharedSchemePathsToRemove {
+                    try FileManager.default.removeItem(atPath: sharedSchemePathToRemove)
+                }
             }
         } else {
-            print("No shared scheme found with exact name '\(framework.libraryName)' – can't determine unnecessary shared scheme to delete, keeping all", level: .verbose)
+            print("No shared schemes found matching framework '\(framework.libraryName)' – can't remove unnecessary shared schemes, keeping all", level: .warning)
         }
+    }
+
+    func sharedSchemePaths(in xcodeProjectPath: String) throws -> [String] {
+        let sharedSchemesPath: String = URL(fileURLWithPath: xcodeProjectPath).appendingPathComponent("xcshareddata/xcschemes").path
+        guard FileManager.default.fileExists(atPath: sharedSchemesPath) else { return [] }
+        return try FileManager.default.contentsOfDirectory(atPath: sharedSchemesPath)
     }
 }
