@@ -34,7 +34,7 @@ final class CarthageBuilderService {
         }
 
         try XcodeProjectSchemeHandlerService.shared.removeUnnecessarySharedSchemes(from: framework, platform: platform)
-        try bash("carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current")
+        try bash("carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current --no-use-binaries")
 
         // revert any changes to prevent issues when removing checked out dependency
         try bash("git -C '\(framework.projectDirectory)' reset HEAD --hard")

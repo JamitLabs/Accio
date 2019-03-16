@@ -45,8 +45,12 @@ extension Manifest {
         let dependencyTargetNames: [String] = Array(Set(productsTargets.flatMap { $0.dependencies.map { $0.name } })).sorted()
 
         let projectTargetNames: [String] = targets.map { $0.name }
+        let projectProductNames: [String] = products.map { $0.name }
+
+        let dependencyInternalLibraryNames: [String] = dependencyTargetNames.filter { projectProductNames.contains($0) }
         let dependencyExternalLibraryNames: [String] = dependencyTargetNames.filter { !projectTargetNames.contains($0) }
 
-        return try dependencyExternalLibraryNames.map { try dependencyGraph.framework(libraryName: $0) }
+        let libraryNames: [String] = dependencyInternalLibraryNames + dependencyExternalLibraryNames
+        return try libraryNames.map { try dependencyGraph.framework(libraryName: $0) }
     }
 }
