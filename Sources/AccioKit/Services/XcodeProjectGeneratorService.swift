@@ -1,4 +1,5 @@
 import Foundation
+import HandySwift
 import PathKit
 import xcodeproj
 
@@ -74,6 +75,33 @@ final class XcodeProjectGeneratorService {
 
     /// Swift 4.2 doesn't support the `platform` parameter in the Package manifest, thus read it from a comment with this method.
     func platformToVersion(framework: Framework) throws -> [Platform: String] {
-        return [.iOS: "8.0", .macOS: "10.10", .tvOS: "9.0", .watchOS: "2.0"] // TODO: not yet implemented, read from comment in Package.swift file
+        let commentedPlatformsRegex = try Regex("// *platforms: \\[([^\n]+)\\]")
+
+        let manifestPath: String = URL(fileURLWithPath: framework.projectDirectory).appendingPathComponent("Package.swift").path
+        let manifestContents: String = try String(contentsOfFile: manifestPath)
+
+        var platformToVersion: [Platform: String] = [.iOS: "8.0", .macOS: "10.10", .tvOS: "9.0", .watchOS: "2.0"]
+
+        if let match = commentedPlatformsRegex.firstMatch(in: manifestContents) {
+            let capture = match.captures[0]!
+            let platformSpecifierComponents: [String] = capture.components(separatedBy: ",").map { $0.stripped() }
+            let platformVersionRegex = try Regex("\\.(\\w+)\\(\"(\\S+)\"\\)")
+
+            for platformSpecifier in platformSpecifierComponents {
+                guard let match = platformVersionRegex.firstMatch(in: platformSpecifier) else {
+                    print("Could not read platform specifier '\(platformSpecifier)' – expected format: .<platform>(\"<version>\")", level: .warning)
+                    continue
+                }
+
+                guard let platform = Platform(rawValue: match.captures[0]!) else {
+                    print("Did not recognize platform with name '\(match.captures[0]!)' in '\(platformSpecifier)' – expected one of \(Platform.allCases.map { $0.rawValue })", level: .warning)
+                    continue
+                }
+
+                platformToVersion[platform] = match.captures[1]!
+            }
+        }
+
+        return platformToVersion
     }
 }
