@@ -76,7 +76,7 @@ final class XcodeProjectIntegrationService {
         let dependenciesGroup = try rootGroup.group(named: Constants.xcodeDependenciesGroup) ?? rootGroup.addGroup(named: Constants.xcodeDependenciesGroup, options: .withoutFolder)[0]
         let platformGroup = try dependenciesGroup.group(named: platform.rawValue) ?? dependenciesGroup.addGroup(named: platform.rawValue, options: .withoutFolder)[0]
 
-        let frameworksToAdd = frameworkProducts.filter { product in !platformGroup.children.compactMap { $0.path }.contains { $0.hasSuffix(product.frameworkDirUrl.lastPathComponent) } }
+        let frameworksToAdd = frameworkProducts.filter { product in !platformGroup.children.compactMap { $0.path }.contains { $0.hasSuffix(product.frameworkDirUrl.lastPathComponent) } }.removingDuplicates()
         let platformGroupName = "\(Constants.xcodeDependenciesGroup)/\(platformGroup.name!)"
 
         if !frameworksToAdd.isEmpty {
