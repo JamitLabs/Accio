@@ -33,7 +33,7 @@ final class CarthageBuilderService {
             try bash("ln -f -s '\(requiredFrameworkProduct.symbolsFilePath)' '\(targetFrameworkUrl.path).dSYM'")
         }
 
-        try XcodeProjectSchemeHandlerService.shared.removeUnnecessarySharedSchemes(from: framework)
+        try XcodeProjectSchemeHandlerService.shared.removeUnnecessarySharedSchemes(from: framework, platform: platform)
         try bash("carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current")
 
         // revert any changes to prevent issues when removing checked out dependency

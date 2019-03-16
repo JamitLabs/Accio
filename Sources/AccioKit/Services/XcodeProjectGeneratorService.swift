@@ -18,6 +18,7 @@ final class XcodeProjectGeneratorService {
         }
 
         try bash("swift package --package-path '\(framework.projectDirectory)' generate-xcodeproj")
+        try createSharedSchemeIfNeeded(framework: framework)
         try setDeploymentTargets(framework: framework)
 
         print("Generated Xcode project at \(framework.generatedXcodeProjectPath) using SwiftPM.", level: .info)
@@ -34,12 +35,41 @@ final class XcodeProjectGeneratorService {
         for targetObject in pbxproj.nativeTargets {
             for buildConfiguration in targetObject.buildConfigurationList!.buildConfigurations {
                 for (platform, version) in platformToVersion {
-                    buildConfiguration.buildSettings[platform.deploymentTargetBuildSetting] = "\"\(version)\""
+                    buildConfiguration.buildSettings[platform.deploymentTargetBuildSetting] = "\(version)"
                 }
             }
         }
 
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
+    }
+
+    func createSharedSchemeIfNeeded(framework: Framework) throws {
+        let xcodeProjectPath: String = framework.generatedXcodeProjectPath
+        let projectFile: XcodeProj = try XcodeProj(path: Path(xcodeProjectPath))
+
+        if projectFile.sharedData == nil {
+            projectFile.sharedData = XCSharedData(schemes: [])
+        }
+
+        if projectFile.sharedData!.schemes.isEmpty {
+            print("Manually creating shared scheme for generated project to fix issues with SwiftPM ...", level: .verbose)
+
+            let sharedScheme: XCScheme = XCScheme(name: "\(framework.libraryName)-Package", lastUpgradeVersion: "9999", version: "1.3")
+            let frameworkBuildableReference = XCScheme.BuildableReference(
+                referencedContainer: "container:\(framework.projectName).xcodeproj",
+                blueprint: projectFile.pbxproj.nativeTargets.first { $0.name == framework.libraryName }!,
+                buildableName: "\(framework.projectName).xcodeproj",
+                blueprintName: framework.libraryName
+            )
+            let frameworkBuildAction = XCScheme.BuildAction.Entry(
+                buildableReference: frameworkBuildableReference,
+                buildFor: XCScheme.BuildAction.Entry.BuildFor.default
+            )
+            sharedScheme.buildAction = XCScheme.BuildAction(buildActionEntries: [frameworkBuildAction])
+
+            projectFile.sharedData!.schemes = [sharedScheme]
+            try projectFile.write(path: Path(xcodeProjectPath), override: true)
+        }
     }
 
     /// Swift 4.2 doesn't support the `platform` parameter in the Package manifest, thus read it from a comment with this method.

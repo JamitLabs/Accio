@@ -19,30 +19,33 @@ struct Framework {
         return URL(fileURLWithPath: projectDirectory).appendingPathComponent("\(projectName).xcodeproj").path
     }
 
-    func xcodeProjectPaths() throws -> [String] {
-        let projectDirUrl: URL = URL(fileURLWithPath: projectDirectory)
-        let rootProjectFileNames: [String] = try FileManager.default.contentsOfDirectory(atPath: projectDirectory).filter { pathIsProjectFile($0) }
-        let rootProjectFilePaths: [String] = rootProjectFileNames.map { projectDirUrl.appendingPathComponent($0).path }
+    func xcodeProjectPaths(in directory: String) throws -> [String] {
+        let directoryUrl: URL = URL(fileURLWithPath: directory)
+        let visibleContentNames: [String] = try FileManager.default.contentsOfDirectory(atPath: directoryUrl.path).filter { !$0.hasPrefix(".") }
+        let visibleContentPaths: [String] = visibleContentNames.map { directoryUrl.appendingPathComponent($0).path }
 
-        let projectNameDirUrl: URL = projectDirUrl.appendingPathComponent(projectName)
-        guard FileManager.default.fileExists(atPath: projectNameDirUrl.path) else {
-            return rootProjectFilePaths.filter { !$0.isAliasFile }
-        }
+        let directoryPaths: [String] = try visibleContentPaths.filter { try FileManager.default.isDirectory(atPath: $0) && !pathIsProjectFile($0) }
+        let projectFilePaths: [String] = visibleContentPaths.filter { pathIsProjectFile($0) && !$0.isAliasFile }
 
-        let projectNameDirProjectFileNames: [String] = try FileManager.default.contentsOfDirectory(atPath: projectNameDirUrl.path).filter { pathIsProjectFile($0) }
-        let projectNameDirProjectFilePaths: [String] = projectNameDirProjectFileNames.map { projectNameDirUrl.appendingPathComponent($0).path }
-
-        return (rootProjectFilePaths + projectNameDirProjectFilePaths).filter { !$0.isAliasFile }
+        let projectFilePathsInDirectories: [String] = try directoryPaths.reduce([]) { $0 + (try xcodeProjectPaths(in: $1)) }
+        return projectFilePaths + projectFilePathsInDirectories
     }
 
     func sharedSchemePaths() throws -> [String] {
-        return try xcodeProjectPaths().reduce([]) { result, xcodeProjectPath in
+        return try xcodeProjectPaths(in: projectDirectory).reduce([]) { result, xcodeProjectPath in
             // TODO: doesn't find existing shared framework in AlignedCollectionViewFlowLayout project, debug
             let schemesDirUrl: URL = URL(fileURLWithPath: xcodeProjectPath).appendingPathComponent("xcshareddata/xcschemes")
             guard FileManager.default.fileExists(atPath: schemesDirUrl.path) else { return result }
 
             let sharedSchemeFileNames: [String] = try FileManager.default.contentsOfDirectory(atPath: schemesDirUrl.path).filter { $0.hasSuffix(".xcscheme") }
             return result + sharedSchemeFileNames.map { schemesDirUrl.appendingPathComponent($0).path }
+        }
+    }
+
+    func librarySchemePaths(in schemePaths: [String]) -> [String] {
+        let nonLibrarySchemeSubstrings: [String] = ["Example", "Demo", "Sample"]
+        return schemePaths.filter { schemePath in
+            return !nonLibrarySchemeSubstrings.contains { schemePath.contains($0) }
         }
     }
 
