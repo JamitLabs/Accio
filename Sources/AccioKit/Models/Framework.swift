@@ -43,7 +43,7 @@ struct Framework {
     }
 
     func librarySchemePaths(in schemePaths: [String]) -> [String] {
-        let nonLibrarySchemeSubstrings: [String] = ["Example", "Demo", "Sample"]
+        let nonLibrarySchemeSubstrings: [String] = ["Example", "Demo", "Sample", "Tests"]
         return schemePaths.filter { schemePath in
             return !nonLibrarySchemeSubstrings.contains { schemePath.contains($0) }
         }

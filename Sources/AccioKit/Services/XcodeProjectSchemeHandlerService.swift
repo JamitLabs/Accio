@@ -9,9 +9,9 @@ final class XcodeProjectSchemeHandlerService {
 
         let expectedSchemeNames: [String] = [
             framework.libraryName,
-            "\(framework) \(platform.rawValue)",
-            "\(framework)-\(platform.rawValue)",
-            "\(framework)_\(platform.rawValue)",
+            "\(framework.libraryName) \(platform.rawValue)",
+            "\(framework.libraryName)-\(platform.rawValue)",
+            "\(framework.libraryName)_\(platform.rawValue)",
             "\(framework.libraryName)-Package"
         ]
         let matchingSchemePaths: [String] = librarySchemePaths.filter { expectedSchemeNames.contains($0.fileNameWithoutExtension) }
