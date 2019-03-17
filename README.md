@@ -204,6 +204,61 @@ This will remove all build products from the cache and tell you how much file si
 
 Note: There is also a `clean` command which this should not be confused with. The `clean` command will only remove the files within the `.accio` build path leading to all dependencies being freshly checked out on next install.
 
+## Adding support for Accio
+
+Most libraries that are compatible with SwiftPM should automatically work with Accio. Also libraries that are compatible with Carthage can be easily made compatible with Accio by simply adding a `Package.swift` file similar to this:
+
+```swift
+// swift-tools-version:4.2
+import PackageDescription
+
+let package = Package(
+    name: "LibraryName",
+    // platforms: [.iOS("8.0"), .macOS("10.10"), tvOS("9.0"), .watchOS("2.0")],
+    products: [
+        .library(name: "LibraryName", targets: ["LibraryName"])
+    ],
+    targets: [
+        .target(
+            name: "LibraryName",
+            path: "LibraryName"
+        )
+    ]
+)
+```
+
+Please note that the commented `platforms` parameter line can be uncommented if the library only supports Swift 5 or up (it was added to Swift Package Manager via [proposal SE-0236](https://github.com/apple/swift-evolution/blob/master/proposals/0236-package-manager-platform-deployment-settings.md)). But it is currently recommended to keep the line commented out for Swift 4.2 compatibility – Accio will take care of specifying the target versions manually if the line is commented out.
+
+If the library has subdependencies, link the projects within the `dependencies` array of the target and the library names in the `dependencies` array of the targets. For example:
+
+```swift
+// swift-tools-version:4.2
+import PackageDescription
+
+let package = Package(
+    name: "LibraryName",
+    // platforms: [.iOS("8.0"), .macOS("10.10"), tvOS("9.0"), .watchOS("2.0")],
+    products: [
+        .library(name: "LibraryName", targets: ["LibraryName"])
+    ],
+    dependencies: [
+        .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "4.1.0")),
+        .package(url: "https://github.com/antitypical/Result.git", .upToNextMajor(from: "4.0.0")),
+    ],
+    targets: [
+        .target(
+            name: "LibraryName",
+            dependencies: ["Alamofire", "Result"],
+            path: "LibraryName"
+        )
+    ]
+)
+```
+
+Refer to the [official Package manifest documentation](https://github.com/apple/swift-package-manager/blob/master/Documentation/PackageDescriptionV4.md) for details on how it can be configured, for example the other options for the version range specification of dependencies.
+
+If you come across any issues with a dependency that you expect to work with Accio, please [open an issue on GitHub](https://github.com/JamitLabs/Accio/issues).
+
 ## Contributing
 
 See the file [CONTRIBUTING.md](https://github.com/JamitLabs/Accio/blob/stable/CONTRIBUTING.md).
