@@ -6,7 +6,7 @@ enum GitIgnoreIntegrationError: Error {
 }
 
 final class GitIgnoreIntegrationService {
-    static let shared = GitIgnoreIntegrationService(workingDirectory: FileManager.default.currentDirectoryPath)
+    static let shared = GitIgnoreIntegrationService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
 
     private let workingDirectory: String
 

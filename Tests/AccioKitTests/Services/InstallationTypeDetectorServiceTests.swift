@@ -16,6 +16,7 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
                 .package(url: "https://github.com/Flinesoft/Imperio.git", .upToNextMajor(from: "3.0.0")),
                 .package(url: "https://github.com/JamitLabs/MungoHealer.git", .upToNextMajor(from: "0.3.0")),
                 .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", .upToNextMajor(from: "1.6.2")),
+                .package(url: "https://github.com/Dschee/WheelPicker.git", .branch("master")),
             ],
             targets: [
                 .target(
@@ -27,7 +28,9 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
                         "Imperio",
                         "MungoHealer",
                         "SwiftyBeaver",
-                    ]
+                        "WheelPicker"
+                    ],
+                    path: "App"
                 )
             ]
         )
@@ -39,7 +42,7 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        try! bash("mkdir -p \(testResourcesDir.path)")
+        try! bash("mkdir -p '\(testResourcesDir.path)'")
 
         FileManager.default.createFile(atPath: testResourcesDir.appendingPathComponent("Package.swift").path, contents: manifestContents.data(using: .utf8))
         try! DependencyResolverService(workingDirectory: testResourcesDir.path).resolveDependencies()
@@ -47,12 +50,13 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
 
     func testDetectInstallationTypeTests() {
         let expectedTypes: [String: InstallationType] = [
-            "DataCompression": InstallationType.swiftPackageManager,
+            "DataCompression": InstallationType.carthage,
             "HandySwift": InstallationType.carthage,
             "HandyUIKit": InstallationType.carthage,
             "Imperio": InstallationType.carthage,
             "MungoHealer": InstallationType.carthage,
-            "SwiftyBeaver": InstallationType.carthage
+            "SwiftyBeaver": InstallationType.carthage,
+            "WheelPicker": InstallationType.swiftPackageManager
         ]
 
         let checkoutsDir = testResourcesDir.appendingPathComponent(".accio/checkouts")
@@ -61,12 +65,7 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
             let frameworkDirName = try! FileManager.default.contentsOfDirectory(atPath: checkoutsDir.path).first { $0.hasPrefix(frameworkName) }!
             let frameworkDir = checkoutsDir.appendingPathComponent(frameworkDirName)
 
-            let framework = Framework(
-                commit: "aaa",
-                directory: frameworkDir.path,
-                xcodeProjectPath: frameworkDir.appendingPathComponent("\(frameworkName).xcodeproj").path,
-                scheme: frameworkName
-            )
+            let framework = Framework(projectName: "TestProject", libraryName: frameworkName, projectDirectory: frameworkDir.path, requiredFrameworks: [])
 
             let installationType = try! InstallationTypeDetectorService.shared.detectInstallationType(for: framework)
             XCTAssertEqual(installationType, expectedInstallationType, "Expected \(frameworkName) to be of type \(expectedInstallationType).")

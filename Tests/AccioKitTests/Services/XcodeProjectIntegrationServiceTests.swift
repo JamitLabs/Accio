@@ -5,8 +5,8 @@ import XCTest
 
 class XcodeProjectIntegrationServiceTests: XCTestCase {
     private let testResourcesDir: URL = FileManager.userCacheDirUrl.appendingPathComponent("AccioTestResources")
-    private let testFrameworkNames: [String] = ["HandySwift", "HandyUIKit", "MungoHealer", "Alamofire"]
-    private let testTarget: Target = Target(name: "TestProject-iOS", platform: .iOS)
+    private let testFrameworkNames: [String] = ["Alamofire", "HandySwift", "HandyUIKit", "MungoHealer"]
+    private let testTarget: AppTarget = AppTarget(projectName: "TestProject", targetName: "TestProject-iOS", dependentLibraryNames: [])
 
     private var xcodeProjectResource: Resource {
         return Resource(
@@ -45,7 +45,7 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        try! bash("rm -rf \(testResourcesDir.path)")
+        try! bash("rm -rf '\(testResourcesDir.path)'")
     }
 
     func testUpdateDependencies() {
@@ -68,7 +68,7 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
             // ensure build phase not yet updated
             XCTAssert(!targetObject.buildPhases.contains { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript })
 
-            try! xcodeProjectIntegrationService.updateDependencies(of: testTarget, in: "TestProject", with: frameworkProducts)
+            try! xcodeProjectIntegrationService.updateDependencies(of: testTarget, for: .iOS, with: frameworkProducts)
 
             // test copyFrameworkProducts
             for frameworkProduct in copiedFrameworkProducts {

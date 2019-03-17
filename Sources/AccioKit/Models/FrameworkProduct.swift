@@ -11,4 +11,8 @@ struct FrameworkProduct {
     var symbolsFileUrl: URL {
         return URL(fileURLWithPath: symbolsFilePath)
     }
+
+    var libraryName: String {
+        return frameworkDirUrl.lastPathComponent.replacingOccurrences(of: ".framework", with: "")
+    }
 }
