@@ -3,7 +3,7 @@ import Foundation
 import SwiftCLI
 
 // MARK: - CLI
-let cli = CLI(name: "accio", version: "0.1.0", description: "A dependency manager driven by SwiftPM that works for iOS/tvOS/watchOS/macOS projects.")
+let cli = CLI(name: "accio", version: "0.2.0", description: "A dependency manager driven by SwiftPM that works for iOS/tvOS/watchOS/macOS projects.")
 
 cli.commands = [InitCommand(), InstallCommand(), UpdateCommand(), CleanCommand(), ClearCacheCommand()]
 cli.globalOptions.append(contentsOf: GlobalOptions.all)
