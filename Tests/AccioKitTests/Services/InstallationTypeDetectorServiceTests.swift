@@ -50,7 +50,7 @@ class InstallationTypeDetectorServiceTests: XCTestCase {
 
     func testDetectInstallationTypeTests() {
         let expectedTypes: [String: InstallationType] = [
-            "DataCompression": InstallationType.swiftPackageManager,
+            "DataCompression": InstallationType.carthage,
             "HandySwift": InstallationType.carthage,
             "HandyUIKit": InstallationType.carthage,
             "Imperio": InstallationType.carthage,

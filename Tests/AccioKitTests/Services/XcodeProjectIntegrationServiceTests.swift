@@ -5,7 +5,7 @@ import XCTest
 
 class XcodeProjectIntegrationServiceTests: XCTestCase {
     private let testResourcesDir: URL = FileManager.userCacheDirUrl.appendingPathComponent("AccioTestResources")
-    private let testFrameworkNames: [String] = ["HandySwift", "HandyUIKit", "MungoHealer", "Alamofire"]
+    private let testFrameworkNames: [String] = ["Alamofire", "HandySwift", "HandyUIKit", "MungoHealer"]
     private let testTarget: AppTarget = AppTarget(projectName: "TestProject", targetName: "TestProject-iOS", dependentLibraryNames: [])
 
     private var xcodeProjectResource: Resource {
