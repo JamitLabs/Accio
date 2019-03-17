@@ -28,12 +28,12 @@ struct Framework {
         let projectFilePaths: [String] = visibleContentPaths.filter { pathIsProjectFile($0) && !$0.isAliasFile }
 
         let projectFilePathsInDirectories: [String] = try directoryPaths.reduce([]) { $0 + (try xcodeProjectPaths(in: $1)) }
-        return projectFilePaths + projectFilePathsInDirectories
+        let xcodeProjectFilePaths: [String] = projectFilePaths + projectFilePathsInDirectories
+        return xcodeProjectFilePaths.filter { !$0.hasSuffix(".playground/playground.xcworkspace") }
     }
 
     func sharedSchemePaths() throws -> [String] {
         return try xcodeProjectPaths(in: projectDirectory).reduce([]) { result, xcodeProjectPath in
-            // TODO: doesn't find existing shared framework in AlignedCollectionViewFlowLayout project, debug
             let schemesDirUrl: URL = URL(fileURLWithPath: xcodeProjectPath).appendingPathComponent("xcshareddata/xcschemes")
             guard FileManager.default.fileExists(atPath: schemesDirUrl.path) else { return result }
 

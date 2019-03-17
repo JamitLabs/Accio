@@ -68,10 +68,12 @@ class FrameworkTests: XCTestCase {
 
             XCTAssertEqual(rxFramework.libraryName, "RxSwift")
             XCTAssertEqual(
-                try! rxFramework.xcodeProjectPaths().sorted(),
+                try! rxFramework.xcodeProjectPaths(in: rxFramework.projectDirectory).sorted(),
                 [
+                    "\(rxFramework.projectDirectory)/Preprocessor/Preprocessor.xcodeproj",
                     "\(rxFramework.projectDirectory)/Rx.xcodeproj",
                     "\(rxFramework.projectDirectory)/Rx.xcworkspace",
+                    "\(rxFramework.projectDirectory)/RxExample/RxExample.xcodeproj",
                 ]
             )
         }
