@@ -13,8 +13,8 @@
              alt="Codebeat Badge">
     </a>
     <a href="https://github.com/JamitLabs/Accio/releases">
-        <img src="https://img.shields.io/badge/Version-0.2.1-blue.svg"
-             alt="Version: 0.2.1">
+        <img src="https://img.shields.io/badge/Version-0.2.2-blue.svg"
+             alt="Version: 0.2.2">
     </a>
     <img src="https://img.shields.io/badge/Swift-4.2-FFAC45.svg"
          alt="Swift: 4.2">
@@ -107,6 +107,7 @@ If you want to migrate your Carthage-driven project to Accio, here are the steps
 2. Delete the Carthage copy build phase
 3. Delete any files beginning with `Cartfile`
 4. Remove the `Carthage` directory entirely
+5. Remove Carthage entries like `$(PROJECT_DIR)/Carthage/Build/iOS` from the `FRAMEWORK_SEARCH_PATHS` within the build settings
 
 ### Initialization
 
