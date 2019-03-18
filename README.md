@@ -13,8 +13,8 @@
              alt="Codebeat Badge">
     </a>
     <a href="https://github.com/JamitLabs/Accio/releases">
-        <img src="https://img.shields.io/badge/Version-0.2.0-blue.svg"
-             alt="Version: 0.2.0">
+        <img src="https://img.shields.io/badge/Version-0.2.1-blue.svg"
+             alt="Version: 0.2.1">
     </a>
     <img src="https://img.shields.io/badge/Swift-4.2-FFAC45.svg"
          alt="Swift: 4.2">
@@ -36,9 +36,6 @@
 # Accio
 
 A dependency manager driven by SwiftPM that works for iOS/tvOS/watchOS/macOS projects.
-
-***Important Note:***
-*This project is currently a **work on progress.** While the API should already be stable, this tool might not work in many cases yet. Version 1.0.0 will be released once we feel it is ready for most projects.*
 
 ## Requirements
 
@@ -192,6 +189,16 @@ Specifying this can drastically cut your teams total dependencies building time 
 
 Run `accio install help` or `accio update help` to get a list of all available options.
 
+### Configuring Accio's default behavior
+
+You can configure Accio to always **automatically** use a shared cache path without the need to specify it as an option by writing it into the Accio config file like so:
+
+```bash
+accio set-shared-cache /Volumes/GoogleDrive/TeamShare/AccioCache
+```
+
+Note that the config file is saved to `/Users/<Name>/Library/Application Support/Accio/config.json`. Simply delete it to reset all configuration options.
+
 ### Clearing local Cache
 
 Since Accio automatically caches any build products locally on your machine, this can result in the cache taking up quite some space after a while. So you might want to clear up the local cache from time to time by running the `clear-cache` command:
@@ -265,3 +272,5 @@ See the file [CONTRIBUTING.md](https://github.com/JamitLabs/Accio/blob/stable/CO
 
 ## License
 This library is released under the [MIT License](http://opensource.org/licenses/MIT). See LICENSE for details.
+
+Logo Design by [Dogan Duran](https://twitter.com/Dodu_Doodle).

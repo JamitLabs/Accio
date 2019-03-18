@@ -7,6 +7,7 @@ enum Constants {
     static let dependenciesPath: String = "Dependencies"
     static let xcodeDependenciesGroup: String = "Dependencies"
     static let copyBuildScript: String = "Accio"
+    static let configFilePath: String = FileManager.applicationSupportDirUrl.appendingPathComponent("Accio/config.json").path
 
     static var localCachePath: String {
         if useTestPaths {
