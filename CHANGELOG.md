@@ -16,3 +16,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - None.
 ### Security
 - None.
+
+## [0.2.1]
+### Added
+- Support for setting a default `shared-cache-path` via configuration.
+- New sub command `set-shared-cache` for setting the shared cache path.
+### Fixed
+- Also correctly recognize scheme names like "SwiftyBeaver (iOS)".
+
+## [0.2.0]
+### Added
+- Initial working release with `init`, `install`, `update`, `clean` and `clear-cache` sub commands
