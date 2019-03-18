@@ -10,6 +10,7 @@ final class XcodeProjectSchemeHandlerService {
         let expectedSchemeNames: [String] = [
             framework.libraryName,
             "\(framework.libraryName) \(platform.rawValue)",
+            "\(framework.libraryName) (\(platform.rawValue))",
             "\(framework.libraryName)-\(platform.rawValue)",
             "\(framework.libraryName)_\(platform.rawValue)",
             "\(framework.libraryName)-Package"
