@@ -107,6 +107,7 @@ If you want to migrate your Carthage-driven project to Accio, here are the steps
 2. Delete the Carthage copy build phase
 3. Delete any files beginning with `Cartfile`
 4. Remove the `Carthage` directory entirely
+5. Remove Carthage entries like `$(PROJECT_DIR)/Carthage/Build/iOS` from the `FRAMEWORK_SEARCH_PATHS` within the build settings 
 
 ### Initialization
 
