@@ -37,9 +37,6 @@
 
 A dependency manager driven by SwiftPM that works for iOS/tvOS/watchOS/macOS projects.
 
-***Important Note:***
-*This project is currently a **work on progress.** While the API should already be stable, this tool might not work in many cases yet. Version 1.0.0 will be released once we feel it is ready for most projects.*
-
 ## Requirements
 
 - Xcode 10+ and Swift 4.2+
