@@ -265,3 +265,5 @@ See the file [CONTRIBUTING.md](https://github.com/JamitLabs/Accio/blob/stable/CO
 
 ## License
 This library is released under the [MIT License](http://opensource.org/licenses/MIT). See LICENSE for details.
+
+Logo Design by [Dogan Duran](https://twitter.com/Dodu_Doodle).
