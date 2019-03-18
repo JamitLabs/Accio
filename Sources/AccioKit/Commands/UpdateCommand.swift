@@ -13,12 +13,17 @@ public class UpdateCommand: Command {
 
     // MARK: - Instance Methods
     public func execute() throws {
+        let config = try Config.load()
         try DependencyResolverService.shared.updateDependencies()
 
         let manifest = try loadManifest()
         let dependencyGraph = try DependencyResolverService.shared.dependencyGraph()
 
-        try buildFrameworksAndIntegrateWithXcode(manifest: manifest, dependencyGraph: dependencyGraph, sharedCachePath: sharedCachePath.value)
+        try buildFrameworksAndIntegrateWithXcode(
+            manifest: manifest,
+            dependencyGraph: dependencyGraph,
+            sharedCachePath: sharedCachePath.value ?? config.defaultSharedCachePath
+        )
         print("Successfully updated dependencies.", level: .info)
     }
 }
