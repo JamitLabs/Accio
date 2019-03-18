@@ -189,6 +189,16 @@ Specifying this can drastically cut your teams total dependencies building time 
 
 Run `accio install help` or `accio update help` to get a list of all available options.
 
+### Configuring Accio's default behavior
+
+You can configure Accio to always **automatically** use a shared cache path without the need to specify it as an option by writing it into the Accio config file like so:
+
+```bash
+accio set-shared-cache /Volumes/GoogleDrive/TeamShare/AccioCache
+```
+
+Note that the config file is saved to `/Users/<Name>/Library/Application Support/Accio/config.json`. Simply delete it to reset all configuration options.
+
 ### Clearing local Cache
 
 Since Accio automatically caches any build products locally on your machine, this can result in the cache taking up quite some space after a while. So you might want to clear up the local cache from time to time by running the `clear-cache` command:
