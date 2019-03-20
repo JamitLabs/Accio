@@ -89,7 +89,7 @@ The unwelcomingness (is there such a word?) of the Carthage community is so much
 
 That's why Accio was designed as the all-in-one tool for any improvements you might need for managing dependencies using Carthage. It's explicitly open for new features from the community as long as they improve aspects of dependency management for the Apple developer community. Also, the implementation of Accio is pretty straight-forward, without the need to learn any reactive programming.
 
-Also the core of Accio was designed to use [SwiftPM](https://github.com/apple/swift-package-manager) as much as possible because we think it will at some point replace the need for an extra dependency manager completely. Until that time, making an open source project "Accio compliant" basically means adding a manifest file that exactly matches that of `SwiftPM`. This way Accio is trying to fill the gap between now and the time when Xcode properly supports `SwiftPM` for Apple platform projects (which we guess to be at WWDC 2020) and most Accio compatible projects might already be compatible out of the box when the time comes.
+Additionally, the core of Accio was designed to use [SwiftPM](https://github.com/apple/swift-package-manager) as much as possible because we think it will at some point replace the need for an extra dependency manager completely. Until that time, making an open source project "Accio compliant" basically means adding a manifest file that exactly matches that of `SwiftPM`. This way Accio is trying to fill the gap between now and the time when Xcode properly supports `SwiftPM` for Apple platform projects (which we guess to be at WWDC 2020) and most Accio compatible projects might already be compatible out of the box when the time comes.
 
 </details>
 
@@ -117,7 +117,7 @@ To configure Accio in a new project, simply run the `init` command and provide b
 accio init -p "XcodeProjectName" -t "AppTargetName"
 ```
 
-This step will create a template `Package.swift` file and set some `.gitignore` entries to keep your repository clean. Please note that if your source code files aren't placed within directories named after the targets, you will need to explicitly set the `path` parameters within the targets in the `Package.swift` file to the correct paths.
+This step will create a template `Package.swift` file and set some `.gitignore` entries to keep your repository clean. Please note that if your source code files aren't placed within directories named after the targets, you will need to explicitly set the `path` parameters within the targets in the `Package.swift` file to the correct paths. Also note that the specified `path` must be a directory recursively containing at least one Swift file – but mixing with other languages like (Objective-)C(++) is not supported, so they shouldn't be within the specified directory. The files in there will not be built, they just need to exist in order for SwifPM to work properly, so you could point this anywhere Swift-only code.
 
 Run `accio init help` to get a list of all available options.
 
@@ -178,6 +178,8 @@ When running this the first time in a project, the following steps will be taken
 
 On future runs, both `install` and `update` will make sure all these created directories & build scripts are kept up-to-date so you don't ever need to change them manually. Actually, you shouldn't change their contents, reordering is fine though.
 
+_Please note that before running any of the install commands, you should **close your project** if you have it open in Xcode. Otherwise some unexpected problems could occur when Accio rewrites the project file._
+
 Additionally, for both install commands you can provide a path to a **shared cache** to copy the build products to on top of the local cache. For example:
 
 ```bash
@@ -186,7 +188,7 @@ accio install -c /Volumes/GoogleDrive/TeamShare/AccioCache
 
 Specifying this can drastically cut your teams total dependencies building time since each commit of a dependency will be built only once by only one person in the team.
 
-*Please note that a **global cache** is planned to be added as an opt-in option in the near future for those who trust our CI setup regarding security. Details will follow.*
+_Please note that a **global cache** is planned to be added as an opt-in option in the near future for those who trust our CI setup regarding security. Details will follow._
 
 Run `accio install help` or `accio update help` to get a list of all available options.
 
