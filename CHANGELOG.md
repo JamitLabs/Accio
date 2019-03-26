@@ -7,11 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 - None.
 ### Changed
-- None.
+- Add support for Swift 5 and Xcode 10.2.
 ### Deprecated
 - None.
 ### Removed
-- None.
+- Drop support for Swift 4.2 and Xcode <=10.1.
 ### Fixed
 - None.
 ### Security
