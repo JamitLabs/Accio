@@ -8,7 +8,7 @@ final class FrameworkCachingService {
     }
 
     func cachedProduct(framework: Framework, platform: Platform) throws -> FrameworkProduct? {
-        let subpath = "\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue)"
+        let subpath = "\(Constants.swiftVersion)/\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue)"
         let localCacheDir = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath)
 
         let productFrameworkDir = "\(framework.libraryName).framework"
@@ -38,7 +38,7 @@ final class FrameworkCachingService {
     }
 
     func cache(product: FrameworkProduct, framework: Framework, platform: Platform) throws {
-        let subpath = "\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue)"
+        let subpath = "\(Constants.swiftVersion)/\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue)"
         let localCacheDir = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath)
 
         try bash("mkdir -p '\(localCacheDir.path)'")

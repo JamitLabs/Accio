@@ -75,27 +75,27 @@ class ManifestCreatorServiceTests: XCTestCase {
             XCTAssertEqual(foundFrameworks.count, 5)
 
             XCTAssertEqual(foundFrameworks[0].libraryName, "HandySwift")
-            XCTAssert(foundFrameworks[0].projectDirectory.contains("checkouts/HandySwift.git-"))
+            XCTAssertEqual(foundFrameworks[0].projectDirectory, testResourcesDir.appendingPathComponent("\(Constants.buildPath)/checkouts/HandySwift").path)
             XCTAssert(try! foundFrameworks[0].xcodeProjectPaths(in: foundFrameworks[0].projectDirectory).contains { $0.contains("HandySwift.xcodeproj") })
             XCTAssertEqual(foundFrameworks[0].commitHash.count, 40)
 
             XCTAssertEqual(foundFrameworks[1].libraryName, "HandyUIKit")
-            XCTAssert(foundFrameworks[1].projectDirectory.contains("checkouts/HandyUIKit.git-"))
+            XCTAssertEqual(foundFrameworks[1].projectDirectory, testResourcesDir.appendingPathComponent("\(Constants.buildPath)/checkouts/HandyUIKit").path)
             XCTAssert(try! foundFrameworks[1].xcodeProjectPaths(in: foundFrameworks[1].projectDirectory).contains { $0.contains("HandyUIKit.xcodeproj") })
             XCTAssertEqual(foundFrameworks[1].commitHash.count, 40)
 
             XCTAssertEqual(foundFrameworks[2].libraryName, "Imperio")
-            XCTAssert(foundFrameworks[2].projectDirectory.contains("checkouts/Imperio.git-"))
+            XCTAssertEqual(foundFrameworks[2].projectDirectory, testResourcesDir.appendingPathComponent("\(Constants.buildPath)/checkouts/Imperio").path)
             XCTAssert(try! foundFrameworks[2].xcodeProjectPaths(in: foundFrameworks[2].projectDirectory).contains { $0.contains("Imperio.xcodeproj") })
             XCTAssertEqual(foundFrameworks[2].commitHash.count, 40)
 
             XCTAssertEqual(foundFrameworks[3].libraryName, "MungoHealer")
-            XCTAssert(foundFrameworks[3].projectDirectory.contains("checkouts/MungoHealer.git-"))
+            XCTAssertEqual(foundFrameworks[3].projectDirectory, testResourcesDir.appendingPathComponent("\(Constants.buildPath)/checkouts/MungoHealer").path)
             XCTAssert(try! foundFrameworks[3].xcodeProjectPaths(in: foundFrameworks[3].projectDirectory).contains { $0.contains("MungoHealer.xcodeproj") })
             XCTAssertEqual(foundFrameworks[3].commitHash.count, 40)
 
             XCTAssertEqual(foundFrameworks[4].libraryName, "SwiftyBeaver")
-            XCTAssert(foundFrameworks[4].projectDirectory.contains("checkouts/SwiftyBeaver.git-"))
+            XCTAssertEqual(foundFrameworks[4].projectDirectory, testResourcesDir.appendingPathComponent("\(Constants.buildPath)/checkouts/SwiftyBeaver").path)
             XCTAssert(try! foundFrameworks[4].xcodeProjectPaths(in: foundFrameworks[4].projectDirectory).contains { $0.contains("SwiftyBeaver.xcodeproj") })
             XCTAssertEqual(foundFrameworks[4].commitHash.count, 40)
         }

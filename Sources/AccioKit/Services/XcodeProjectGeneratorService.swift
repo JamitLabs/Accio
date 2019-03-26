@@ -75,7 +75,7 @@ final class XcodeProjectGeneratorService {
 
     /// Swift 4.2 doesn't support the `platform` parameter in the Package manifest, thus read it from a comment with this method.
     func platformToVersion(framework: Framework) throws -> [Platform: String] {
-        let commentedPlatformsRegex = try Regex("// *platforms: \\[([^\n]+)\\]")
+        let commentedPlatformsRegex = Regex("// *platforms: \\[([^\n]+)\\]")
 
         let manifestPath: String = URL(fileURLWithPath: framework.projectDirectory).appendingPathComponent("Package.swift").path
         let manifestContents: String = try String(contentsOfFile: manifestPath)
@@ -85,7 +85,7 @@ final class XcodeProjectGeneratorService {
         if let match = commentedPlatformsRegex.firstMatch(in: manifestContents) {
             let capture = match.captures[0]!
             let platformSpecifierComponents: [String] = capture.components(separatedBy: ",").map { $0.stripped() }
-            let platformVersionRegex = try Regex("\\.(\\w+)\\(\"(\\S+)\"\\)")
+            let platformVersionRegex = Regex("\\.(\\w+)\\(\"(\\S+)\"\\)")
 
             for platformSpecifier in platformSpecifierComponents {
                 guard let match = platformVersionRegex.firstMatch(in: platformSpecifier) else {

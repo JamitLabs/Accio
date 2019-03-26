@@ -32,8 +32,8 @@ class FrameworkCachingServiceTests: XCTestCase {
     func testCachingProductWithoutSharedCachePath() {
         let frameworkCachingService = FrameworkCachingService(sharedCachePath: nil)
 
-        let testFrameworkLocalCacheDir: String = "\(Constants.localCachePath)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
-        let testFrameworkSharedCacheDir: String = "\(sharedCachePath)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
+        let testFrameworkLocalCacheDir: String = "\(Constants.localCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
+        let testFrameworkSharedCacheDir: String = "\(sharedCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
 
         var cachedProduct: FrameworkProduct? = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
         XCTAssertNil(cachedProduct)
@@ -59,8 +59,8 @@ class FrameworkCachingServiceTests: XCTestCase {
     func testCachingProductWithSharedCachePath() {
         let frameworkCachingService = FrameworkCachingService(sharedCachePath: sharedCachePath)
 
-        let testFrameworkLocalCacheDir: String = "\(Constants.localCachePath)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
-        let testFrameworkSharedCacheDir: String = "\(sharedCachePath)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
+        let testFrameworkLocalCacheDir: String = "\(Constants.localCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
+        let testFrameworkSharedCacheDir: String = "\(sharedCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
 
         var cachedProduct: FrameworkProduct? = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
         XCTAssertNil(cachedProduct)
