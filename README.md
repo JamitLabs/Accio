@@ -16,8 +16,8 @@
         <img src="https://img.shields.io/badge/Version-0.2.2-blue.svg"
              alt="Version: 0.2.2">
     </a>
-    <img src="https://img.shields.io/badge/Swift-4.2-FFAC45.svg"
-         alt="Swift: 4.2">
+    <img src="https://img.shields.io/badge/Swift-5.0-FFAC45.svg"
+         alt="Swift: 5.0">
     <img src="https://img.shields.io/badge/Platforms-macOS-FF69B4.svg"
         alt="Platforms: macOS">
     <a href="https://github.com/JamitLabs/Accio/blob/stable/LICENSE">
@@ -39,7 +39,7 @@ A dependency manager driven by SwiftPM that works for iOS/tvOS/watchOS/macOS pro
 
 ## Requirements
 
-- Xcode 10+ and Swift 4.2+
+- Xcode 10.2+ and Swift 5.0+
 - Xcode Command Line Tools (see [here](http://stackoverflow.com/a/9329325/3451975) for installation instructions)
 - Carthage 0.32+ (install from [here](https://github.com/Carthage/Carthage))
 
