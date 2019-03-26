@@ -16,4 +16,12 @@ enum Constants {
 
         return FileManager.userCacheDirUrl.appendingPathComponent("Accio/Cache").path
     }
+
+    static var swiftVersion: String {
+        #if swift(>=5.0)
+            return "Swift-5.0"
+        #else
+            return "Swift-4.2"
+        #endif
+    }
 }
