@@ -32,5 +32,7 @@ extension DependencyInstaller {
             let frameworkProducts = try CachedBuilderService(sharedCachePath: sharedCachePath).frameworkProducts(manifest: manifest, appTarget: appTarget, dependencyGraph: dependencyGraph, platform: platform)
             try XcodeProjectIntegrationService.shared.updateDependencies(of: appTarget, for: platform, with: frameworkProducts)
         }
+
+        try XcodeProjectIntegrationService.shared.removeUnnecessaryGroups(keepingTargets: manifest.appTargets)
     }
 }

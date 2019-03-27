@@ -16,6 +16,28 @@ final class XcodeProjectIntegrationService {
         self.workingDirectory = workingDirectory
     }
 
+    func removeUnnecessaryGroups(keepingTargets targetsToKeep: [AppTarget]) throws {
+        guard let projectName = targetsToKeep.first?.projectName else { return }
+
+        let xcodeProjectPath = "\(workingDirectory)/\(projectName).xcodeproj"
+        let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
+        let rootGroup = try projectFile.pbxproj.rootGroup()!
+        let dependenciesGroup = try rootGroup.group(named: Constants.xcodeDependenciesGroup) ?? rootGroup.addGroup(named: Constants.xcodeDependenciesGroup, options: .withoutFolder)[0]
+
+        let targetNames = targetsToKeep.map { $0.targetName }
+        let groupsToRemove = dependenciesGroup.children.filter { !targetNames.contains($0.name ?? "") }
+
+        guard !groupsToRemove.isEmpty else { return }
+
+        print("Removing unnecessary groups \(groupsToRemove.compactMap { $0.name }) from group 'Dependencies' ...", level: .info)
+
+        for groupToRemove in groupsToRemove {
+            dependenciesGroup.children.removeAll { $0 == groupToRemove }
+        }
+
+        try projectFile.write(path: Path(xcodeProjectPath), override: true)
+    }
+
     func updateDependencies(of appTarget: AppTarget, for platform: Platform, with frameworkProducts: [FrameworkProduct]) throws {
         print("Relinking build products with targets in Xcode project ...", level: .info)
 
