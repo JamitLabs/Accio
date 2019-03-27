@@ -119,6 +119,9 @@ final class XcodeProjectIntegrationService {
 
             for fileToRemove in filesToRemove {
                 targetGroup.children.removeAll { $0 === fileToRemove }
+                frameworksBuildPhase.files.removeAll { file in
+                    file.file === fileToRemove
+                }
             }
         }
 
