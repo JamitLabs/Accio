@@ -74,45 +74,47 @@ final class XcodeProjectIntegrationService {
 
         let rootGroup = try pbxproj.rootGroup()!
         let dependenciesGroup = try rootGroup.group(named: Constants.xcodeDependenciesGroup) ?? rootGroup.addGroup(named: Constants.xcodeDependenciesGroup, options: .withoutFolder)[0]
-        let platformGroup = try dependenciesGroup.group(named: platform.rawValue) ?? dependenciesGroup.addGroup(named: platform.rawValue, options: .withoutFolder)[0]
+        let targetGroup = try dependenciesGroup.group(named: appTarget.targetName) ?? dependenciesGroup.addGroup(named: appTarget.targetName, options: .withoutFolder)[0]
 
-        let frameworksToAdd = frameworkProducts.filter { product in !platformGroup.children.compactMap { $0.path }.contains { $0.hasSuffix(product.frameworkDirUrl.lastPathComponent) } }.removingDuplicates()
-        let platformGroupName = "\(Constants.xcodeDependenciesGroup)/\(platformGroup.name!)"
+        let frameworksToAdd = frameworkProducts.filter { product in !targetGroup.children.compactMap { $0.path }.contains { $0.hasSuffix(product.frameworkDirUrl.lastPathComponent) } }.removingDuplicates()
+        let platformGroupName = "\(Constants.xcodeDependenciesGroup)/\(targetGroup.name!)"
 
         if !frameworksToAdd.isEmpty {
             let frameworkNames = frameworksToAdd.map { $0.frameworkDirUrl.lastPathComponent.components(separatedBy: ".").first! }
             print("Adding frameworks \(frameworkNames) to group '\(platformGroupName)' in project navigator & linking with target '\(appTarget.targetName)' ...", level: .info)
 
             for frameworkToAdd in frameworksToAdd {
-                let frameworkFileRef = try platformGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
+                let frameworkFileRef = try targetGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
                 _ = try frameworksBuildPhase.add(file: frameworkFileRef)
             }
         }
 
-        let filesToRemove = platformGroup.children.filter { fileRef in !frameworkProducts.contains { $0.frameworkDirPath.hasSuffix(fileRef.name!) } }
+        let filesToRemove = targetGroup.children.filter { fileRef in !frameworkProducts.contains { $0.frameworkDirPath.hasSuffix(fileRef.name!) } }
 
         if !filesToRemove.isEmpty {
             let fileNames = filesToRemove.map { $0.name! }
             print("Removing references \(fileNames) from group '\(platformGroupName)' and unlinking from target '\(appTarget.targetName)' ...", level: .info)
 
             for fileToRemove in filesToRemove {
-                platformGroup.children.removeAll { $0 === fileToRemove }
+                targetGroup.children.removeAll { $0 === fileToRemove }
             }
         }
 
-        platformGroup.children.removeDuplicates()
-        platformGroup.children.sort { $0.name! < $1.name! }
+        targetGroup.children.removeDuplicates()
+        targetGroup.children.sort { $0.name! < $1.name! }
 
-        var copyBuildScript: PBXShellScriptBuildPhase! = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as? PBXShellScriptBuildPhase
-        if copyBuildScript == nil {
-            print("Creating new copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)'...", level: .info)
-            copyBuildScript = PBXShellScriptBuildPhase(name: Constants.copyBuildScript, shellScript: "/usr/local/bin/carthage copy-frameworks")
-            targetObject.buildPhases.append(copyBuildScript)
+        if appTarget.targetType == .regular {
+            var copyBuildScript: PBXShellScriptBuildPhase! = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as? PBXShellScriptBuildPhase
+            if copyBuildScript == nil {
+                print("Creating new copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)'...", level: .info)
+                copyBuildScript = PBXShellScriptBuildPhase(name: Constants.copyBuildScript, shellScript: "/usr/local/bin/carthage copy-frameworks")
+                targetObject.buildPhases.append(copyBuildScript)
+            }
+
+            pbxproj.add(object: copyBuildScript)
+            print("Updating input paths in copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)' ...", level: .info)
+            copyBuildScript.inputPaths = targetGroup.children.map { "$(SRCROOT)/\($0.path!)" }
         }
-
-        pbxproj.add(object: copyBuildScript)
-        print("Updating input paths in copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)' ...", level: .info)
-        copyBuildScript.inputPaths = platformGroup.children.map { "$(SRCROOT)/\($0.path!)" }
 
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
     }
