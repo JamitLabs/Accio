@@ -20,6 +20,8 @@ class ManifestTests: XCTestCase {
                         .package(url: "https://github.com/Flinesoft/Imperio.git", .upToNextMajor(from: "3.0.0")),
                         .package(url: "https://github.com/JamitLabs/MungoHealer.git", .upToNextMajor(from: "0.3.0")),
                         .package(url: "https://github.com/Moya/Moya.git", .revision("43209d6ac45d244d8be08f4cf6df684b96190616")),
+                        .package(url: "https://github.com/Quick/Quick.git", .upToNextMajor(from: "1.0.0")),
+                        .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "7.0.0")),
                     ],
                     targets: [
                         .target(
@@ -34,8 +36,13 @@ class ManifestTests: XCTestCase {
                             path: "TestProject-iOS"
                         ),
                         .testTarget(
-                            name: "TestProject-iOS Tests"
-                        )
+                            name: "TestProject-iOS Tests",
+                            dependencies: [
+                                "Quick",
+                                "Nimble"
+                            ],
+                            path: "Tests"
+                        ),
                     ]
                 )
 
@@ -57,6 +64,13 @@ class ManifestTests: XCTestCase {
         )
     }
 
+    private var exampleSwiftTestFile: Resource {
+        return Resource(
+            url: testResourcesDir.appendingPathComponent("TestProject-iOS Tests/ExampleTests.swift"),
+            contents: "import XCTest\n\nclass ExampleTests: XCTestCase {}"
+        )
+    }
+
     override func setUp() {
         super.setUp()
 
@@ -65,14 +79,19 @@ class ManifestTests: XCTestCase {
     }
 
     func testAppTargets() {
-        resourcesLoaded([manifestResource, xcodeProjectResource, exampleSwiftFile]) {
+        resourcesLoaded([manifestResource, xcodeProjectResource, exampleSwiftFile, exampleSwiftTestFile]) {
             let manifest = try! ManifestHandlerService(workingDirectory: testResourcesDir.path).loadManifest(isDependency: false)
 
             let appTargets = manifest.appTargets
-            XCTAssertEqual(appTargets.count, 1)
+            XCTAssertEqual(appTargets.count, 2)
+
             XCTAssertEqual(appTargets[0].projectName, "TestProject")
             XCTAssertEqual(appTargets[0].targetName, "TestProject-iOS")
             XCTAssertEqual(appTargets[0].dependentLibraryNames, ["HandySwift", "HandyUIKit", "Imperio", "MungoHealer", "Moya"])
+
+            XCTAssertEqual(appTargets[1].projectName, "TestProject")
+            XCTAssertEqual(appTargets[1].targetName, "TestProject-iOS Tests")
+            XCTAssertEqual(appTargets[1].dependentLibraryNames, ["Quick", "Nimble"])
         }
     }
 }

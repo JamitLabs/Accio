@@ -34,7 +34,7 @@ class Manifest: Decodable {
 
 extension Manifest {
     var appTargets: [AppTarget] {
-        return targets.filter { $0.type == "regular" }.map { AppTarget(projectName: name, targetName: $0.name, dependentLibraryNames: $0.dependencies.flatMap { $0.byName }) }
+        return targets.map { AppTarget(projectName: name, targetName: $0.name, dependentLibraryNames: $0.dependencies.flatMap { $0.byName }) }
     }
 
     func frameworkDependencies(ofLibrary libraryName: String, dependencyGraph: DependencyGraph) throws -> [Framework] {
