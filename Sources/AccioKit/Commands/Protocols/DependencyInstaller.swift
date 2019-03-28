@@ -33,6 +33,6 @@ extension DependencyInstaller {
             try XcodeProjectIntegrationService.shared.updateDependencies(of: appTarget, for: platform, with: frameworkProducts)
         }
 
-        try XcodeProjectIntegrationService.shared.removeUnnecessaryGroups(keepingTargets: manifest.appTargets)
+        try XcodeProjectIntegrationService.shared.unlinkAndRemoveGroupsOfUnnededTargets(keepingTargets: manifest.appTargets)
     }
 }

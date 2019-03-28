@@ -16,23 +16,33 @@ final class XcodeProjectIntegrationService {
         self.workingDirectory = workingDirectory
     }
 
-    func removeUnnecessaryGroups(keepingTargets targetsToKeep: [AppTarget]) throws {
+    func unlinkAndRemoveGroupsOfUnnededTargets(keepingTargets targetsToKeep: [AppTarget]) throws {
         guard let projectName = targetsToKeep.first?.projectName else { return }
 
+        // remove unnecessary groups
         let xcodeProjectPath = "\(workingDirectory)/\(projectName).xcodeproj"
         let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
-        let rootGroup = try projectFile.pbxproj.rootGroup()!
+        let pbxproj = projectFile.pbxproj
+        let rootGroup = try pbxproj.rootGroup()!
         let dependenciesGroup = try rootGroup.group(named: Constants.xcodeDependenciesGroup) ?? rootGroup.addGroup(named: Constants.xcodeDependenciesGroup, options: .withoutFolder)[0]
 
         let targetNames = targetsToKeep.map { $0.targetName }
-        let groupsToRemove = dependenciesGroup.children.filter { !targetNames.contains($0.name ?? "") }
+        let groupFilesToRemove = dependenciesGroup.children.filter { !targetNames.contains($0.name ?? "") }
 
-        guard !groupsToRemove.isEmpty else { return }
+        guard !groupFilesToRemove.isEmpty else { return }
 
-        print("Removing unnecessary groups \(groupsToRemove.compactMap { $0.name }) from group 'Dependencies' ...", level: .info)
-
-        for groupToRemove in groupsToRemove {
+        print("Removing unnecessary groups \(groupFilesToRemove.compactMap { $0.name }) from group 'Dependencies' ...", level: .info)
+        for groupToRemove in groupFilesToRemove {
             dependenciesGroup.children.removeAll { $0 == groupToRemove }
+        }
+
+        // unlink frameworks from targets that shouldn't be kept
+        let possiblyRemovedTargets = groupFilesToRemove.compactMap { $0.name }.flatMap { pbxproj.targets(named: $0) }
+        let frameworkBuildPhases = possiblyRemovedTargets.compactMap { $0.buildPhases.first(where: { $0.buildPhase == .frameworks }) as? PBXFrameworksBuildPhase }
+        let anyFrameworkBuildPhaseContainsFiles = frameworkBuildPhases.reduce(false) { $0 || !$1.files.isEmpty }
+        if anyFrameworkBuildPhaseContainsFiles {
+            print("Unlinking frameworks from targets \(possiblyRemovedTargets.map { $0.name }) that were removed ...", level: .info)
+            frameworkBuildPhases.forEach { $0.files.removeAll() }
         }
 
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
