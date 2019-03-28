@@ -19,7 +19,7 @@ final class XcodeProjectIntegrationService {
     func unlinkAndRemoveGroupsOfUnnededTargets(keepingTargets targetsToKeep: [AppTarget]) throws {
         guard let projectName = targetsToKeep.first?.projectName else { return }
 
-        // remove unnecessary groups
+        // find groups of which the associated target is not be kept
         let xcodeProjectPath = "\(workingDirectory)/\(projectName).xcodeproj"
         let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
         let pbxproj = projectFile.pbxproj
@@ -31,27 +31,23 @@ final class XcodeProjectIntegrationService {
 
         guard !groupsToRemove.isEmpty else { return }
 
-        print("Removing unnecessary groups \(groupsToRemove.compactMap { $0.name }) from group 'Dependencies' ...", level: .info)
+        // remove references to frameworks in removed groups and unlink them
+        for groupToRemove in groupsToRemove {
+            guard !groupToRemove.children.isEmpty, let groupName = groupToRemove.name else { continue }
+
+            let frameworkBuildPhase = pbxproj.targets(named: groupName).compactMap { $0.buildPhases.first(where: { $0.buildPhase == .frameworks }) as? PBXFrameworksBuildPhase }.first
+
+            let printSuffix = frameworkBuildPhase == nil ? "..." : "& unlinking from target '\(groupName)' ..."
+            print("Removing frameworks \(groupToRemove.children.compactMap { $0.name }) from project navigator group '\(groupName)' \(printSuffix)", level: .info)
+
+            groupToRemove.children.removeAll()
+            frameworkBuildPhase?.files.removeAll { file in groupToRemove.children.compactMap { $0.name }.contains { $0 == file.file?.name } }
+        }
+
+        // remove references to groups themselves
+        print("Removing empty groups \(groupsToRemove.compactMap { $0.name }) from project navigator group 'Dependencies' ...", level: .info)
         for groupToRemove in groupsToRemove {
             dependenciesGroup.children.removeAll { $0 == groupToRemove }
-        }
-
-        // unlink frameworks of which the group was removed
-        typealias RemovedGroup = (groupName: String, frameworkNames: [String])
-        let removedGroups = groupsToRemove.compactMap { group -> RemovedGroup? in
-            guard let groupName = group.name else { return nil }
-            return RemovedGroup(groupName: groupName, frameworkNames: group.children.compactMap { $0.name })
-        }
-
-        for removedGroup in removedGroups {
-            let frameworkBuildPhases = pbxproj.targets(named: removedGroup.groupName).compactMap { $0.buildPhases.first(where: { $0.buildPhase == .frameworks }) as? PBXFrameworksBuildPhase }
-
-            if !frameworkBuildPhases.isEmpty && !removedGroup.frameworkNames.isEmpty {
-                print("Unlinking frameworks \(removedGroup.frameworkNames) from target \(removedGroup.groupName) ...", level: .info)
-                frameworkBuildPhases.forEach {
-                    $0.files.removeAll { file in removedGroup.frameworkNames.contains { $0 == file.file?.name } }
-                }
-            }
         }
 
         // write project file
@@ -64,14 +60,14 @@ final class XcodeProjectIntegrationService {
     }
 
     func updateDependencies(of appTarget: AppTarget, for platform: Platform, with frameworkProducts: [FrameworkProduct]) throws {
-        print("Relinking build products with targets in Xcode project ...", level: .info)
-
         let dependenciesPlatformPath = "\(workingDirectory)/\(Constants.dependenciesPath)/\(platform.rawValue)"
-        let copiedFrameworkProducts: [FrameworkProduct] = try copyFrameworkProducts(frameworkProducts, to: dependenciesPlatformPath)
-        try linkFrameworks(copiedFrameworkProducts, with: appTarget, for: platform)
+        let copiedFrameworkProducts: [FrameworkProduct] = try copy(frameworkProducts: frameworkProducts, of: appTarget, to: dependenciesPlatformPath)
+        try link(frameworkProducts: copiedFrameworkProducts, with: appTarget, for: platform)
     }
 
-    private func copyFrameworkProducts(_ frameworkProducts: [FrameworkProduct], to targetPath: String) throws -> [FrameworkProduct] {
+    private func copy(frameworkProducts: [FrameworkProduct], of appTarget: AppTarget, to targetPath: String) throws -> [FrameworkProduct] {
+        print("Copying build products of target \(appTarget.targetName) into folder `Dependencies` ...", level: .info)
+
         try bash("mkdir -p '\(targetPath)'")
         var copiedFrameworkProducts: [FrameworkProduct] = []
 
@@ -96,7 +92,7 @@ final class XcodeProjectIntegrationService {
         return copiedFrameworkProducts
     }
 
-    private func linkFrameworks(_ frameworkProducts: [FrameworkProduct], with appTarget: AppTarget, for platform: Platform) throws {
+    private func link(frameworkProducts: [FrameworkProduct], with appTarget: AppTarget, for platform: Platform) throws {
         let xcodeProjectPath = "\(workingDirectory)/\(appTarget.projectName).xcodeproj"
         let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
         let pbxproj = projectFile.pbxproj
@@ -128,7 +124,7 @@ final class XcodeProjectIntegrationService {
 
         if !frameworksToAdd.isEmpty {
             let frameworkNames = frameworksToAdd.map { $0.frameworkDirUrl.lastPathComponent.components(separatedBy: ".").first! }
-            print("Adding frameworks \(frameworkNames) to group '\(platformGroupName)' in project navigator & linking with target '\(appTarget.targetName)' ...", level: .info)
+            print("Adding frameworks \(frameworkNames) to project navigator group '\(platformGroupName)' & linking with target '\(appTarget.targetName)' ...", level: .info)
 
             for frameworkToAdd in frameworksToAdd {
                 let frameworkFileRef = try targetGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
@@ -143,7 +139,7 @@ final class XcodeProjectIntegrationService {
 
         if !filesToRemove.isEmpty {
             let fileNames = filesToRemove.map { $0.name! }
-            print("Removing references \(fileNames) from group '\(platformGroupName)' and unlinking from target '\(appTarget.targetName)' ...", level: .info)
+            print("Removing frameworks \(fileNames) from project navigator group '\(platformGroupName)' & unlinking from target '\(appTarget.targetName)' ...", level: .info)
 
             for fileToRemove in filesToRemove {
                 targetGroup.children.removeAll { $0 === fileToRemove }
