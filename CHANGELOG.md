@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## [Unreleased]
 ### Added
 - Add support for test targets.
+- Sort `Dependencies` group alphabetically.
 ### Changed
 - Change structure of `Dependencies` folder.
 - Delete unneeded groups & references from `Dependencies` group.

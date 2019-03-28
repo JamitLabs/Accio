@@ -16,10 +16,10 @@ final class XcodeProjectIntegrationService {
         self.workingDirectory = workingDirectory
     }
 
-    func unlinkAndRemoveGroupsOfUnnededTargets(keepingTargets targetsToKeep: [AppTarget]) throws {
+    func handleRemovedTargets(keepingTargets targetsToKeep: [AppTarget]) throws {
         guard let projectName = targetsToKeep.first?.projectName else { return }
 
-        // find groups of which the associated target is not kept
+        // find groups of which the associated target is no longer listed in the Package.swift
         let xcodeProjectPath = "\(workingDirectory)/\(projectName).xcodeproj"
         let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
         let pbxproj = projectFile.pbxproj
@@ -29,7 +29,8 @@ final class XcodeProjectIntegrationService {
         let targetNames = targetsToKeep.map { $0.targetName }
         let groupsToRemove = dependenciesGroup.children.filter { !targetNames.contains($0.name ?? "") }.compactMap { $0 as? PBXGroup }
 
-        guard !groupsToRemove.isEmpty else { return }
+        // sort dependencies group alphabetically
+        dependenciesGroup.children.sort { ($0.name ?? "") < ($1.name ?? "") }
 
         for groupToRemove in groupsToRemove {
             guard !groupToRemove.children.isEmpty, let groupName = groupToRemove.name else { continue }
@@ -66,10 +67,12 @@ final class XcodeProjectIntegrationService {
             }
         }
 
-        // remove references to groups themselves
-        print("Removing empty groups \(groupsToRemove.compactMap { $0.name }) from project navigator group '\(Constants.xcodeDependenciesGroup)' ...", level: .info)
-        for groupToRemove in groupsToRemove {
-            dependenciesGroup.children.removeAll { $0 == groupToRemove }
+        if !groupsToRemove.isEmpty {
+            // remove references to groups themselves
+            print("Removing empty groups \(groupsToRemove.compactMap { $0.name }) from project navigator group '\(Constants.xcodeDependenciesGroup)' ...", level: .info)
+            for groupToRemove in groupsToRemove {
+                dependenciesGroup.children.removeAll { $0 == groupToRemove }
+            }
         }
 
         // write project file
@@ -88,7 +91,7 @@ final class XcodeProjectIntegrationService {
     }
 
     private func copy(frameworkProducts: [FrameworkProduct], of appTarget: AppTarget, to targetPath: String) throws -> [FrameworkProduct] {
-        print("Copying build products of target \(appTarget.targetName) into folder `\(Constants.dependenciesPath)` ...", level: .info)
+        print("Copying build products of target '\(appTarget.targetName)' into folder '\(Constants.dependenciesPath)' ...", level: .info)
 
         try bash("mkdir -p '\(targetPath)'")
         var copiedFrameworkProducts: [FrameworkProduct] = []
