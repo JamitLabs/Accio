@@ -48,6 +48,11 @@ final class XcodeProjectIntegrationService {
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
     }
 
+    func clearDependenciesFolder() throws {
+        let dependenciesPath = "\(workingDirectory)/\(Constants.dependenciesPath)/*"
+        try bash("rm -rf \(dependenciesPath)")
+    }
+
     func updateDependencies(of appTarget: AppTarget, for platform: Platform, with frameworkProducts: [FrameworkProduct]) throws {
         print("Relinking build products with targets in Xcode project ...", level: .info)
 
