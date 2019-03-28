@@ -54,6 +54,19 @@ class DependencyResolverServiceTests: XCTestCase {
         )
     }
 
+    private var exampleObjCFile: Resource {
+        return Resource(
+            url: testResourcesDir.appendingPathComponent("TestProject-iOS/AppDelegate.m"),
+            contents: """
+                @interface AppDelegate
+                @end
+
+                @implementation AppDelegate
+                #end
+                """
+        )
+    }
+
     override func setUp() {
         super.setUp()
 
@@ -75,6 +88,26 @@ class DependencyResolverServiceTests: XCTestCase {
             XCTAssertEqual(moyaDependency.path, testResourcesDir.appendingPathComponent("\(Constants.buildPath)/checkouts/Moya").path)
             XCTAssertEqual(moyaDependency.dependencies.count, 4)
             XCTAssertEqual(moyaDependency.dependencies.map { $0.name }.sorted(), ["Alamofire", "ReactiveSwift", "Result", "RxSwift"])
+        }
+    }
+
+    func testMixedProjectOutput() {
+        TestHelper.shared.isStartedByUnitTests = true
+
+        resourcesLoaded([manifestResource, xcodeProjectResource, exampleSwiftFile, exampleObjCFile]) {
+            do {
+                _ = try DependencyResolverService(workingDirectory: testResourcesDir.path).dependencyGraph()
+                XCTFail("Expected DependencyResolverService to throw exception.")
+            } catch {
+                XCTAssertEqual(
+                    TestHelper.shared.printOutputs.last?.message,
+                    """
+                    Please make sure that the 'path' of all targets in Package.swift are set to directories containing only Swift files.
+                        For additional details, please see here: https://github.com/JamitLabs/Accio/issues/3")
+                    """
+                )
+                XCTAssertEqual(TestHelper.shared.printOutputs.last?.level, .warning)
+            }
         }
     }
 }
