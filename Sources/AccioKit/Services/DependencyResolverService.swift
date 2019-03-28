@@ -30,6 +30,17 @@ final class DependencyResolverService {
 
         guard output.exitcode == 0 else {
             print(output.stderror, level: .error)
+
+            if output.stderror.contains("contains mixed language source files") {
+                print(
+                    """
+                    Please make sure that the 'path' of all targets in Package.swift are set to directories containing only Swift files.
+                        For additional details, please see here: https://github.com/JamitLabs/Accio/issues/3")
+                    """,
+                    level: .warning
+                )
+            }
+
             throw DependencyResolverError.dependencyGraphGenerationFailed
         }
 
