@@ -27,24 +27,34 @@ final class XcodeProjectIntegrationService {
         let dependenciesGroup = try rootGroup.group(named: Constants.xcodeDependenciesGroup) ?? rootGroup.addGroup(named: Constants.xcodeDependenciesGroup, options: .withoutFolder)[0]
 
         let targetNames = targetsToKeep.map { $0.targetName }
-        let groupFilesToRemove = dependenciesGroup.children.filter { !targetNames.contains($0.name ?? "") }
+        let groupsToRemove = dependenciesGroup.children.filter { !targetNames.contains($0.name ?? "") }.compactMap { $0 as? PBXGroup }
 
-        guard !groupFilesToRemove.isEmpty else { return }
+        guard !groupsToRemove.isEmpty else { return }
 
-        print("Removing unnecessary groups \(groupFilesToRemove.compactMap { $0.name }) from group 'Dependencies' ...", level: .info)
-        for groupToRemove in groupFilesToRemove {
+        print("Removing unnecessary groups \(groupsToRemove.compactMap { $0.name }) from group 'Dependencies' ...", level: .info)
+        for groupToRemove in groupsToRemove {
             dependenciesGroup.children.removeAll { $0 == groupToRemove }
         }
 
-        // unlink frameworks from targets that shouldn't be kept
-        let possiblyRemovedTargets = groupFilesToRemove.compactMap { $0.name }.flatMap { pbxproj.targets(named: $0) }
-        let frameworkBuildPhases = possiblyRemovedTargets.compactMap { $0.buildPhases.first(where: { $0.buildPhase == .frameworks }) as? PBXFrameworksBuildPhase }
-        let anyFrameworkBuildPhaseContainsFiles = frameworkBuildPhases.reduce(false) { $0 || !$1.files.isEmpty }
-        if anyFrameworkBuildPhaseContainsFiles {
-            print("Unlinking frameworks from targets \(possiblyRemovedTargets.map { $0.name }) that were removed ...", level: .info)
-            frameworkBuildPhases.forEach { $0.files.removeAll() }
+        // unlink frameworks of which the group was removed
+        typealias RemovedGroup = (groupName: String, frameworkNames: [String])
+        let removedGroups = groupsToRemove.compactMap { group -> RemovedGroup? in
+            guard let groupName = group.name else { return nil }
+            return RemovedGroup(groupName: groupName, frameworkNames: group.children.compactMap { $0.name })
         }
 
+        for removedGroup in removedGroups {
+            let frameworkBuildPhases = pbxproj.targets(named: removedGroup.groupName).compactMap { $0.buildPhases.first(where: { $0.buildPhase == .frameworks }) as? PBXFrameworksBuildPhase }
+
+            if !frameworkBuildPhases.isEmpty && !removedGroup.frameworkNames.isEmpty {
+                print("Unlinking frameworks \(removedGroup.frameworkNames) from target \(removedGroup.groupName) ...", level: .info)
+                frameworkBuildPhases.forEach {
+                    $0.files.removeAll { file in removedGroup.frameworkNames.contains { $0 == file.file?.name } }
+                }
+            }
+        }
+
+        // write project file
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
     }
 
