@@ -120,6 +120,7 @@ final class XcodeProjectIntegrationService {
         let dependenciesGroup = try rootGroup.group(named: Constants.xcodeDependenciesGroup) ?? rootGroup.addGroup(named: Constants.xcodeDependenciesGroup, options: .withoutFolder)[0]
         let targetGroup = try dependenciesGroup.group(named: appTarget.targetName) ?? dependenciesGroup.addGroup(named: appTarget.targetName, options: .withoutFolder)[0]
 
+        // manage added files
         let frameworksToAdd = frameworkProducts.filter { product in !targetGroup.children.compactMap { $0.path }.contains { $0.hasSuffix(product.frameworkDirUrl.lastPathComponent) } }.removingDuplicates()
         let platformGroupName = "\(Constants.xcodeDependenciesGroup)/\(targetGroup.name!)"
 
@@ -136,6 +137,7 @@ final class XcodeProjectIntegrationService {
             }
         }
 
+        // manage removed files
         let filesToRemove = targetGroup.children.filter { fileRef in !frameworkProducts.contains { $0.frameworkDirPath.hasSuffix(fileRef.name!) } }
 
         if !filesToRemove.isEmpty {
@@ -153,7 +155,9 @@ final class XcodeProjectIntegrationService {
         targetGroup.children.removeDuplicates()
         targetGroup.children.sort { $0.name! < $1.name! }
 
-        if appTarget.targetType == .regular {
+        switch appTarget.targetType {
+        case .regular:
+            // manage copy build script for regular targets
             var copyBuildScript: PBXShellScriptBuildPhase! = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as? PBXShellScriptBuildPhase
             if copyBuildScript == nil {
                 print("Creating new copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)'...", level: .info)
@@ -164,6 +168,19 @@ final class XcodeProjectIntegrationService {
             pbxproj.add(object: copyBuildScript)
             print("Updating input paths in copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)' ...", level: .info)
             copyBuildScript.inputPaths = targetGroup.children.map { "$(SRCROOT)/\($0.path!)" }
+
+        case .test:
+            // manage copy files phase for test targets
+            var copyFilesPhase: PBXCopyFilesBuildPhase! = targetObject.buildPhases.first { $0.type() == .copyFiles && ($0 as! PBXCopyFilesBuildPhase).name == Constants.copyFilesPhase } as? PBXCopyFilesBuildPhase
+            if copyFilesPhase == nil {
+                print("Creating new copy files phase '\(Constants.copyFilesPhase)' for target '\(appTarget.targetName)'...", level: .info)
+                copyFilesPhase = PBXCopyFilesBuildPhase(dstSubfolderSpec: .frameworks, name: Constants.copyFilesPhase)
+                targetObject.buildPhases.append(copyFilesPhase)
+            }
+
+            pbxproj.add(object: copyFilesPhase)
+            print("Updating frameworks in copy files phase '\(Constants.copyFilesPhase)' for target '\(appTarget.targetName)' ...", level: .info)
+            copyFilesPhase.files = targetGroup.children.map { PBXBuildFile(file: $0) }
         }
 
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
