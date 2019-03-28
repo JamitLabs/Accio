@@ -92,7 +92,6 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
                 XCTAssertEqual(frameworksBuildPhase.files.count, testFrameworkNames.count)
                 XCTAssertEqual(frameworksBuildPhase.files.map { $0.file!.name }, testFrameworkNames.map { "\($0).framework" })
 
-
                 // test updateBuildPhase
                 switch appTarget.targetType {
                 case .regular:

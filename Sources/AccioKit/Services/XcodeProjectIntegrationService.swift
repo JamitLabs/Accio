@@ -122,7 +122,10 @@ final class XcodeProjectIntegrationService {
 
             for frameworkToAdd in frameworksToAdd {
                 let frameworkFileRef = try targetGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
-                _ = try frameworksBuildPhase.add(file: frameworkFileRef)
+
+                if !frameworksBuildPhase.files.contains { $0.file?.path == frameworkFileRef.path } {
+                    _ = try frameworksBuildPhase.add(file: frameworkFileRef)
+                }
             }
         }
 
