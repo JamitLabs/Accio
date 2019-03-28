@@ -18,7 +18,7 @@ final class FrameworkCachingService {
         let localCachedSymbolsFile = "\(localCacheDir.appendingPathComponent(productSymbolsFile).path)"
 
         if FileManager.default.fileExists(atPath: localCachedFrameworkDir) && FileManager.default.fileExists(atPath: localCachedSymbolsFile) {
-            print("Found cached build product for \(framework.libraryName) in local cache - skipping build.", level: .info)
+            print("Found cached build products for \(framework.libraryName) in local cache - skipping build.", level: .info)
             return FrameworkProduct(frameworkDirPath: localCachedFrameworkDir, symbolsFilePath: localCachedSymbolsFile)
         }
 
