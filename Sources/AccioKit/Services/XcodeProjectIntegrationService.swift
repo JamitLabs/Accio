@@ -67,7 +67,7 @@ final class XcodeProjectIntegrationService {
         }
 
         // remove references to groups themselves
-        print("Removing empty groups \(groupsToRemove.compactMap { $0.name }) from project navigator group 'Dependencies' ...", level: .info)
+        print("Removing empty groups \(groupsToRemove.compactMap { $0.name }) from project navigator group '\(Constants.xcodeDependenciesGroup)' ...", level: .info)
         for groupToRemove in groupsToRemove {
             dependenciesGroup.children.removeAll { $0 == groupToRemove }
         }
@@ -88,7 +88,7 @@ final class XcodeProjectIntegrationService {
     }
 
     private func copy(frameworkProducts: [FrameworkProduct], of appTarget: AppTarget, to targetPath: String) throws -> [FrameworkProduct] {
-        print("Copying build products of target \(appTarget.targetName) into folder `Dependencies` ...", level: .info)
+        print("Copying build products of target \(appTarget.targetName) into folder `\(Constants.dependenciesPath)` ...", level: .info)
 
         try bash("mkdir -p '\(targetPath)'")
         var copiedFrameworkProducts: [FrameworkProduct] = []
@@ -132,8 +132,8 @@ final class XcodeProjectIntegrationService {
         // ensure the framework search path includes the dependencies path
         for buildConfiguration in targetObject.buildConfigurationList!.buildConfigurations {
             let frameworkSearchPaths: [String] = buildConfiguration.buildSettings["FRAMEWORK_SEARCH_PATHS"] as? [String] ?? ["$(inherited)"]
-            if !frameworkSearchPaths.contains("$(PROJECT_DIR)/Dependencies/\(platform.rawValue)") {
-                buildConfiguration.buildSettings["FRAMEWORK_SEARCH_PATHS"] = frameworkSearchPaths + ["$(PROJECT_DIR)/Dependencies/\(platform.rawValue)"]
+            if !frameworkSearchPaths.contains("$(PROJECT_DIR)/\(Constants.dependenciesPath)/\(platform.rawValue)") {
+                buildConfiguration.buildSettings["FRAMEWORK_SEARCH_PATHS"] = frameworkSearchPaths + ["$(PROJECT_DIR)/\(Constants.dependenciesPath)/\(platform.rawValue)"]
             }
         }
 

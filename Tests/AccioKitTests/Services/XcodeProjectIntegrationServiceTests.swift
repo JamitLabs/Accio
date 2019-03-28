@@ -98,7 +98,7 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
                     let accioBuildScript = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as! PBXShellScriptBuildPhase
 
                     XCTAssertEqual(accioBuildScript.inputPaths.count, testFrameworkNames.count)
-                    XCTAssertEqual(accioBuildScript.inputPaths, testFrameworkNames.map { "$(SRCROOT)/Dependencies/iOS/\($0).framework" })
+                    XCTAssertEqual(accioBuildScript.inputPaths, testFrameworkNames.map { "$(SRCROOT)/\(Constants.dependenciesPath)/iOS/\($0).framework" })
 
                 case .test:
                     let accioBuildScript = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript }

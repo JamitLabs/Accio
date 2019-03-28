@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - None.
 ### Fixed
 - Fix typo in local cache logging. 
+- Fix missing use of `Constants.xcodeDependenciesGroup` & `Constants.dependenciesPath`.
 ### Security
 - None.
 
