@@ -19,7 +19,7 @@ final class XcodeProjectIntegrationService {
     func unlinkAndRemoveGroupsOfUnnededTargets(keepingTargets targetsToKeep: [AppTarget]) throws {
         guard let projectName = targetsToKeep.first?.projectName else { return }
 
-        // find groups of which the associated target is not be kept
+        // find groups of which the associated target is not kept
         let xcodeProjectPath = "\(workingDirectory)/\(projectName).xcodeproj"
         let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
         let pbxproj = projectFile.pbxproj
@@ -40,8 +40,9 @@ final class XcodeProjectIntegrationService {
             let printSuffix = frameworkBuildPhase == nil ? "..." : "& unlinking from target '\(groupName)' ..."
             print("Removing frameworks \(groupToRemove.children.compactMap { $0.name }) from project navigator group '\(groupName)' \(printSuffix)", level: .info)
 
+            let namesOfFrameworksToRemove = groupToRemove.children.compactMap { $0.name }
             groupToRemove.children.removeAll()
-            frameworkBuildPhase?.files.removeAll { file in groupToRemove.children.compactMap { $0.name }.contains { $0 == file.file?.name } }
+            frameworkBuildPhase?.files.removeAll { file in namesOfFrameworksToRemove.contains { $0 == file.file?.name } }
         }
 
         // remove references to groups themselves
