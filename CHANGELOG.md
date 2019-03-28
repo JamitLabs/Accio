@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Only link frameworks when not already linked.
 - Unlink frameworks that are no longer included.
 - Don't save build products to local cache if shared cache is available.
+- Cleanup Accio run script phase when target gets removed.
 ### Deprecated
 - None.
 ### Removed

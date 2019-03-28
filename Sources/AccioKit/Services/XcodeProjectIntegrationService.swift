@@ -31,11 +31,13 @@ final class XcodeProjectIntegrationService {
 
         guard !groupsToRemove.isEmpty else { return }
 
-        // remove references to frameworks in removed groups and unlink them
         for groupToRemove in groupsToRemove {
             guard !groupToRemove.children.isEmpty, let groupName = groupToRemove.name else { continue }
 
-            let frameworkBuildPhase = pbxproj.targets(named: groupName).compactMap { $0.buildPhases.first(where: { $0.buildPhase == .frameworks }) as? PBXFrameworksBuildPhase }.first
+            let target = pbxproj.targets(named: groupName).first
+
+            // remove references to frameworks in removed groups and unlink them
+            let frameworkBuildPhase = target?.buildPhases.first { $0.buildPhase == .frameworks } as? PBXFrameworksBuildPhase
 
             let printSuffix = frameworkBuildPhase == nil ? "..." : "& unlinking from target '\(groupName)' ..."
             print("Removing frameworks \(groupToRemove.children.compactMap { $0.name }) from project navigator group '\(groupName)' \(printSuffix)", level: .info)
@@ -43,6 +45,25 @@ final class XcodeProjectIntegrationService {
             let namesOfFrameworksToRemove = groupToRemove.children.compactMap { $0.name }
             groupToRemove.children.removeAll()
             frameworkBuildPhase?.files.removeAll { file in namesOfFrameworksToRemove.contains { $0 == file.file?.name } }
+
+            // clean up potential copy frameworks phase
+            if let target = target, let copyFrameworksPhase = (target.buildPhases.first {
+                $0.type() == .copyFiles &&
+                    ($0 as! PBXCopyFilesBuildPhase).name == Constants.copyFilesPhase &&
+                    ($0 as! PBXCopyFilesBuildPhase).dstSubfolderSpec == .frameworks
+            }) as? PBXCopyFilesBuildPhase {
+                print("Cleaning up frameworks in copy frameworks phase '\(Constants.copyFilesPhase)' for target '\(target.name)' ...", level: .info)
+                copyFrameworksPhase.files = []
+            }
+
+            // clean up potential copy build script
+            if let target = target, let copyBuildScript = (target.buildPhases.first {
+                $0.type() == .runScript &&
+                    ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript
+            }) as? PBXShellScriptBuildPhase {
+                print("Cleaning up input paths in copy build script phase '\(Constants.copyBuildScript)' for target '\(target.name)' ...", level: .info)
+                copyBuildScript.inputPaths = []
+            }
         }
 
         // remove references to groups themselves
@@ -163,24 +184,28 @@ final class XcodeProjectIntegrationService {
                 print("Creating new copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)'...", level: .info)
                 copyBuildScript = PBXShellScriptBuildPhase(name: Constants.copyBuildScript, shellScript: "/usr/local/bin/carthage copy-frameworks")
                 targetObject.buildPhases.append(copyBuildScript)
+                pbxproj.add(object: copyBuildScript)
             }
 
-            pbxproj.add(object: copyBuildScript)
             print("Updating input paths in copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)' ...", level: .info)
             copyBuildScript.inputPaths = targetGroup.children.map { "$(SRCROOT)/\($0.path!)" }
 
         case .test:
-            // manage copy files phase for test targets
-            var copyFilesPhase: PBXCopyFilesBuildPhase! = targetObject.buildPhases.first { $0.type() == .copyFiles && ($0 as! PBXCopyFilesBuildPhase).name == Constants.copyFilesPhase } as? PBXCopyFilesBuildPhase
-            if copyFilesPhase == nil {
-                print("Creating new copy files phase '\(Constants.copyFilesPhase)' for target '\(appTarget.targetName)'...", level: .info)
-                copyFilesPhase = PBXCopyFilesBuildPhase(dstSubfolderSpec: .frameworks, name: Constants.copyFilesPhase)
-                targetObject.buildPhases.append(copyFilesPhase)
+            // manage copy frameworks phase for test targets
+            var copyFrameworksPhase: PBXCopyFilesBuildPhase! = targetObject.buildPhases.first {
+                $0.type() == .copyFiles &&
+                    ($0 as! PBXCopyFilesBuildPhase).name == Constants.copyFilesPhase &&
+                    ($0 as! PBXCopyFilesBuildPhase).dstSubfolderSpec == .frameworks
+                } as? PBXCopyFilesBuildPhase
+            if copyFrameworksPhase == nil {
+                print("Creating new copy frameworks phase '\(Constants.copyFilesPhase)' for target '\(appTarget.targetName)'...", level: .info)
+                copyFrameworksPhase = PBXCopyFilesBuildPhase(dstSubfolderSpec: .frameworks, name: Constants.copyFilesPhase)
+                targetObject.buildPhases.append(copyFrameworksPhase)
+                pbxproj.add(object: copyFrameworksPhase)
             }
 
-            pbxproj.add(object: copyFilesPhase)
-            print("Updating frameworks in copy files phase '\(Constants.copyFilesPhase)' for target '\(appTarget.targetName)' ...", level: .info)
-            copyFilesPhase.files = targetGroup.children.map { PBXBuildFile(file: $0) }
+            print("Updating frameworks in copy frameworks phase '\(Constants.copyFilesPhase)' for target '\(appTarget.targetName)' ...", level: .info)
+            try targetGroup.children.forEach { _ = try copyFrameworksPhase.add(file: $0) }
         }
 
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
