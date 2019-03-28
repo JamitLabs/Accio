@@ -131,7 +131,7 @@ Accio uses the [official SwiftPM manifest format](https://github.com/apple/swift
 Here's an example `Package.swift` file with multiple dependencies specified:
 
 ```swift
-// swift-tools-version:4.2
+// swift-tools-version:5.0
 import PackageDescription
 
 let package = Package(
