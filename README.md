@@ -216,7 +216,7 @@ Note: There is also a `clean` command which this should not be confused with. Th
 
 ## Adding support for Accio
 
-Most libraries that are compatible with SwiftPM should automatically work with Accio. Also libraries that are compatible with Carthage can be easily made compatible with Accio by simply adding a `Package.swift` file similar to this:
+Most libraries that are compatible with SwiftPM should automatically work with Accio. There's also a Demo project with integration tests on the CI to ensure most Swift frameworks on GitHub with [at least 1,000 stars](https://github.com/search?q=stars%3A%3E1000+language%3Aswift&type=Repositories) support Accio. Libraries that are compatible with Carthage can be easily made compatible with Accio by simply adding a `Package.swift` file similar to this:
 
 ```swift
 // swift-tools-version:4.2
