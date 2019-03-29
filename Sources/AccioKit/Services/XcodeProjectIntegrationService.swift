@@ -16,15 +16,83 @@ final class XcodeProjectIntegrationService {
         self.workingDirectory = workingDirectory
     }
 
-    func updateDependencies(of appTarget: AppTarget, for platform: Platform, with frameworkProducts: [FrameworkProduct]) throws {
-        print("Relinking build products with targets in Xcode project ...", level: .info)
+    func handleRemovedTargets(keepingTargets targetsToKeep: [AppTarget]) throws {
+        guard let projectName = targetsToKeep.first?.projectName else { return }
 
-        let dependenciesPlatformPath = "\(workingDirectory)/\(Constants.dependenciesPath)/\(platform.rawValue)"
-        let copiedFrameworkProducts: [FrameworkProduct] = try copyFrameworkProducts(frameworkProducts, to: dependenciesPlatformPath)
-        try linkFrameworks(copiedFrameworkProducts, with: appTarget, for: platform)
+        // find groups of which the associated target is no longer listed in the Package.swift
+        let xcodeProjectPath = "\(workingDirectory)/\(projectName).xcodeproj"
+        let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
+        let pbxproj = projectFile.pbxproj
+        let rootGroup = try pbxproj.rootGroup()!
+        let dependenciesGroup = try rootGroup.group(named: Constants.xcodeDependenciesGroup) ?? rootGroup.addGroup(named: Constants.xcodeDependenciesGroup, options: .withoutFolder)[0]
+
+        let targetNames = targetsToKeep.map { $0.targetName }
+        let groupsToRemove = dependenciesGroup.children.filter { !targetNames.contains($0.name ?? "") }.compactMap { $0 as? PBXGroup }
+
+        // sort dependencies group alphabetically
+        dependenciesGroup.children.sort { ($0.name ?? "") < ($1.name ?? "") }
+
+        for groupToRemove in groupsToRemove {
+            guard !groupToRemove.children.isEmpty, let groupName = groupToRemove.name else { continue }
+
+            let target = pbxproj.targets(named: groupName).first
+
+            // remove references to frameworks in removed groups and unlink them
+            let frameworkBuildPhase = target?.buildPhases.first { $0.buildPhase == .frameworks } as? PBXFrameworksBuildPhase
+
+            let printSuffix = frameworkBuildPhase == nil ? "..." : "& unlinking from target '\(groupName)' ..."
+            print("Removing frameworks \(groupToRemove.children.compactMap { $0.name }) from project navigator group '\(groupName)' \(printSuffix)", level: .info)
+
+            let namesOfFrameworksToRemove = groupToRemove.children.compactMap { $0.name }
+            groupToRemove.children.removeAll()
+            frameworkBuildPhase?.files.removeAll { file in namesOfFrameworksToRemove.contains { $0 == file.file?.name } }
+
+            // clean up potential copy frameworks phase
+            if let target = target, let copyFrameworksPhase = (target.buildPhases.first {
+                $0.type() == .copyFiles &&
+                    ($0 as! PBXCopyFilesBuildPhase).name == Constants.copyFilesPhase &&
+                    ($0 as! PBXCopyFilesBuildPhase).dstSubfolderSpec == .frameworks
+            }) as? PBXCopyFilesBuildPhase {
+                print("Cleaning up frameworks in copy frameworks phase '\(Constants.copyFilesPhase)' for target '\(target.name)' ...", level: .info)
+                copyFrameworksPhase.files = []
+            }
+
+            // clean up potential copy build script
+            if let target = target, let copyBuildScript = (target.buildPhases.first {
+                $0.type() == .runScript &&
+                    ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript
+            }) as? PBXShellScriptBuildPhase {
+                print("Cleaning up input paths in copy build script phase '\(Constants.copyBuildScript)' for target '\(target.name)' ...", level: .info)
+                copyBuildScript.inputPaths = []
+            }
+        }
+
+        if !groupsToRemove.isEmpty {
+            // remove references to groups themselves
+            print("Removing empty groups \(groupsToRemove.compactMap { $0.name }) from project navigator group '\(Constants.xcodeDependenciesGroup)' ...", level: .info)
+            for groupToRemove in groupsToRemove {
+                dependenciesGroup.children.removeAll { $0 == groupToRemove }
+            }
+        }
+
+        // write project file
+        try projectFile.write(path: Path(xcodeProjectPath), override: true)
     }
 
-    private func copyFrameworkProducts(_ frameworkProducts: [FrameworkProduct], to targetPath: String) throws -> [FrameworkProduct] {
+    func clearDependenciesFolder() throws {
+        let dependenciesPath = "\(workingDirectory)/\(Constants.dependenciesPath)/*"
+        try bash("rm -rf \(dependenciesPath)")
+    }
+
+    func updateDependencies(of appTarget: AppTarget, for platform: Platform, with frameworkProducts: [FrameworkProduct]) throws {
+        let dependenciesPlatformPath = "\(workingDirectory)/\(Constants.dependenciesPath)/\(platform.rawValue)"
+        let copiedFrameworkProducts: [FrameworkProduct] = try copy(frameworkProducts: frameworkProducts, of: appTarget, to: dependenciesPlatformPath)
+        try link(frameworkProducts: copiedFrameworkProducts, with: appTarget, for: platform)
+    }
+
+    private func copy(frameworkProducts: [FrameworkProduct], of appTarget: AppTarget, to targetPath: String) throws -> [FrameworkProduct] {
+        print("Copying build products of target '\(appTarget.targetName)' into folder '\(Constants.dependenciesPath)' ...", level: .info)
+
         try bash("mkdir -p '\(targetPath)'")
         var copiedFrameworkProducts: [FrameworkProduct] = []
 
@@ -49,7 +117,7 @@ final class XcodeProjectIntegrationService {
         return copiedFrameworkProducts
     }
 
-    private func linkFrameworks(_ frameworkProducts: [FrameworkProduct], with appTarget: AppTarget, for platform: Platform) throws {
+    private func link(frameworkProducts: [FrameworkProduct], with appTarget: AppTarget, for platform: Platform) throws {
         let xcodeProjectPath = "\(workingDirectory)/\(appTarget.projectName).xcodeproj"
         let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
         let pbxproj = projectFile.pbxproj
@@ -67,52 +135,81 @@ final class XcodeProjectIntegrationService {
         // ensure the framework search path includes the dependencies path
         for buildConfiguration in targetObject.buildConfigurationList!.buildConfigurations {
             let frameworkSearchPaths: [String] = buildConfiguration.buildSettings["FRAMEWORK_SEARCH_PATHS"] as? [String] ?? ["$(inherited)"]
-            if !frameworkSearchPaths.contains("$(PROJECT_DIR)/Dependencies/\(platform.rawValue)") {
-                buildConfiguration.buildSettings["FRAMEWORK_SEARCH_PATHS"] = frameworkSearchPaths + ["$(PROJECT_DIR)/Dependencies/\(platform.rawValue)"]
+            if !frameworkSearchPaths.contains("$(PROJECT_DIR)/\(Constants.dependenciesPath)/\(platform.rawValue)") {
+                buildConfiguration.buildSettings["FRAMEWORK_SEARCH_PATHS"] = frameworkSearchPaths + ["$(PROJECT_DIR)/\(Constants.dependenciesPath)/\(platform.rawValue)"]
             }
         }
 
         let rootGroup = try pbxproj.rootGroup()!
         let dependenciesGroup = try rootGroup.group(named: Constants.xcodeDependenciesGroup) ?? rootGroup.addGroup(named: Constants.xcodeDependenciesGroup, options: .withoutFolder)[0]
-        let platformGroup = try dependenciesGroup.group(named: platform.rawValue) ?? dependenciesGroup.addGroup(named: platform.rawValue, options: .withoutFolder)[0]
+        let targetGroup = try dependenciesGroup.group(named: appTarget.targetName) ?? dependenciesGroup.addGroup(named: appTarget.targetName, options: .withoutFolder)[0]
 
-        let frameworksToAdd = frameworkProducts.filter { product in !platformGroup.children.compactMap { $0.path }.contains { $0.hasSuffix(product.frameworkDirUrl.lastPathComponent) } }.removingDuplicates()
-        let platformGroupName = "\(Constants.xcodeDependenciesGroup)/\(platformGroup.name!)"
+        // manage added files
+        let frameworksToAdd = frameworkProducts.filter { product in !targetGroup.children.compactMap { $0.path }.contains { $0.hasSuffix(product.frameworkDirUrl.lastPathComponent) } }.removingDuplicates()
+        let platformGroupName = "\(Constants.xcodeDependenciesGroup)/\(targetGroup.name!)"
 
         if !frameworksToAdd.isEmpty {
             let frameworkNames = frameworksToAdd.map { $0.frameworkDirUrl.lastPathComponent.components(separatedBy: ".").first! }
-            print("Adding frameworks \(frameworkNames) to group '\(platformGroupName)' in project navigator & linking with target '\(appTarget.targetName)' ...", level: .info)
+            print("Adding frameworks \(frameworkNames) to project navigator group '\(platformGroupName)' & linking with target '\(appTarget.targetName)' ...", level: .info)
 
             for frameworkToAdd in frameworksToAdd {
-                let frameworkFileRef = try platformGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
-                _ = try frameworksBuildPhase.add(file: frameworkFileRef)
+                let frameworkFileRef = try targetGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
+
+                if !frameworksBuildPhase.files.contains { $0.file?.path == frameworkFileRef.path } {
+                    _ = try frameworksBuildPhase.add(file: frameworkFileRef)
+                }
             }
         }
 
-        let filesToRemove = platformGroup.children.filter { fileRef in !frameworkProducts.contains { $0.frameworkDirPath.hasSuffix(fileRef.name!) } }
+        // manage removed files
+        let filesToRemove = targetGroup.children.filter { fileRef in !frameworkProducts.contains { $0.frameworkDirPath.hasSuffix(fileRef.name!) } }
 
         if !filesToRemove.isEmpty {
             let fileNames = filesToRemove.map { $0.name! }
-            print("Removing references \(fileNames) from group '\(platformGroupName)' and unlinking from target '\(appTarget.targetName)' ...", level: .info)
+            print("Removing frameworks \(fileNames) from project navigator group '\(platformGroupName)' & unlinking from target '\(appTarget.targetName)' ...", level: .info)
 
             for fileToRemove in filesToRemove {
-                platformGroup.children.removeAll { $0 === fileToRemove }
+                targetGroup.children.removeAll { $0 === fileToRemove }
+                frameworksBuildPhase.files.removeAll { file in
+                    file.file === fileToRemove
+                }
             }
         }
 
-        platformGroup.children.removeDuplicates()
-        platformGroup.children.sort { $0.name! < $1.name! }
+        targetGroup.children.removeDuplicates()
+        targetGroup.children.sort { $0.name! < $1.name! }
 
-        var copyBuildScript: PBXShellScriptBuildPhase! = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as? PBXShellScriptBuildPhase
-        if copyBuildScript == nil {
-            print("Creating new copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)'...", level: .info)
-            copyBuildScript = PBXShellScriptBuildPhase(name: Constants.copyBuildScript, shellScript: "/usr/local/bin/carthage copy-frameworks")
-            targetObject.buildPhases.append(copyBuildScript)
+        switch appTarget.targetType {
+        case .regular:
+            // manage copy build script for regular targets
+            var copyBuildScript: PBXShellScriptBuildPhase! = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as? PBXShellScriptBuildPhase
+            if copyBuildScript == nil {
+                print("Creating new copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)'...", level: .info)
+                copyBuildScript = PBXShellScriptBuildPhase(name: Constants.copyBuildScript, shellScript: "/usr/local/bin/carthage copy-frameworks")
+                targetObject.buildPhases.append(copyBuildScript)
+                pbxproj.add(object: copyBuildScript)
+            }
+
+            print("Updating input paths in copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)' ...", level: .info)
+            copyBuildScript.inputPaths = targetGroup.children.map { "$(SRCROOT)/\($0.path!)" }
+
+        case .test:
+            // manage copy frameworks phase for test targets
+            var copyFrameworksPhase: PBXCopyFilesBuildPhase! = targetObject.buildPhases.first {
+                $0.type() == .copyFiles &&
+                    ($0 as! PBXCopyFilesBuildPhase).name == Constants.copyFilesPhase &&
+                    ($0 as! PBXCopyFilesBuildPhase).dstSubfolderSpec == .frameworks
+                } as? PBXCopyFilesBuildPhase
+            if copyFrameworksPhase == nil {
+                print("Creating new copy frameworks phase '\(Constants.copyFilesPhase)' for target '\(appTarget.targetName)'...", level: .info)
+                copyFrameworksPhase = PBXCopyFilesBuildPhase(dstSubfolderSpec: .frameworks, name: Constants.copyFilesPhase)
+                targetObject.buildPhases.append(copyFrameworksPhase)
+                pbxproj.add(object: copyFrameworksPhase)
+            }
+
+            print("Updating frameworks in copy frameworks phase '\(Constants.copyFilesPhase)' for target '\(appTarget.targetName)' ...", level: .info)
+            try targetGroup.children.forEach { _ = try copyFrameworksPhase.add(file: $0) }
         }
-
-        pbxproj.add(object: copyBuildScript)
-        print("Updating input paths in copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)' ...", level: .info)
-        copyBuildScript.inputPaths = platformGroup.children.map { "$(SRCROOT)/\($0.path!)" }
 
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
     }

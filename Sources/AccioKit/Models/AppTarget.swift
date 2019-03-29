@@ -1,9 +1,15 @@
 import Foundation
 
 struct AppTarget {
+    enum TargetType: String {
+        case regular
+        case test
+    }
+
     let projectName: String
     let targetName: String
     let dependentLibraryNames: [String]
+    let targetType: TargetType
 }
 
 extension AppTarget {
