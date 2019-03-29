@@ -5,6 +5,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 ### Added
+- None.
+### Changed
+- None.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- None.
+### Security
+- None.
+
+## [0.4.0] - 2019-03-29
+### Added
 - Add support for test targets.
 - Sort `Dependencies` group alphabetically.
 ### Changed
@@ -20,12 +34,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removed
 - None.
 ### Fixed
-- Fix typo in local cache logging. 
+- Fix typo in local cache logging.
 - Fix missing use of `Constants.xcodeDependenciesGroup` & `Constants.dependenciesPath`.
 ### Security
 - None.
 
-## [0.3.0]
+## [0.3.0] - 2019-03-26
 ### Added
 - None.
 ### Changed
