@@ -23,6 +23,10 @@ enum PrintLevel {
 ///   - message: The message to be printed. Don't include `Error!`, `Warning!` or similar information at the beginning.
 ///   - level: The level of the print statement.
 func print(_ message: String, level: PrintLevel) {
+    if TestHelper.shared.isStartedByUnitTests {
+        TestHelper.shared.printOutputs.append((message, level))
+    }
+
     switch level {
     case .verbose:
         if GlobalOptions.verbose.value {

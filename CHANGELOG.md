@@ -3,7 +3,43 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.3.0]
+## [Unreleased]
+### Added
+- None.
+### Changed
+- None.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- None.
+### Security
+- None.
+
+## [0.4.0] - 2019-03-29
+### Added
+- Add support for test targets.
+- Sort `Dependencies` group alphabetically.
+### Changed
+- Change structure of `Dependencies` folder.
+- Delete unneeded groups & references from `Dependencies` group.
+- Delete unneeded files & folders from `Dependencies` folder.
+- Only link frameworks when not already linked.
+- Unlink frameworks that are no longer included.
+- Don't save build products to local cache if shared cache is available.
+- Cleanup Accio run script phase when target gets removed.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- Fix typo in local cache logging.
+- Fix missing use of `Constants.xcodeDependenciesGroup` & `Constants.dependenciesPath`.
+### Security
+- None.
+
+## [0.3.0] - 2019-03-26
 ### Added
 - None.
 ### Changed

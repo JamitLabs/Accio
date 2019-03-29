@@ -13,8 +13,8 @@
              alt="Codebeat Badge">
     </a>
     <a href="https://github.com/JamitLabs/Accio/releases">
-        <img src="https://img.shields.io/badge/Version-0.3.0-blue.svg"
-             alt="Version: 0.3.0">
+        <img src="https://img.shields.io/badge/Version-0.4.0-blue.svg"
+             alt="Version: 0.4.0">
     </a>
     <img src="https://img.shields.io/badge/Swift-5.0-FFAC45.svg"
          alt="Swift: 5.0">
@@ -131,7 +131,7 @@ Accio uses the [official SwiftPM manifest format](https://github.com/apple/swift
 Here's an example `Package.swift` file with multiple dependencies specified:
 
 ```swift
-// swift-tools-version:4.2
+// swift-tools-version:5.0
 import PackageDescription
 
 let package = Package(

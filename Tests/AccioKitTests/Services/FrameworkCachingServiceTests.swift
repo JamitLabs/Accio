@@ -76,8 +76,8 @@ class FrameworkCachingServiceTests: XCTestCase {
         cachedProduct = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
         XCTAssertNotNil(cachedProduct)
 
-        XCTAssert(FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.frameworkDirUrl.lastPathComponent)"))
-        XCTAssert(FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.symbolsFileUrl.lastPathComponent)"))
+        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.frameworkDirUrl.lastPathComponent)"))
+        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.symbolsFileUrl.lastPathComponent)"))
 
         XCTAssert(FileManager.default.fileExists(atPath: "\(testFrameworkSharedCacheDir)/\(testFrameworkProduct.frameworkDirUrl.lastPathComponent)"))
         XCTAssert(FileManager.default.fileExists(atPath: "\(testFrameworkSharedCacheDir)/\(testFrameworkProduct.symbolsFileUrl.lastPathComponent)"))
