@@ -41,11 +41,12 @@ final class XcodeProjectIntegrationService {
             let frameworkBuildPhase = target?.buildPhases.first { $0.buildPhase == .frameworks } as? PBXFrameworksBuildPhase
 
             let printSuffix = frameworkBuildPhase == nil ? "..." : "& unlinking from target '\(groupName)' ..."
-            print("Removing frameworks \(groupToRemove.children.compactMap { $0.name }) from project navigator group '\(groupName)' \(printSuffix)", level: .info)
+            print("Removing frameworks \(groupToRemove.children.compactMap { $0.name }) from project navigator group '\(Constants.xcodeDependenciesGroup)/\(groupName)' \(printSuffix)", level: .info)
 
-            let namesOfFrameworksToRemove = groupToRemove.children.compactMap { $0.name }
+            frameworkBuildPhase?.files.removeAll { file in groupToRemove.children.contains { $0 == file  } }
             groupToRemove.children.removeAll()
-            frameworkBuildPhase?.files.removeAll { file in namesOfFrameworksToRemove.contains { $0 == file.file?.name } }
+            pbxproj.delete(object: groupToRemove)
+            pbxproj.deleteAllTemporaryFileReferences()
 
             // clean up potential copy frameworks phase
             if let target = target, let copyFrameworksPhase = (target.buildPhases.first {
@@ -173,6 +174,7 @@ final class XcodeProjectIntegrationService {
                 frameworksBuildPhase.files.removeAll { file in
                     file.file === fileToRemove
                 }
+                pbxproj.delete(object: fileToRemove)
             }
         }
 
@@ -209,6 +211,7 @@ final class XcodeProjectIntegrationService {
 
             print("Updating frameworks in copy frameworks phase '\(Constants.copyFilesPhase)' for target '\(appTarget.targetName)' ...", level: .info)
             try targetGroup.children.forEach { _ = try copyFrameworksPhase.add(file: $0) }
+            copyFrameworksPhase.files.forEach { $0.settings = ["ATTRIBUTES": ["CodeSignOnCopy"]] }
         }
 
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
