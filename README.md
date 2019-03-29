@@ -5,7 +5,7 @@
 
 <p align="center">
     <a href="https://app.bitrise.io/app/cf0587a25c78c7d4">
-        <img src="https://app.bitrise.io/app/cf0587a25c78c7d4/status.svg?token=AlujqlsL_IVwxMLJJGPKvA"
+        <img src="https://app.bitrise.io/app/cf0587a25c78c7d4/status.svg?token=AlujqlsL_IVwxMLJJGPKvA&branch=stable"
              alt="Build Status">
     </a>
     <a href="https://codebeat.co/projects/github-com-jamitlabs-accio-stable">
