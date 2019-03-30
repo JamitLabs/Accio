@@ -12,6 +12,10 @@ struct Framework {
     let requiredFrameworks: [Framework]
 
     var commitHash: String {
+        if TestHelper.shared.isStartedByUnitTests && projectDirectory.isEmpty {
+            return "PSEUDO_HASH_\(libraryName)"
+        }
+
         return run(bash: "git -C '\(projectDirectory)' rev-parse HEAD").stdout
     }
 
@@ -42,10 +46,11 @@ struct Framework {
         }
     }
 
-    func librarySchemePaths(in schemePaths: [String]) -> [String] {
+    func librarySchemePaths(in schemePaths: [String], framework: Framework) -> [String] {
         let nonLibrarySchemeSubstrings: [String] = ["Example", "Demo", "Sample", "Tests"]
         return schemePaths.filter { schemePath in
-            return !nonLibrarySchemeSubstrings.contains { schemePath.contains($0) }
+            let relativeSchemePath = schemePath.replacingOccurrences(of: framework.projectDirectory, with: "")
+            return !nonLibrarySchemeSubstrings.contains { relativeSchemePath.contains($0) }
         }
     }
 

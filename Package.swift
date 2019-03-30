@@ -4,6 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "Accio",
+    platforms: [.macOS(.v10_12)],
     products: [
         .executable(name: "accio", targets: ["Accio"]),
         .library(name: "AccioKit", type: .dynamic, targets: ["AccioKit"])

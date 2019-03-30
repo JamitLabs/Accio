@@ -3,17 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.0] - 2019-03-30
 ### Added
-- None.
+- Demo project for integration testing with popular Swift frameworks.
 ### Changed
-- None.
+- Compress cached build products in a .zip file. Old style cached build products can be deleted.
 ### Deprecated
 - None.
 ### Removed
 - None.
 ### Fixed
-- None.
+- Multiple issues with paths, names, symbolic links & more.
 ### Security
 - None.
 

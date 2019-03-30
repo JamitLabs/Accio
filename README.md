@@ -5,7 +5,7 @@
 
 <p align="center">
     <a href="https://app.bitrise.io/app/cf0587a25c78c7d4">
-        <img src="https://app.bitrise.io/app/cf0587a25c78c7d4/status.svg?token=AlujqlsL_IVwxMLJJGPKvA"
+        <img src="https://app.bitrise.io/app/cf0587a25c78c7d4/status.svg?token=AlujqlsL_IVwxMLJJGPKvA&branch=stable"
              alt="Build Status">
     </a>
     <a href="https://codebeat.co/projects/github-com-jamitlabs-accio-stable">
@@ -13,8 +13,8 @@
              alt="Codebeat Badge">
     </a>
     <a href="https://github.com/JamitLabs/Accio/releases">
-        <img src="https://img.shields.io/badge/Version-0.4.0-blue.svg"
-             alt="Version: 0.4.0">
+        <img src="https://img.shields.io/badge/Version-0.5.0-blue.svg"
+             alt="Version: 0.5.0">
     </a>
     <img src="https://img.shields.io/badge/Swift-5.0-FFAC45.svg"
          alt="Swift: 5.0">
@@ -180,10 +180,10 @@ On future runs, both `install` and `update` will make sure all these created dir
 
 _Please note that before running any of the install commands, you should **close your project** if you have it open in Xcode. Otherwise some unexpected problems could occur when Accio rewrites the project file._
 
-Additionally, for both install commands you can provide a path to a **shared cache** to copy the build products to on top of the local cache. For example:
+Additionally, for both install commands you can provide a path to a **shared cache** to copy the build products to instead of the local cache. For example:
 
 ```bash
-accio install -c /Volumes/GoogleDrive/TeamShare/AccioCache
+accio install -c '/Volumes/GoogleDrive/Team Share/AccioSharedCache'
 ```
 
 Specifying this can drastically cut your teams total dependencies building time since each commit of a dependency will be built only once by only one person in the team.
@@ -212,11 +212,11 @@ accio clear-cache
 
 This will remove all build products from the cache and tell you how much file size was freed up. Please note that there's currently no way of clearing a shared cache to prevent any accidental deletes by a single team member. Please do this manually if your shared space gets too filled up.
 
-Note: There is also a `clean` command which this should not be confused with. The `clean` command will only remove the files within the `.accio` build path leading to all dependencies being freshly checked out on next install.
+Note: There is also a `clean` command which this should not be confused with. The `clean` command will only remove the files within the `.accio` build path leading to all dependencies being freshly checked out on next install. Also it deletes any temporary leftover files from failed or cancelled runs of Accio.
 
 ## Adding support for Accio
 
-Most libraries that are compatible with SwiftPM should automatically work with Accio. Also libraries that are compatible with Carthage can be easily made compatible with Accio by simply adding a `Package.swift` file similar to this:
+Most libraries that are compatible with SwiftPM should automatically work with Accio. There's also a Demo project with integration tests on the CI to ensure most Swift frameworks on GitHub with [at least 1,000 stars](https://github.com/search?q=stars%3A%3E1000+language%3Aswift&type=Repositories) support Accio. Libraries that are compatible with Carthage can be easily made compatible with Accio by simply adding a `Package.swift` file similar to this:
 
 ```swift
 // swift-tools-version:4.2

@@ -40,4 +40,14 @@ enum Platform: String, CaseIterable {
             return "WATCHOS_DEPLOYMENT_TARGET"
         }
     }
+
+    var carthageBuildFolderName: String {
+        switch self {
+        case .iOS, .tvOS, .watchOS:
+            return rawValue
+
+        case .macOS:
+            return "Mac"
+        }
+    }
 }
