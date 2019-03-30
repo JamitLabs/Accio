@@ -18,12 +18,18 @@ public class CleanCommand: Command {
 
         print("Calculating size of local build path ...", level: .info)
         let localBuildDirectorySizeInBytes = try FileManager.default.directorySizeInBytes(atPath: Constants.buildPath)
+        let temporaryUncachingUrlSizeInBytes = try FileManager.default.directorySizeInBytes(atPath: Constants.temporaryFrameworksUrl.path)
+        let temporaryFrameworksUrlSizeInBytes = try FileManager.default.directorySizeInBytes(atPath: Constants.temporaryFrameworksUrl.path)
 
         print("Cleaning local build path ...", level: .info)
         try bash("rm -rf '\(Constants.buildPath)'")
+        try bash("rm -rf '\(Constants.temporaryUncachingUrl.path)'")
+        try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")
 
         let byteCountFormatter = ByteCountFormatter()
-        let localBuildPathSizeString = byteCountFormatter.string(fromByteCount: localBuildDirectorySizeInBytes)
-        print("Successfully cleaned local build path. Total space freed up: \(localBuildPathSizeString)", level: .info)
+        let localBuildPathSizeString = byteCountFormatter.string(
+            fromByteCount: localBuildDirectorySizeInBytes + temporaryUncachingUrlSizeInBytes + temporaryFrameworksUrlSizeInBytes
+        )
+        print("Successfully cleaned local build path & temp dirs. Total space freed up: \(localBuildPathSizeString)", level: .info)
     }
 }

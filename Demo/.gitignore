@@ -1,3 +1,6 @@
 # Accio dependency management
 Dependencies/
 .accio/
+
+# Demo Testing
+Package.resolved

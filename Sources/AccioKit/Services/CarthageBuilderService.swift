@@ -22,7 +22,7 @@ final class CarthageBuilderService {
                 throw CarthageBuilderError.requiredBuildProductsMissing
             }
 
-            let productsTargetDirectoryUrl = URL(fileURLWithPath: framework.projectDirectory).appendingPathComponent("Carthage/Build/\(platform.rawValue)")
+            let productsTargetDirectoryUrl = URL(fileURLWithPath: framework.projectDirectory).appendingPathComponent("Carthage/Build/\(platform.carthageBuildFolderName)")
 
             print("Linking required frameworks build products '\(requiredFrameworkProduct.frameworkDirPath)(.dSYM)' into directory '\(productsTargetDirectoryUrl.path)' ...", level: .verbose)
 
@@ -36,15 +36,17 @@ final class CarthageBuilderService {
         try XcodeProjectSchemeHandlerService.shared.removeUnnecessarySharedSchemes(from: framework, platform: platform)
         try bash("carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current --no-use-binaries")
 
+        let frameworkProduct = FrameworkProduct(libraryName: framework.libraryName, platformName: platform.rawValue)
+        let platformBuildDir = "\(framework.projectDirectory)/Carthage/Build/\(platform.carthageBuildFolderName)"
+
+        try bash("mkdir -p '\(frameworkProduct.frameworkDirUrl.deletingLastPathComponent().path)'")
+        try bash("cp -R '\(platformBuildDir)/\(framework.libraryName).framework' '\(frameworkProduct.frameworkDirPath)'")
+        try bash("cp -R '\(platformBuildDir)/\(framework.libraryName).framework.dSYM' '\(frameworkProduct.symbolsFilePath)'")
+
         // revert any changes to prevent issues when removing checked out dependency
+        try bash("rm -rf '\(framework.projectDirectory)/Carthage/Build'")
         try bash("git -C '\(framework.projectDirectory)' reset HEAD --hard")
         try bash("git -C '\(framework.projectDirectory)' clean -fd")
-
-        let platformBuildDir = "\(framework.projectDirectory)/Carthage/Build/\(platform)"
-        let frameworkProduct = FrameworkProduct(
-            frameworkDirPath: "\(platformBuildDir)/\(framework.libraryName).framework",
-            symbolsFilePath: "\(platformBuildDir)/\(framework.libraryName).framework.dSYM"
-        )
 
         guard FileManager.default.fileExists(atPath: frameworkProduct.frameworkDirPath) && FileManager.default.fileExists(atPath: frameworkProduct.symbolsFilePath) else {
             print("Failed to build products to \(platformBuildDir)/\(framework.libraryName).framework(.dSYM).", level: .error)

@@ -5,7 +5,7 @@ final class XcodeProjectSchemeHandlerService {
 
     func removeUnnecessarySharedSchemes(from framework: Framework, platform: Platform) throws {
         let sharedSchemePaths: [String] = try framework.sharedSchemePaths()
-        let librarySchemePaths: [String] = framework.librarySchemePaths(in: sharedSchemePaths)
+        let librarySchemePaths: [String] = framework.librarySchemePaths(in: sharedSchemePaths, framework: framework)
 
         let expectedSchemeNames: [String] = [
             framework.libraryName,
