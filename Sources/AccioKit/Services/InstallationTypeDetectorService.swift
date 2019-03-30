@@ -6,7 +6,7 @@ final class InstallationTypeDetectorService {
 
     func detectInstallationType(for framework: Framework) throws -> InstallationType {
         let sharedSchemePaths: [String] = try framework.sharedSchemePaths()
-        let librarySchemePaths: [String] = framework.librarySchemePaths(in: sharedSchemePaths)
+        let librarySchemePaths: [String] = framework.librarySchemePaths(in: sharedSchemePaths, framework: framework)
 
         if !librarySchemePaths.isEmpty {
             return .carthage

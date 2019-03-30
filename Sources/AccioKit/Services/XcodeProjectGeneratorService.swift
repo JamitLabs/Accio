@@ -18,6 +18,7 @@ final class XcodeProjectGeneratorService {
             try bash("rm -rf '\(framework.generatedXcodeProjectPath)'")
         }
 
+        try bash("chmod -R 775 '\(framework.projectDirectory)'")
         try bash("swift package --package-path '\(framework.projectDirectory)' generate-xcodeproj")
         try createSharedSchemeIfNeeded(framework: framework)
         try setDeploymentTargets(framework: framework)

@@ -22,7 +22,19 @@ extension DependencyInstaller {
     }
 
     func buildFrameworksAndIntegrateWithXcode(manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws {
+        if FileManager.default.fileExists(atPath: Constants.temporaryFrameworksUrl.path) {
+            try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")
+        }
+
+        if FileManager.default.fileExists(atPath: Constants.temporaryUncachingUrl.path) {
+            try bash("rm -rf '\(Constants.temporaryUncachingUrl.path)'")
+        }
+
+        try bash("mkdir -p '\(Constants.temporaryFrameworksUrl.path)'")
+        try bash("mkdir -p '\(Constants.temporaryUncachingUrl.path)'")
+
         typealias ParsingResult = (target: AppTarget, platform: Platform, frameworkProducts: [FrameworkProduct])
+
         let parsingResults: [ParsingResult] = try manifest.appTargets.compactMap { appTarget in
             guard !appTarget.dependentLibraryNames.isEmpty else {
                 print("No dependencies specified for target '\(appTarget.targetName)'. Please add at least one dependency scheme to the 'dependencies' array of the target in Package.swift.", level: .warning)
@@ -41,5 +53,6 @@ extension DependencyInstaller {
         }
 
         try XcodeProjectIntegrationService.shared.handleRemovedTargets(keepingTargets: manifest.appTargets)
+        try bash("rm -rf '\(Constants.temporaryFrameworksUrl)'")
     }
 }

@@ -20,6 +20,8 @@ extension FileManager {
     }
 
     func directorySizeInBytes(atPath path: String) throws -> Int64 {
+        guard FileManager.default.fileExists(atPath: path) else { return 0 }
+
         let folderUrl = URL(fileURLWithPath: path)
         let relativeFilePaths: [String] = try FileManager.default.subpathsOfDirectory(atPath: path)
         let filePaths: [String] = relativeFilePaths.map { folderUrl.appendingPathComponent($0).path }

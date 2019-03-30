@@ -1,4 +1,5 @@
 import Foundation
+import SwiftCLI
 
 final class FrameworkCachingService {
     private let sharedCachePath: String?
@@ -8,29 +9,20 @@ final class FrameworkCachingService {
     }
 
     func cachedProduct(framework: Framework, platform: Platform) throws -> FrameworkProduct? {
-        let subpath = "\(Constants.swiftVersion)/\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue)"
-        let localCacheDir = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath)
+        let subpath: String = cacheFileSubPath(framework: framework, platform: platform)
+        let localCachedFileUrl = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath)
 
-        let productFrameworkDir = "\(framework.libraryName).framework"
-        let productSymbolsFile = "\(framework.libraryName).framework.dSYM"
-
-        let localCachedFrameworkDir = "\(localCacheDir.appendingPathComponent(productFrameworkDir).path)"
-        let localCachedSymbolsFile = "\(localCacheDir.appendingPathComponent(productSymbolsFile).path)"
-
-        if FileManager.default.fileExists(atPath: localCachedFrameworkDir) && FileManager.default.fileExists(atPath: localCachedSymbolsFile) {
+        if FileManager.default.fileExists(atPath: localCachedFileUrl.path) {
             print("Found cached build products for \(framework.libraryName) in local cache - skipping build.", level: .info)
-            return FrameworkProduct(frameworkDirPath: localCachedFrameworkDir, symbolsFilePath: localCachedSymbolsFile)
+            return try frameworkProduct(forCachedFileAt: localCachedFileUrl)
         }
 
         if let sharedCachePath = sharedCachePath {
-            let sharedCacheDir = URL(fileURLWithPath: sharedCachePath).appendingPathComponent(subpath)
+            let sharedCacheFileUrl = URL(fileURLWithPath: sharedCachePath).appendingPathComponent(subpath)
 
-            let sharedCachedFrameworkDir = "\(sharedCacheDir.appendingPathComponent(productFrameworkDir).path)"
-            let sharedCachedSymbolsFile = "\(sharedCacheDir.appendingPathComponent(productSymbolsFile).path)"
-
-            if FileManager.default.fileExists(atPath: sharedCachedFrameworkDir) && FileManager.default.fileExists(atPath: sharedCachedSymbolsFile) {
+            if FileManager.default.fileExists(atPath: sharedCacheFileUrl.path) {
                 print("Found cached build products for \(framework.libraryName) in shared cache - skipping build.", level: .info)
-                return FrameworkProduct(frameworkDirPath: sharedCachedFrameworkDir, symbolsFilePath: sharedCachedSymbolsFile)
+                return try frameworkProduct(forCachedFileAt: sharedCacheFileUrl)
             }
         }
 
@@ -38,26 +30,51 @@ final class FrameworkCachingService {
     }
 
     func cache(product: FrameworkProduct, framework: Framework, platform: Platform) throws {
-        let subpath = "\(Constants.swiftVersion)/\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue)"
+        let subpath: String = cacheFileSubPath(framework: framework, platform: platform)
 
         if let sharedCachePath = sharedCachePath {
-            let sharedCacheDir = URL(fileURLWithPath: sharedCachePath).appendingPathComponent(subpath)
-
-            try bash("mkdir -p '\(sharedCacheDir.path)'")
-
-            try bash("cp -R '\(product.frameworkDirPath)' '\(sharedCacheDir.appendingPathComponent(product.frameworkDirUrl.lastPathComponent).path)'")
-            try bash("cp -R '\(product.symbolsFilePath)' '\(sharedCacheDir.appendingPathComponent(product.symbolsFileUrl.lastPathComponent).path)'")
-
+            try cache(product: product, to: URL(fileURLWithPath: sharedCachePath).appendingPathComponent(subpath))
             print("Saved build products for \(framework.libraryName) in shared cache.", level: .info)
         } else {
-            let localCacheDir = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath)
-
-            try bash("mkdir -p '\(localCacheDir.path)'")
-
-            try bash("cp -R '\(product.frameworkDirPath)' '\(localCacheDir.appendingPathComponent(product.frameworkDirUrl.lastPathComponent).path)'")
-            try bash("cp -R '\(product.symbolsFilePath)' '\(localCacheDir.appendingPathComponent(product.symbolsFileUrl.lastPathComponent).path)'")
-
+            try cache(product: product, to: URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath))
             print("Saved build products for \(framework.libraryName) in local cache.", level: .info)
         }
+    }
+
+    private func frameworkProduct(forCachedFileAt cachedFileUrl: URL) throws -> FrameworkProduct {
+        let libraryName: String = cachedFileUrl.pathComponents.suffix(3).first!
+        let platformName: String = cachedFileUrl.deletingPathExtension().lastPathComponent
+
+        let frameworkProduct = FrameworkProduct(libraryName: libraryName, platformName: platformName)
+
+        let subpath: String = cachedFileUrl.deletingPathExtension().pathComponents.suffix(3).joined(separator: "/")
+        let unzippingUrl: URL = Constants.temporaryUncachingUrl.appendingPathComponent(subpath)
+
+        try bash("mkdir -p '\(unzippingUrl.path)'")
+        try run(bash: "unzip -n -q '\(cachedFileUrl.path)' -d '\(unzippingUrl.path)'")
+
+        let unzippedFrameworkDirPath = unzippingUrl.appendingPathComponent("\(libraryName).framework").path
+        let unzippedSymbolsFilePath = unzippingUrl.appendingPathComponent("\(libraryName).framework.dSYM").path
+
+        try bash("mkdir -p '\(frameworkProduct.frameworkDirPath)'")
+
+        try run(bash: "cp -R '\(unzippedFrameworkDirPath)' '\(frameworkProduct.frameworkDirPath)'")
+        try run(bash: "cp -R '\(unzippedSymbolsFilePath)' '\(frameworkProduct.symbolsFilePath)'")
+
+        return frameworkProduct
+    }
+
+    private func cacheFileSubPath(framework: Framework, platform: Platform) -> String {
+        return "\(Constants.swiftVersion)/\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue).zip"
+    }
+
+    private func cache(product: FrameworkProduct, to targetUrl: URL) throws {
+        try bash("mkdir -p '\(targetUrl.deletingLastPathComponent().path)'")
+
+        let previousCurrentDirectoryPath = FileManager.default.currentDirectoryPath
+        defer { FileManager.default.changeCurrentDirectoryPath(previousCurrentDirectoryPath) }
+
+        FileManager.default.changeCurrentDirectoryPath(product.frameworkDirUrl.deletingLastPathComponent().path)
+        try run(bash: "zip -r -q '\(targetUrl.path)' '\(product.frameworkDirUrl.lastPathComponent)' '\(product.symbolsFileUrl.lastPathComponent)'")
     }
 }

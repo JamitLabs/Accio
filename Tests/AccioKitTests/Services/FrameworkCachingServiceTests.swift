@@ -30,56 +30,58 @@ class FrameworkCachingServiceTests: XCTestCase {
     }
 
     func testCachingProductWithoutSharedCachePath() {
+        TestHelper.shared.isStartedByUnitTests = true
         let frameworkCachingService = FrameworkCachingService(sharedCachePath: nil)
 
-        let testFrameworkLocalCacheDir: String = "\(Constants.localCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
-        let testFrameworkSharedCacheDir: String = "\(sharedCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
+        let testFrameworkLocalCacheFilePath: String = "\(Constants.localCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
+        let testFrameworkSharedCacheFilePath: String = "\(sharedCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
 
         var cachedProduct: FrameworkProduct? = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
         XCTAssertNil(cachedProduct)
 
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.frameworkDirUrl.lastPathComponent)"))
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.symbolsFileUrl.lastPathComponent)"))
-
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkSharedCacheDir)/\(testFrameworkProduct.frameworkDirUrl.lastPathComponent)"))
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkSharedCacheDir)/\(testFrameworkProduct.symbolsFileUrl.lastPathComponent)"))
+        XCTAssert(!FileManager.default.fileExists(atPath: testFrameworkLocalCacheFilePath))
+        XCTAssert(!FileManager.default.fileExists(atPath: testFrameworkSharedCacheFilePath))
 
         try! frameworkCachingService.cache(product: testFrameworkProduct, framework: testFramework, platform: .iOS)
 
         cachedProduct = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
         XCTAssertNotNil(cachedProduct)
 
-        XCTAssert(FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.frameworkDirUrl.lastPathComponent)"))
-        XCTAssert(FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.symbolsFileUrl.lastPathComponent)"))
+        XCTAssert(cachedProduct!.frameworkDirPath.hasPrefix(Constants.temporaryFrameworksUrl.path))
+        XCTAssert(cachedProduct!.symbolsFilePath.hasPrefix(Constants.temporaryFrameworksUrl.path))
 
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkSharedCacheDir)/\(testFrameworkProduct.frameworkDirUrl.lastPathComponent)"))
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkSharedCacheDir)/\(testFrameworkProduct.symbolsFileUrl.lastPathComponent)"))
+        XCTAssert(FileManager.default.fileExists(atPath: cachedProduct!.frameworkDirPath))
+        XCTAssert(FileManager.default.fileExists(atPath: cachedProduct!.symbolsFilePath))
+
+        XCTAssert(FileManager.default.fileExists(atPath: testFrameworkLocalCacheFilePath))
+        XCTAssert(!FileManager.default.fileExists(atPath: testFrameworkSharedCacheFilePath))
     }
 
     func testCachingProductWithSharedCachePath() {
+        TestHelper.shared.isStartedByUnitTests = true
         let frameworkCachingService = FrameworkCachingService(sharedCachePath: sharedCachePath)
 
-        let testFrameworkLocalCacheDir: String = "\(Constants.localCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
-        let testFrameworkSharedCacheDir: String = "\(sharedCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue)"
+        let testFrameworkLocalCacheFilePath: String = "\(Constants.localCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
+        let testFrameworkSharedCacheFilePath: String = "\(sharedCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
 
         var cachedProduct: FrameworkProduct? = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
         XCTAssertNil(cachedProduct)
 
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.frameworkDirUrl.lastPathComponent)"))
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.symbolsFileUrl.lastPathComponent)"))
-
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkSharedCacheDir)/\(testFrameworkProduct.frameworkDirUrl.lastPathComponent)"))
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkSharedCacheDir)/\(testFrameworkProduct.symbolsFileUrl.lastPathComponent)"))
+        XCTAssert(!FileManager.default.fileExists(atPath: testFrameworkLocalCacheFilePath))
+        XCTAssert(!FileManager.default.fileExists(atPath: testFrameworkSharedCacheFilePath))
 
         try! frameworkCachingService.cache(product: testFrameworkProduct, framework: testFramework, platform: .iOS)
 
         cachedProduct = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
         XCTAssertNotNil(cachedProduct)
 
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.frameworkDirUrl.lastPathComponent)"))
-        XCTAssert(!FileManager.default.fileExists(atPath: "\(testFrameworkLocalCacheDir)/\(testFrameworkProduct.symbolsFileUrl.lastPathComponent)"))
+        XCTAssert(cachedProduct!.frameworkDirPath.hasPrefix(Constants.temporaryFrameworksUrl.path))
+        XCTAssert(cachedProduct!.symbolsFilePath.hasPrefix(Constants.temporaryFrameworksUrl.path))
 
-        XCTAssert(FileManager.default.fileExists(atPath: "\(testFrameworkSharedCacheDir)/\(testFrameworkProduct.frameworkDirUrl.lastPathComponent)"))
-        XCTAssert(FileManager.default.fileExists(atPath: "\(testFrameworkSharedCacheDir)/\(testFrameworkProduct.symbolsFileUrl.lastPathComponent)"))
+        XCTAssert(FileManager.default.fileExists(atPath: cachedProduct!.frameworkDirPath))
+        XCTAssert(FileManager.default.fileExists(atPath: cachedProduct!.symbolsFilePath))
+
+        XCTAssert(!FileManager.default.fileExists(atPath: testFrameworkLocalCacheFilePath))
+        XCTAssert(FileManager.default.fileExists(atPath: testFrameworkSharedCacheFilePath))
     }
 }
