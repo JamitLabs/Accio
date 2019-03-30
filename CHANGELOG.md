@@ -5,15 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 ### Added
-- None.
+- Demo project for integration testing with popular Swift frameworks.
 ### Changed
-- None.
+- Compress cached build products in a .zip file. Old style cached build products can be deleted.
 ### Deprecated
 - None.
 ### Removed
 - None.
 ### Fixed
-- None.
+- Multiple issues with paths, names, symbolic links & more.
 ### Security
 - None.
 
