@@ -47,8 +47,8 @@ class FrameworkCachingServiceTests: XCTestCase {
         cachedProduct = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
         XCTAssertNotNil(cachedProduct)
 
-        XCTAssert(cachedProduct!.frameworkDirPath.hasPrefix(Constants.temporaryUncachingUrl.path))
-        XCTAssert(cachedProduct!.symbolsFilePath.hasPrefix(Constants.temporaryUncachingUrl.path))
+        XCTAssert(cachedProduct!.frameworkDirPath.hasPrefix(Constants.temporaryFrameworksUrl.path))
+        XCTAssert(cachedProduct!.symbolsFilePath.hasPrefix(Constants.temporaryFrameworksUrl.path))
 
         XCTAssert(FileManager.default.fileExists(atPath: cachedProduct!.frameworkDirPath))
         XCTAssert(FileManager.default.fileExists(atPath: cachedProduct!.symbolsFilePath))
@@ -75,8 +75,8 @@ class FrameworkCachingServiceTests: XCTestCase {
         cachedProduct = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
         XCTAssertNotNil(cachedProduct)
 
-        XCTAssert(cachedProduct!.frameworkDirPath.hasPrefix(Constants.temporaryUncachingUrl.path))
-        XCTAssert(cachedProduct!.symbolsFilePath.hasPrefix(Constants.temporaryUncachingUrl.path))
+        XCTAssert(cachedProduct!.frameworkDirPath.hasPrefix(Constants.temporaryFrameworksUrl.path))
+        XCTAssert(cachedProduct!.symbolsFilePath.hasPrefix(Constants.temporaryFrameworksUrl.path))
 
         XCTAssert(FileManager.default.fileExists(atPath: cachedProduct!.frameworkDirPath))
         XCTAssert(FileManager.default.fileExists(atPath: cachedProduct!.symbolsFilePath))
