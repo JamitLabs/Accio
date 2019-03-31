@@ -32,7 +32,10 @@ final class FrameworkCachingService {
     func cache(product: FrameworkProduct, framework: Framework, platform: Platform) throws {
         let subpath: String = cacheFileSubPath(framework: framework, platform: platform)
 
-        if let sharedCachePath = sharedCachePath, FileManager.default.fileExists(atPath: sharedCachePath) {
+        if
+            let sharedCachePath = sharedCachePath,
+            FileManager.default.fileExists(atPath: URL(fileURLWithPath: sharedCachePath).deletingLastPathComponent().path)
+        {
             try cache(product: product, to: URL(fileURLWithPath: sharedCachePath).appendingPathComponent(subpath))
             print("Saved build products for \(framework.libraryName) in shared cache.", level: .info)
         } else {
@@ -75,6 +78,6 @@ final class FrameworkCachingService {
         defer { FileManager.default.changeCurrentDirectoryPath(previousCurrentDirectoryPath) }
 
         FileManager.default.changeCurrentDirectoryPath(product.frameworkDirUrl.deletingLastPathComponent().path)
-        try run(bash: "zip -r -q '\(targetUrl.path)' '\(product.frameworkDirUrl.lastPathComponent)' '\(product.symbolsFileUrl.lastPathComponent)'")
+        try run(bash: "zip -r -q -y '\(targetUrl.path)' '\(product.frameworkDirUrl.lastPathComponent)' '\(product.symbolsFileUrl.lastPathComponent)'")
     }
 }

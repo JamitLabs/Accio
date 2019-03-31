@@ -11,17 +11,12 @@ public class CleanCommand: Command {
 
     // MARK: - Instance Methods
     public func execute() throws {
-        guard FileManager.default.fileExists(atPath: Constants.buildPath) else {
-            print("Local build path is already clean.", level: .info)
-            return
-        }
-
-        print("Calculating size of local build path ...", level: .info)
+        print("Calculating size of local build path & temp dirs ...", level: .info)
         let localBuildDirectorySizeInBytes = try FileManager.default.directorySizeInBytes(atPath: Constants.buildPath)
         let temporaryUncachingUrlSizeInBytes = try FileManager.default.directorySizeInBytes(atPath: Constants.temporaryFrameworksUrl.path)
         let temporaryFrameworksUrlSizeInBytes = try FileManager.default.directorySizeInBytes(atPath: Constants.temporaryFrameworksUrl.path)
 
-        print("Cleaning local build path ...", level: .info)
+        print("Cleaning local build path & temp dirs ...", level: .info)
         try bash("rm -rf '\(Constants.buildPath)'")
         try bash("rm -rf '\(Constants.temporaryUncachingUrl.path)'")
         try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")

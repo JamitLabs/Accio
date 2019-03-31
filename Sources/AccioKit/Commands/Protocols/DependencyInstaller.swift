@@ -42,6 +42,8 @@ extension DependencyInstaller {
             }
 
             let platform = try PlatformDetectorService.shared.detectPlatform(of: appTarget)
+            print("Resolving dependencies for target '\(appTarget.targetName)' on platform '\(platform.rawValue)' ...", level: .info)
+
             let frameworkProducts = try CachedBuilderService(sharedCachePath: sharedCachePath).frameworkProducts(manifest: manifest, appTarget: appTarget, dependencyGraph: dependencyGraph, platform: platform)
             return ParsingResult(target: appTarget, platform: platform, frameworkProducts: frameworkProducts)
         }
