@@ -3,6 +3,35 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- None.
+### Changed
+- None.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- None.
+### Security
+- None.
+
+## [0.5.1] - 2019-03-31
+### Added
+- None.
+### Changed
+- Check if shared cache path is available, else add new build products to local cache.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- Fixed an issue with copying unzipped cache build products back to project.
+### Security
+- None.
+
+
 ## [0.5.0] - 2019-03-30
 ### Added
 - Demo project for integration testing with popular Swift frameworks.
