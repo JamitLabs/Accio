@@ -9,6 +9,7 @@ let package = Package(
         .package(url: "https://github.com/AccioSupport/Moya.git", .upToNextMajor(from: "13.0.0-beta.1")),
         .package(url: "https://github.com/AccioSupport/RxSwift.git", .upToNextMajor(from: "4.4.2")),
         .package(url: "https://github.com/AccioSupport/socket.io-client-swift.git", .upToNextMajor(from: "15.0.0")),
+        .package(url: "https://github.com/AccioSupport/SwiftDate.git", .upToNextMajor(from: "6.0.1")),
     ],
     targets: [
         .target(
@@ -18,6 +19,7 @@ let package = Package(
                 "Moya",
                 "RxSwift",
                 "SocketIO",
+                "SwiftDate",
             ],
             path: "Demo-iOS"
         ),
@@ -34,6 +36,7 @@ let package = Package(
                 "Moya",
                 "RxSwift",
                 "SocketIO",
+                "SwiftDate",
             ],
             path: "Demo-tvOS"
         ),
@@ -50,6 +53,7 @@ let package = Package(
                 "Moya",
                 "RxSwift",
                 "SocketIO",
+                "SwiftDate",
             ],
             path: "Demo-macOS"
         ),

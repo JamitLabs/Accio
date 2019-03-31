@@ -38,6 +38,9 @@
 		82DDB87122515FDD00A35E5B /* SocketIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB87022515FDD00A35E5B /* SocketIO.swift */; };
 		82DDB87222515FDD00A35E5B /* SocketIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB87022515FDD00A35E5B /* SocketIO.swift */; };
 		82DDB87322515FDD00A35E5B /* SocketIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB87022515FDD00A35E5B /* SocketIO.swift */; };
+		82DDB877225163ED00A35E5B /* SwiftDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB876225163ED00A35E5B /* SwiftDate.swift */; };
+		82DDB878225163ED00A35E5B /* SwiftDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB876225163ED00A35E5B /* SwiftDate.swift */; };
+		82DDB879225163ED00A35E5B /* SwiftDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB876225163ED00A35E5B /* SwiftDate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +132,7 @@
 		82DDB8612251596F00A35E5B /* RxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxSwift.swift; sourceTree = "<group>"; };
 		82DDB86922515C2200A35E5B /* Kingfisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kingfisher.swift; sourceTree = "<group>"; };
 		82DDB87022515FDD00A35E5B /* SocketIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketIO.swift; sourceTree = "<group>"; };
+		82DDB876225163ED00A35E5B /* SwiftDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -340,6 +344,7 @@
 				82955BE2224D1DB300BC27CE /* Moya.swift */,
 				82DDB8612251596F00A35E5B /* RxSwift.swift */,
 				82DDB87022515FDD00A35E5B /* SocketIO.swift */,
+				82DDB876225163ED00A35E5B /* SwiftDate.swift */,
 			);
 			path = AppDependencies;
 			sourceTree = "<group>";
@@ -664,6 +669,7 @@
 			files = (
 				82955B54224CF10800BC27CE /* ViewController.swift in Sources */,
 				82DDB86A22515C2200A35E5B /* Kingfisher.swift in Sources */,
+				82DDB877225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				82DDB87122515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE3224D1DB300BC27CE /* Moya.swift in Sources */,
 				82DDB86D22515F2400A35E5B /* RxSwift.swift in Sources */,
@@ -693,6 +699,7 @@
 			files = (
 				82955B88224CF12900BC27CE /* ViewController.swift in Sources */,
 				82DDB86B22515C2200A35E5B /* Kingfisher.swift in Sources */,
+				82DDB878225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				82DDB87222515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE4224D1DB300BC27CE /* Moya.swift in Sources */,
 				82DDB86E22515F2500A35E5B /* RxSwift.swift in Sources */,
@@ -722,6 +729,7 @@
 			files = (
 				82955BB7224CF14100BC27CE /* ViewController.swift in Sources */,
 				82DDB86C22515C2200A35E5B /* Kingfisher.swift in Sources */,
+				82DDB879225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				82DDB87322515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE5224D1DB300BC27CE /* Moya.swift in Sources */,
 				82DDB86F22515F2600A35E5B /* RxSwift.swift in Sources */,
