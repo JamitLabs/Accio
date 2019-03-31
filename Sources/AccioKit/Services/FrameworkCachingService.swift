@@ -56,7 +56,7 @@ final class FrameworkCachingService {
         let unzippedFrameworkDirPath = unzippingUrl.appendingPathComponent("\(libraryName).framework").path
         let unzippedSymbolsFilePath = unzippingUrl.appendingPathComponent("\(libraryName).framework.dSYM").path
 
-        try bash("mkdir -p '\(frameworkProduct.frameworkDirPath)'")
+        try bash("mkdir -p '\(frameworkProduct.frameworkDirUrl.deletingLastPathComponent().path)'")
 
         try run(bash: "cp -R '\(unzippedFrameworkDirPath)' '\(frameworkProduct.frameworkDirPath)'")
         try run(bash: "cp -R '\(unzippedSymbolsFilePath)' '\(frameworkProduct.symbolsFilePath)'")

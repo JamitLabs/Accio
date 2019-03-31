@@ -5,7 +5,7 @@ let package = Package(
     name: "Demo",
     products: [],
     dependencies: [
-        .package(url: "https://github.com/AccioSupport/Moya.git", .branch("master")),
+        .package(url: "https://github.com/AccioSupport/Moya.git", .branch("development")),
     ],
     targets: [
         .target(
