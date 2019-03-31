@@ -5,6 +5,7 @@ let package = Package(
     name: "Demo",
     products: [],
     dependencies: [
+        .package(url: "https://github.com/AccioSupport/folding-cell.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Kingfisher.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Moya.git", .upToNextMajor(from: "13.0.0-beta.1")),
         .package(url: "https://github.com/AccioSupport/RxSwift.git", .upToNextMajor(from: "4.4.2")),
@@ -15,6 +16,7 @@ let package = Package(
         .target(
             name: "Demo-iOS",
             dependencies: [
+                "FoldingCell",
                 "Kingfisher",
                 "Moya",
                 "RxSwift",

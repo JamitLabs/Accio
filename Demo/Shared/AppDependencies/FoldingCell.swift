@@ -1,4 +1,4 @@
-import SwiftDate
+import FoldingCell
 
 // Ensure that framework was correctly integrated by using public API:
-let swiftDateType = SwiftDate.self
+let foldingCellType = FoldingCell.self
