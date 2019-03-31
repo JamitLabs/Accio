@@ -78,6 +78,6 @@ final class FrameworkCachingService {
         defer { FileManager.default.changeCurrentDirectoryPath(previousCurrentDirectoryPath) }
 
         FileManager.default.changeCurrentDirectoryPath(product.frameworkDirUrl.deletingLastPathComponent().path)
-        try run(bash: "zip -r -q '\(targetUrl.path)' '\(product.frameworkDirUrl.lastPathComponent)' '\(product.symbolsFileUrl.lastPathComponent)'")
+        try run(bash: "zip -r -q -y '\(targetUrl.path)' '\(product.frameworkDirUrl.lastPathComponent)' '\(product.symbolsFileUrl.lastPathComponent)'")
     }
 }
