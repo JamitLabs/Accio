@@ -32,7 +32,7 @@ final class FrameworkCachingService {
     func cache(product: FrameworkProduct, framework: Framework, platform: Platform) throws {
         let subpath: String = cacheFileSubPath(framework: framework, platform: platform)
 
-        if let sharedCachePath = sharedCachePath {
+        if let sharedCachePath = sharedCachePath, FileManager.default.fileExists(atPath: sharedCachePath) {
             try cache(product: product, to: URL(fileURLWithPath: sharedCachePath).appendingPathComponent(subpath))
             print("Saved build products for \(framework.libraryName) in shared cache.", level: .info)
         } else {
