@@ -6,12 +6,14 @@ let package = Package(
     products: [],
     dependencies: [
         .package(url: "https://github.com/AccioSupport/Moya.git", .upToNextMajor(from: "13.0.0-beta.1")),
+        .package(url: "https://github.com/AccioSupport/RxSwift.git", .upToNextMajor(from: "4.4.2")),
     ],
     targets: [
         .target(
             name: "Demo-iOS",
             dependencies: [
                 "Moya",
+                "RxSwift"
             ],
             path: "Demo-iOS"
         ),
@@ -25,6 +27,7 @@ let package = Package(
             name: "Demo-tvOS",
             dependencies: [
                 "Moya",
+                "RxSwift",
             ],
             path: "Demo-tvOS"
         ),
@@ -38,6 +41,7 @@ let package = Package(
             name: "Demo-macOS",
             dependencies: [
                 "Moya",
+                "RxSwift",
             ],
             path: "Demo-macOS"
         ),

@@ -117,6 +117,7 @@
 		82955BD2224CF14200BC27CE /* Demo_macOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demo_macOSUITests.swift; sourceTree = "<group>"; };
 		82955BD4224CF14200BC27CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		82955BE2224D1DB300BC27CE /* Moya.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moya.swift; sourceTree = "<group>"; };
+		82DDB8612251596F00A35E5B /* RxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxSwift.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -325,6 +326,7 @@
 			isa = PBXGroup;
 			children = (
 				82955BE2224D1DB300BC27CE /* Moya.swift */,
+				82DDB8612251596F00A35E5B /* RxSwift.swift */,
 			);
 			path = AppDependencies;
 			sourceTree = "<group>";
@@ -650,6 +652,7 @@
 				82955B54224CF10800BC27CE /* ViewController.swift in Sources */,
 				82955BE3224D1DB300BC27CE /* Moya.swift in Sources */,
 				82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */,
+				82DDB8622251596F00A35E5B /* RxSwift.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -676,6 +679,7 @@
 				82955B88224CF12900BC27CE /* ViewController.swift in Sources */,
 				82955BE4224D1DB300BC27CE /* Moya.swift in Sources */,
 				82955B86224CF12900BC27CE /* AppDelegate.swift in Sources */,
+				82DDB8632251596F00A35E5B /* RxSwift.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -702,6 +706,7 @@
 				82955BB7224CF14100BC27CE /* ViewController.swift in Sources */,
 				82955BE5224D1DB300BC27CE /* Moya.swift in Sources */,
 				82955BB5224CF14100BC27CE /* AppDelegate.swift in Sources */,
+				82DDB8642251596F00A35E5B /* RxSwift.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
