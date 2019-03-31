@@ -8,6 +8,7 @@ let package = Package(
         .package(url: "https://github.com/AccioSupport/Kingfisher.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Moya.git", .upToNextMajor(from: "13.0.0-beta.1")),
         .package(url: "https://github.com/AccioSupport/RxSwift.git", .upToNextMajor(from: "4.4.2")),
+        .package(url: "https://github.com/AccioSupport/socket.io-client-swift.git", .upToNextMajor(from: "15.0.0")),
     ],
     targets: [
         .target(
@@ -15,7 +16,8 @@ let package = Package(
             dependencies: [
                 "Kingfisher",
                 "Moya",
-                "RxSwift"
+                "RxSwift",
+                "SocketIO",
             ],
             path: "Demo-iOS"
         ),
@@ -31,6 +33,7 @@ let package = Package(
                 "Kingfisher",
                 "Moya",
                 "RxSwift",
+                "SocketIO",
             ],
             path: "Demo-tvOS"
         ),
@@ -46,6 +49,7 @@ let package = Package(
                 "Kingfisher",
                 "Moya",
                 "RxSwift",
+                "SocketIO",
             ],
             path: "Demo-macOS"
         ),
