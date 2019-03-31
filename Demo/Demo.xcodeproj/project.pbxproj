@@ -42,6 +42,7 @@
 		82DDB878225163ED00A35E5B /* SwiftDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB876225163ED00A35E5B /* SwiftDate.swift */; };
 		82DDB879225163ED00A35E5B /* SwiftDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB876225163ED00A35E5B /* SwiftDate.swift */; };
 		82DDB87B22516AE800A35E5B /* FoldingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB87A22516AE800A35E5B /* FoldingCell.swift */; };
+		82DDB87D22516CE800A35E5B /* SwiftMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB87C22516CE800A35E5B /* SwiftMessages.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +136,7 @@
 		82DDB87022515FDD00A35E5B /* SocketIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketIO.swift; sourceTree = "<group>"; };
 		82DDB876225163ED00A35E5B /* SwiftDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDate.swift; sourceTree = "<group>"; };
 		82DDB87A22516AE800A35E5B /* FoldingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldingCell.swift; sourceTree = "<group>"; };
+		82DDB87C22516CE800A35E5B /* SwiftMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMessages.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -348,6 +350,7 @@
 				82DDB8612251596F00A35E5B /* RxSwift.swift */,
 				82DDB87022515FDD00A35E5B /* SocketIO.swift */,
 				82DDB876225163ED00A35E5B /* SwiftDate.swift */,
+				82DDB87C22516CE800A35E5B /* SwiftMessages.swift */,
 			);
 			path = AppDependencies;
 			sourceTree = "<group>";
@@ -674,6 +677,7 @@
 				82DDB86A22515C2200A35E5B /* Kingfisher.swift in Sources */,
 				82DDB877225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				82DDB87122515FDD00A35E5B /* SocketIO.swift in Sources */,
+				82DDB87D22516CE800A35E5B /* SwiftMessages.swift in Sources */,
 				82955BE3224D1DB300BC27CE /* Moya.swift in Sources */,
 				82DDB87B22516AE800A35E5B /* FoldingCell.swift in Sources */,
 				82DDB86D22515F2400A35E5B /* RxSwift.swift in Sources */,

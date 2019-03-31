@@ -11,6 +11,7 @@ let package = Package(
         .package(url: "https://github.com/AccioSupport/RxSwift.git", .upToNextMajor(from: "4.4.2")),
         .package(url: "https://github.com/AccioSupport/socket.io-client-swift.git", .upToNextMajor(from: "15.0.0")),
         .package(url: "https://github.com/AccioSupport/SwiftDate.git", .upToNextMajor(from: "6.0.1")),
+        .package(url: "https://github.com/AccioSupport/SwiftMessages.git", .branch("master")),
     ],
     targets: [
         .target(
@@ -22,6 +23,7 @@ let package = Package(
                 "RxSwift",
                 "SocketIO",
                 "SwiftDate",
+                "SwiftMessages",
             ],
             path: "Demo-iOS"
         ),
