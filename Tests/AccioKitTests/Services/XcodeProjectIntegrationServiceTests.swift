@@ -70,7 +70,7 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
                 var targetObject: PBXTarget = pbxproject.targets(named: appTarget.targetName).first!
                 var frameworksBuildPhase: PBXFrameworksBuildPhase = targetObject.buildPhases.first(where: { $0.buildPhase == .frameworks })! as! PBXFrameworksBuildPhase
 
-                XCTAssert(frameworksBuildPhase.files.isEmpty)
+                XCTAssert(frameworksBuildPhase.files!.isEmpty)
 
                 // ensure build phase not yet updated
                 XCTAssert(!targetObject.buildPhases.contains { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript })
@@ -89,8 +89,8 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
                 targetObject = pbxproject.targets(named: appTarget.targetName).first!
                 frameworksBuildPhase = targetObject.buildPhases.first(where: { $0.buildPhase == .frameworks })! as! PBXFrameworksBuildPhase
 
-                XCTAssertEqual(frameworksBuildPhase.files.count, testFrameworkNames.count)
-                XCTAssertEqual(frameworksBuildPhase.files.map { $0.file!.name }, testFrameworkNames.map { "\($0).framework" })
+                XCTAssertEqual(frameworksBuildPhase.files!.count, testFrameworkNames.count)
+                XCTAssertEqual(frameworksBuildPhase.files!.map { $0.file!.name }, testFrameworkNames.map { "\($0).framework" })
 
                 // test updateBuildPhase
                 switch appTarget.targetType {

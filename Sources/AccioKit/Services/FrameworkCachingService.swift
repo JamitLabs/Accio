@@ -32,7 +32,7 @@ final class FrameworkCachingService {
     func cache(product: FrameworkProduct, framework: Framework, platform: Platform) throws {
         let subpath: String = cacheFileSubPath(framework: framework, platform: platform)
 
-        if let sharedCachePath = sharedCachePath {
+        if let sharedCachePath = sharedCachePath, FileManager.default.fileExists(atPath: sharedCachePath) {
             try cache(product: product, to: URL(fileURLWithPath: sharedCachePath).appendingPathComponent(subpath))
             print("Saved build products for \(framework.libraryName) in shared cache.", level: .info)
         } else {
@@ -56,7 +56,7 @@ final class FrameworkCachingService {
         let unzippedFrameworkDirPath = unzippingUrl.appendingPathComponent("\(libraryName).framework").path
         let unzippedSymbolsFilePath = unzippingUrl.appendingPathComponent("\(libraryName).framework.dSYM").path
 
-        try bash("mkdir -p '\(frameworkProduct.frameworkDirPath)'")
+        try bash("mkdir -p '\(frameworkProduct.frameworkDirUrl.deletingLastPathComponent().path)'")
 
         try run(bash: "cp -R '\(unzippedFrameworkDirPath)' '\(frameworkProduct.frameworkDirPath)'")
         try run(bash: "cp -R '\(unzippedSymbolsFilePath)' '\(frameworkProduct.symbolsFilePath)'")

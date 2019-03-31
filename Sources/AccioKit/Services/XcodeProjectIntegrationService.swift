@@ -43,7 +43,7 @@ final class XcodeProjectIntegrationService {
             let printSuffix = frameworkBuildPhase == nil ? "..." : "& unlinking from target '\(groupName)' ..."
             print("Removing frameworks \(groupToRemove.children.compactMap { $0.name }) from project navigator group '\(Constants.xcodeDependenciesGroup)/\(groupName)' \(printSuffix)", level: .info)
 
-            frameworkBuildPhase?.files.removeAll { file in groupToRemove.children.contains { $0 == file  } }
+            frameworkBuildPhase?.files?.removeAll { file in groupToRemove.children.contains { $0 == file  } }
             groupToRemove.children.removeAll()
             pbxproj.delete(object: groupToRemove)
             pbxproj.deleteAllTemporaryFileReferences()
@@ -158,7 +158,7 @@ final class XcodeProjectIntegrationService {
             for frameworkToAdd in frameworksToAdd {
                 let frameworkFileRef = try targetGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
 
-                if !frameworksBuildPhase.files.contains { $0.file?.path == frameworkFileRef.path } {
+                if let files = frameworksBuildPhase.files, !files.contains(where: { $0.file?.path == frameworkFileRef.path }) {
                     _ = try frameworksBuildPhase.add(file: frameworkFileRef)
                 }
             }
@@ -173,7 +173,7 @@ final class XcodeProjectIntegrationService {
 
             for fileToRemove in filesToRemove {
                 targetGroup.children.removeAll { $0 === fileToRemove }
-                frameworksBuildPhase.files.removeAll { file in
+                frameworksBuildPhase.files?.removeAll { file in
                     file.file === fileToRemove
                 }
                 pbxproj.delete(object: fileToRemove)
@@ -213,7 +213,7 @@ final class XcodeProjectIntegrationService {
 
             print("Updating frameworks in copy frameworks phase '\(Constants.copyFilesPhase)' for target '\(appTarget.targetName)' ...", level: .info)
             try targetGroup.children.forEach { _ = try copyFrameworksPhase.add(file: $0) }
-            copyFrameworksPhase.files.forEach { $0.settings = ["ATTRIBUTES": ["CodeSignOnCopy"]] }
+            copyFrameworksPhase.files?.forEach { $0.settings = ["ATTRIBUTES": ["CodeSignOnCopy"]] }
         }
 
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
