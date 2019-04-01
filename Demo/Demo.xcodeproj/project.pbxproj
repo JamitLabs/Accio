@@ -11,6 +11,9 @@
 		8219BAA72252301B003331E4 /* SwifterSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAA62252301B003331E4 /* SwifterSwift.swift */; };
 		8219BAA82252301B003331E4 /* SwifterSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAA62252301B003331E4 /* SwifterSwift.swift */; };
 		8219BAA92252301B003331E4 /* SwifterSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAA62252301B003331E4 /* SwifterSwift.swift */; };
+		8219BAAB22523238003331E4 /* Starscream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAAA22523238003331E4 /* Starscream.swift */; };
+		8219BAAC22523238003331E4 /* Starscream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAAA22523238003331E4 /* Starscream.swift */; };
+		8219BAAD22523238003331E4 /* Starscream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAAA22523238003331E4 /* Starscream.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -97,6 +100,7 @@
 /* Begin PBXFileReference section */
 		8219BAA422522E1E003331E4 /* Siren.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Siren.swift; sourceTree = "<group>"; };
 		8219BAA62252301B003331E4 /* SwifterSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSwift.swift; sourceTree = "<group>"; };
+		8219BAAA22523238003331E4 /* Starscream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Starscream.swift; sourceTree = "<group>"; };
 		8251C5A8224E7BD1006DFB7A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -356,9 +360,10 @@
 				82DDB8612251596F00A35E5B /* RxSwift.swift */,
 				8219BAA422522E1E003331E4 /* Siren.swift */,
 				82DDB87022515FDD00A35E5B /* SocketIO.swift */,
+				8219BAAA22523238003331E4 /* Starscream.swift */,
 				82DDB876225163ED00A35E5B /* SwiftDate.swift */,
-				82DDB87C22516CE800A35E5B /* SwiftMessages.swift */,
 				8219BAA62252301B003331E4 /* SwifterSwift.swift */,
+				82DDB87C22516CE800A35E5B /* SwiftMessages.swift */,
 			);
 			path = AppDependencies;
 			sourceTree = "<group>";
@@ -689,6 +694,7 @@
 				82DDB87D22516CE800A35E5B /* SwiftMessages.swift in Sources */,
 				82955BE3224D1DB300BC27CE /* Moya.swift in Sources */,
 				82DDB87B22516AE800A35E5B /* FoldingCell.swift in Sources */,
+				8219BAAB22523238003331E4 /* Starscream.swift in Sources */,
 				82DDB86D22515F2400A35E5B /* RxSwift.swift in Sources */,
 				8219BAA72252301B003331E4 /* SwifterSwift.swift in Sources */,
 				82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */,
@@ -717,6 +723,7 @@
 			files = (
 				82955B88224CF12900BC27CE /* ViewController.swift in Sources */,
 				82DDB86B22515C2200A35E5B /* Kingfisher.swift in Sources */,
+				8219BAAC22523238003331E4 /* Starscream.swift in Sources */,
 				82DDB878225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				82DDB87222515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE4224D1DB300BC27CE /* Moya.swift in Sources */,
@@ -748,6 +755,7 @@
 			files = (
 				82955BB7224CF14100BC27CE /* ViewController.swift in Sources */,
 				82DDB86C22515C2200A35E5B /* Kingfisher.swift in Sources */,
+				8219BAAD22523238003331E4 /* Starscream.swift in Sources */,
 				82DDB879225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				82DDB87322515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE5224D1DB300BC27CE /* Moya.swift in Sources */,
