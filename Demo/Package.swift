@@ -19,6 +19,7 @@ let package = Package(
         .package(url: "https://github.com/AccioSupport/SwiftDate.git", .upToNextMajor(from: "6.0.1")),
         .package(url: "https://github.com/AccioSupport/SwifterSwift.git", .upToNextMajor(from: "4.6.0")),
         .package(url: "https://github.com/AccioSupport/SwiftMessages.git", .branch("master")),
+        .package(url: "https://github.com/AccioSupport/SwiftyStoreKit.git", .branch("master")),
     ],
     targets: [
         .target(
@@ -38,6 +39,7 @@ let package = Package(
                 "SwiftDate",
                 "SwifterSwift",
                 "SwiftMessages",
+                "SwiftyStoreKit",
             ],
             path: "Demo-iOS"
         ),
@@ -60,6 +62,7 @@ let package = Package(
                 "Starscream",
                 "SwiftDate",
                 "SwifterSwift",
+                "SwiftyStoreKit",
             ],
             path: "Demo-tvOS"
         ),
@@ -81,6 +84,7 @@ let package = Package(
                 "Starscream",
                 "SwiftDate",
                 "SwifterSwift",
+                "SwiftyStoreKit",
             ],
             path: "Demo-macOS"
         ),
