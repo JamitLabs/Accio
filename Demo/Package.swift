@@ -5,6 +5,7 @@ let package = Package(
     name: "Demo",
     products: [],
     dependencies: [
+        .package(url: "https://github.com/AccioSupport/Cartography.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/folding-cell.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Kingfisher.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Material.git", .branch("development")),
@@ -22,6 +23,7 @@ let package = Package(
         .target(
             name: "Demo-iOS",
             dependencies: [
+                "Cartography",
                 "FoldingCell",
                 "Kingfisher",
                 "Material",
@@ -46,6 +48,7 @@ let package = Package(
         .target(
             name: "Demo-tvOS",
             dependencies: [
+                "Cartography",
                 "Kingfisher",
                 "Moya",
                 "ReSwift",
@@ -66,6 +69,7 @@ let package = Package(
         .target(
             name: "Demo-macOS",
             dependencies: [
+                "Cartography",
                 "Kingfisher",
                 "Moya",
                 "ReSwift",
