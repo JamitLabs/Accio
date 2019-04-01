@@ -273,7 +273,9 @@ If you come across any issues with a dependency that you expect to work with Acc
 
 ### Official Badge
 
-If you like to add a badge to your project that shows its support for installation via Accio, feel free to add the following to the top of your `README.md`:
+[![Accio supported](https://img.shields.io/badge/Accio-supported-0A7CF5.svg?style=flat)](https://github.com/JamitLabs/Accio)
+
+To hint that your project supports installation via Accio, add the following to the top of your `README.md`:
 
 ```markdown
 [![Accio supported](https://img.shields.io/badge/Accio-supported-0A7CF5.svg?style=flat)](https://github.com/JamitLabs/Accio)
