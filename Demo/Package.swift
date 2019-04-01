@@ -7,6 +7,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/AccioSupport/folding-cell.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Kingfisher.git", .branch("master")),
+        .package(url: "https://github.com/AccioSupport/Material.git", .branch("development")),
         .package(url: "https://github.com/AccioSupport/Moya.git", .upToNextMajor(from: "13.0.0-beta.1")),
         .package(url: "https://github.com/AccioSupport/ReSwift.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/RxSwift.git", .upToNextMajor(from: "4.4.2")),
@@ -23,6 +24,7 @@ let package = Package(
             dependencies: [
                 "FoldingCell",
                 "Kingfisher",
+                "Material",
                 "Moya",
                 "ReSwift",
                 "RxSwift",

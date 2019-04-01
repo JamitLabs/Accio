@@ -17,6 +17,7 @@
 		8219BAAF22523321003331E4 /* ReSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAAE22523321003331E4 /* ReSwift.swift */; };
 		8219BAB022523321003331E4 /* ReSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAAE22523321003331E4 /* ReSwift.swift */; };
 		8219BAB122523321003331E4 /* ReSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAAE22523321003331E4 /* ReSwift.swift */; };
+		8219BAB32252479F003331E4 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAB22252479F003331E4 /* Material.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -105,6 +106,7 @@
 		8219BAA62252301B003331E4 /* SwifterSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSwift.swift; sourceTree = "<group>"; };
 		8219BAAA22523238003331E4 /* Starscream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Starscream.swift; sourceTree = "<group>"; };
 		8219BAAE22523321003331E4 /* ReSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReSwift.swift; sourceTree = "<group>"; };
+		8219BAB22252479F003331E4 /* Material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Material.swift; sourceTree = "<group>"; };
 		8251C5A8224E7BD1006DFB7A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -360,6 +362,7 @@
 			children = (
 				82DDB87A22516AE800A35E5B /* FoldingCell.swift */,
 				82DDB86922515C2200A35E5B /* Kingfisher.swift */,
+				8219BAB22252479F003331E4 /* Material.swift */,
 				82955BE2224D1DB300BC27CE /* Moya.swift */,
 				8219BAAE22523321003331E4 /* ReSwift.swift */,
 				82DDB8612251596F00A35E5B /* RxSwift.swift */,
@@ -691,6 +694,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8219BAB32252479F003331E4 /* Material.swift in Sources */,
 				82955B54224CF10800BC27CE /* ViewController.swift in Sources */,
 				82DDB86A22515C2200A35E5B /* Kingfisher.swift in Sources */,
 				82DDB877225163ED00A35E5B /* SwiftDate.swift in Sources */,
