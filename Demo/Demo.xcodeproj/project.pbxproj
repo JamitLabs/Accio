@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8219BAA522522E1E003331E4 /* Siren.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAA422522E1E003331E4 /* Siren.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -91,6 +92,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8219BAA422522E1E003331E4 /* Siren.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Siren.swift; sourceTree = "<group>"; };
 		8251C5A8224E7BD1006DFB7A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -348,6 +350,7 @@
 				82DDB86922515C2200A35E5B /* Kingfisher.swift */,
 				82955BE2224D1DB300BC27CE /* Moya.swift */,
 				82DDB8612251596F00A35E5B /* RxSwift.swift */,
+				8219BAA422522E1E003331E4 /* Siren.swift */,
 				82DDB87022515FDD00A35E5B /* SocketIO.swift */,
 				82DDB876225163ED00A35E5B /* SwiftDate.swift */,
 				82DDB87C22516CE800A35E5B /* SwiftMessages.swift */,
@@ -676,6 +679,7 @@
 				82955B54224CF10800BC27CE /* ViewController.swift in Sources */,
 				82DDB86A22515C2200A35E5B /* Kingfisher.swift in Sources */,
 				82DDB877225163ED00A35E5B /* SwiftDate.swift in Sources */,
+				8219BAA522522E1E003331E4 /* Siren.swift in Sources */,
 				82DDB87122515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82DDB87D22516CE800A35E5B /* SwiftMessages.swift in Sources */,
 				82955BE3224D1DB300BC27CE /* Moya.swift in Sources */,
