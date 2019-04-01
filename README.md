@@ -271,6 +271,14 @@ Refer to the [official Package manifest documentation](https://github.com/apple/
 
 If you come across any issues with a dependency that you expect to work with Accio, please [open an issue on GitHub](https://github.com/JamitLabs/Accio/issues).
 
+### Official Badge
+
+If you like to add a badge to your project that shows its support for installation via Accio, feel free to add the following to the top of your `README.md`:
+
+```markdown
+[![Accio supported](https://img.shields.io/badge/Accio-supported-0A7CF5.svg?style=flat)](https://github.com/JamitLabs/Accio)
+```
+
 ## Contributing
 
 See the file [CONTRIBUTING.md](https://github.com/JamitLabs/Accio/blob/stable/CONTRIBUTING.md).
