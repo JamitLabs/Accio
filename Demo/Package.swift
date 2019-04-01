@@ -8,6 +8,7 @@ let package = Package(
         .package(url: "https://github.com/AccioSupport/folding-cell.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Kingfisher.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Moya.git", .upToNextMajor(from: "13.0.0-beta.1")),
+        .package(url: "https://github.com/AccioSupport/ReSwift.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/RxSwift.git", .upToNextMajor(from: "4.4.2")),
         .package(url: "https://github.com/AccioSupport/Siren.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/socket.io-client-swift.git", .upToNextMajor(from: "15.0.0")),
@@ -23,6 +24,7 @@ let package = Package(
                 "FoldingCell",
                 "Kingfisher",
                 "Moya",
+                "ReSwift",
                 "RxSwift",
                 "Siren",
                 "SocketIO",
@@ -44,6 +46,7 @@ let package = Package(
             dependencies: [
                 "Kingfisher",
                 "Moya",
+                "ReSwift",
                 "RxSwift",
                 "SocketIO",
                 "Starscream",
@@ -63,6 +66,7 @@ let package = Package(
             dependencies: [
                 "Kingfisher",
                 "Moya",
+                "ReSwift",
                 "RxSwift",
                 "SocketIO",
                 "Starscream",
