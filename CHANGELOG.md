@@ -17,6 +17,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Security
 - None.
 
+## [0.5.3] - 2019-04-01
+### Added
+- None.
+### Changed
+- None.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- Fixes an issue where recursive copies of non symbolic links could cause build errors.
+### Security
+- None.
+
 ## [0.5.2] - 2019-04-01
 ### Added
 - None.
