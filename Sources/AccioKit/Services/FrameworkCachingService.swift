@@ -64,6 +64,8 @@ final class FrameworkCachingService {
         try run(bash: "cp -R '\(unzippedFrameworkDirPath)' '\(frameworkProduct.frameworkDirPath)'")
         try run(bash: "cp -R '\(unzippedSymbolsFilePath)' '\(frameworkProduct.symbolsFilePath)'")
 
+        try frameworkProduct.cleanupRecursiveFrameworkIfNeeded()
+
         return frameworkProduct
     }
 

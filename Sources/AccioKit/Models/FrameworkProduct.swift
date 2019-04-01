@@ -25,4 +25,12 @@ struct FrameworkProduct {
     var libraryName: String {
         return frameworkDirUrl.lastPathComponent.replacingOccurrences(of: ".framework", with: "")
     }
+
+    // This is a workaround for issues with frameworks that symlink to themselves (first found in RxSwift)
+    func cleanupRecursiveFrameworkIfNeeded() throws {
+        let recursiveFrameworkPath: String = frameworkDirUrl.appendingPathComponent(frameworkDirUrl.lastPathComponent).path
+        if FileManager.default.fileExists(atPath: recursiveFrameworkPath) {
+            try FileManager.default.removeItem(atPath: recursiveFrameworkPath)
+        }
+    }
 }
