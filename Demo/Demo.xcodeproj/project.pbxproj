@@ -32,6 +32,9 @@
 		8219BADD22525D8A003331E4 /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BADC22525D8A003331E4 /* SQLite.swift */; };
 		8219BADE22525D8A003331E4 /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BADC22525D8A003331E4 /* SQLite.swift */; };
 		8219BADF22525D8A003331E4 /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BADC22525D8A003331E4 /* SQLite.swift */; };
+		8219BAE12252610F003331E4 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAE02252610F003331E4 /* Lottie.swift */; };
+		8219BAE22252610F003331E4 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAE02252610F003331E4 /* Lottie.swift */; };
+		8219BAE32252610F003331E4 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAE02252610F003331E4 /* Lottie.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -126,6 +129,7 @@
 		8219BAD4225258A3003331E4 /* SwiftyStoreKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyStoreKit.swift; sourceTree = "<group>"; };
 		8219BAD822525B18003331E4 /* Bond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bond.swift; sourceTree = "<group>"; };
 		8219BADC22525D8A003331E4 /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
+		8219BAE02252610F003331E4 /* Lottie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lottie.swift; sourceTree = "<group>"; };
 		8251C5A8224E7BD1006DFB7A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -384,6 +388,7 @@
 				82DDB87A22516AE800A35E5B /* FoldingCell.swift */,
 				8219BAD122524EDE003331E4 /* Hero.swift */,
 				82DDB86922515C2200A35E5B /* Kingfisher.swift */,
+				8219BAE02252610F003331E4 /* Lottie.swift */,
 				8219BAB22252479F003331E4 /* Material.swift */,
 				82955BE2224D1DB300BC27CE /* Moya.swift */,
 				8219BAAE22523321003331E4 /* ReSwift.swift */,
@@ -718,6 +723,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8219BAE12252610F003331E4 /* Lottie.swift in Sources */,
 				8219BAD5225258A3003331E4 /* SwiftyStoreKit.swift in Sources */,
 				8219BAB32252479F003331E4 /* Material.swift in Sources */,
 				82955B54224CF10800BC27CE /* ViewController.swift in Sources */,
@@ -768,6 +774,7 @@
 				82DDB87222515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE4224D1DB300BC27CE /* Moya.swift in Sources */,
 				82DDB86E22515F2500A35E5B /* RxSwift.swift in Sources */,
+				8219BAE22252610F003331E4 /* Lottie.swift in Sources */,
 				8219BAA82252301B003331E4 /* SwifterSwift.swift in Sources */,
 				8219BAB022523321003331E4 /* ReSwift.swift in Sources */,
 				82955B86224CF12900BC27CE /* AppDelegate.swift in Sources */,
@@ -803,6 +810,7 @@
 				82DDB86C22515C2200A35E5B /* Kingfisher.swift in Sources */,
 				8219BAD7225258A3003331E4 /* SwiftyStoreKit.swift in Sources */,
 				8219BAAD22523238003331E4 /* Starscream.swift in Sources */,
+				8219BAE32252610F003331E4 /* Lottie.swift in Sources */,
 				82DDB879225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				82DDB87322515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE5224D1DB300BC27CE /* Moya.swift in Sources */,
