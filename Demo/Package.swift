@@ -7,6 +7,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/AccioSupport/Cartography.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/folding-cell.git", .branch("master")),
+        .package(url: "https://github.com/AccioSupport/Hero.git", .upToNextMajor(from: "1.4.0")),
         .package(url: "https://github.com/AccioSupport/Kingfisher.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Material.git", .branch("development")),
         .package(url: "https://github.com/AccioSupport/Moya.git", .upToNextMajor(from: "13.0.0-beta.1")),
@@ -25,6 +26,7 @@ let package = Package(
             dependencies: [
                 "Cartography",
                 "FoldingCell",
+                "Hero",
                 "Kingfisher",
                 "Material",
                 "Moya",
@@ -49,6 +51,7 @@ let package = Package(
             name: "Demo-tvOS",
             dependencies: [
                 "Cartography",
+                "Hero",
                 "Kingfisher",
                 "Moya",
                 "ReSwift",
