@@ -53,19 +53,11 @@ final class CarthageBuilderService {
             throw CarthageBuilderError.buildProductsMissing
         }
 
-        try cleanupRecursiveSymLinkIfNeeded(frameworkProduct: frameworkProduct)
+        try frameworkProduct.cleanupRecursiveFrameworkIfNeeded()
 
         print("Completed building scheme \(framework.libraryName) with Carthage.", level: .info)
         try frameworkCachingService.cache(product: frameworkProduct, framework: framework, platform: platform)
 
         return frameworkProduct
-    }
-
-    // This is a workaround for issues with frameworks that symlink to themselves (first found in RxSwift)
-    private func cleanupRecursiveSymLinkIfNeeded(frameworkProduct: FrameworkProduct) throws {
-        let recursiveSymlinkPath: String = frameworkProduct.frameworkDirUrl.appendingPathComponent(frameworkProduct.frameworkDirUrl.lastPathComponent).path
-        if FileManager.default.fileExists(atPath: recursiveSymlinkPath) && recursiveSymlinkPath.isAliasFile {
-            try FileManager.default.removeItem(atPath: recursiveSymlinkPath)
-        }
     }
 }

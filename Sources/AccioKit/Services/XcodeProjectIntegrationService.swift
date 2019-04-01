@@ -112,9 +112,10 @@ final class XcodeProjectIntegrationService {
             try bash("cp -R '\(frameworkProduct.frameworkDirPath)' '\(frameworkDirPath)'")
             try bash("cp -R '\(frameworkProduct.symbolsFilePath)' '\(symbolsFilePath)'")
 
-            copiedFrameworkProducts.append(
-                FrameworkProduct(frameworkDirPath: frameworkDirPath, symbolsFilePath: symbolsFilePath)
-            )
+            let frameworkProduct = FrameworkProduct(frameworkDirPath: frameworkDirPath, symbolsFilePath: symbolsFilePath)
+            try frameworkProduct.cleanupRecursiveFrameworkIfNeeded()
+
+            copiedFrameworkProducts.append(frameworkProduct)
         }
 
         return copiedFrameworkProducts
