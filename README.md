@@ -119,6 +119,8 @@ accio init -p "XcodeProjectName" -t "AppTargetName"
 
 This step will create a template `Package.swift` file and set some `.gitignore` entries to keep your repository clean. Please note that if your source code files aren't placed within directories named after the targets, you will need to explicitly set the `path` parameters within the targets in the `Package.swift` file to the correct paths. Also note that the specified `path` must be a directory recursively containing at least one Swift file – but mixing with other languages like (Objective-)C(++) is not supported, so they shouldn't be within the specified directory. The files in there will not be built, they just need to exist in order for SwifPM to work properly, so you could point this anywhere Swift-only code.
 
+Please note that you should not provide any test targets with the `-t` parameter of the `init` command. Add them manually to the `Package.swift` using `.testTarget` instead of `.target` since integration of frameworks needs to be done a little differently for test targets. See [this example](https://github.com/JamitLabs/NewProjectTemplate-iOS/blob/stable/Package.swift) manifest file for an always up-to-date real world reference. Alternatively, check the Demo projects [manifest file](https://github.com/JamitLabs/Accio/blob/stable/Demo/Package.swift).
+
 Run `accio init help` to get a list of all available options.
 
 #### Adding Dependencies
