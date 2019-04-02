@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removed
 - None.
 ### Fixed
-- None.
+- Fix symbolic linking of frameworks and dsyms.
 ### Security
 - None.
 
