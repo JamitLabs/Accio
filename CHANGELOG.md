@@ -17,6 +17,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Security
 - None.
 
+## [0.5.4] - 2019-04-03
+### Added
+- None.
+### Changed
+- None.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- Fix symbolic linking of .framework and .dSYM files.
+### Security
+- None.
+
 ## [0.5.3] - 2019-04-01
 ### Added
 - None.

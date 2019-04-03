@@ -13,8 +13,8 @@
              alt="Codebeat Badge">
     </a>
     <a href="https://github.com/JamitLabs/Accio/releases">
-        <img src="https://img.shields.io/badge/Version-0.5.3-blue.svg"
-             alt="Version: 0.5.3">
+        <img src="https://img.shields.io/badge/Version-0.5.4-blue.svg"
+             alt="Version: 0.5.4">
     </a>
     <img src="https://img.shields.io/badge/Swift-5.0-FFAC45.svg"
          alt="Swift: 5.0">
@@ -270,6 +270,16 @@ let package = Package(
 Refer to the [official Package manifest documentation](https://github.com/apple/swift-package-manager/blob/master/Documentation/PackageDescriptionV4.md) for details on how it can be configured, for example the other options for the version range specification of dependencies.
 
 If you come across any issues with a dependency that you expect to work with Accio, please [open an issue on GitHub](https://github.com/JamitLabs/Accio/issues).
+
+### Official Badge
+
+[![Accio supported](https://img.shields.io/badge/Accio-supported-0A7CF5.svg?style=flat)](https://github.com/JamitLabs/Accio)
+
+To hint that your project supports installation via Accio, add the following to the top of your `README.md`:
+
+```markdown
+[![Accio supported](https://img.shields.io/badge/Accio-supported-0A7CF5.svg?style=flat)](https://github.com/JamitLabs/Accio)
+```
 
 ## Contributing
 

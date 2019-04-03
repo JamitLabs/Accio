@@ -27,10 +27,8 @@ final class CarthageBuilderService {
             print("Linking required frameworks build products '\(requiredFrameworkProduct.frameworkDirPath)(.dSYM)' into directory '\(productsTargetDirectoryUrl.path)' ...", level: .verbose)
 
             try bash("mkdir -p '\(productsTargetDirectoryUrl.path)'")
-            let targetFrameworkUrl = productsTargetDirectoryUrl.appendingPathComponent("\(requiredFramework.libraryName).framework")
-
-            try bash("ln -f -s '\(requiredFrameworkProduct.frameworkDirPath)' '\(targetFrameworkUrl.path)'")
-            try bash("ln -f -s '\(requiredFrameworkProduct.symbolsFilePath)' '\(targetFrameworkUrl.path).dSYM'")
+            try bash("ln -f -s '\(requiredFrameworkProduct.frameworkDirPath)' '\(productsTargetDirectoryUrl.path)'")
+            try bash("ln -f -s '\(requiredFrameworkProduct.symbolsFilePath)' '\(productsTargetDirectoryUrl.path)'")
         }
 
         try XcodeProjectSchemeHandlerService.shared.removeUnnecessarySharedSchemes(from: framework, platform: platform)
