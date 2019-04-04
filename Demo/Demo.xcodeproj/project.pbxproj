@@ -61,11 +61,13 @@
 		82CE069C22563C6700EA8F34 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE069A22563C6700EA8F34 /* Alamofire.swift */; };
 		82CE069D22563C6700EA8F34 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE069A22563C6700EA8F34 /* Alamofire.swift */; };
 		82CE06A722564F6B00EA8F34 /* Spring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06A622564F6B00EA8F34 /* Spring.swift */; };
-		82CE06A822564F6B00EA8F34 /* Spring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06A622564F6B00EA8F34 /* Spring.swift */; };
 		82CE06AB2256525F00EA8F34 /* RAMAnimatedTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06AA2256525F00EA8F34 /* RAMAnimatedTabBarController.swift */; };
 		82CE06AD225653CE00EA8F34 /* PromiseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06AC225653CE00EA8F34 /* PromiseKit.swift */; };
 		82CE06AE225653CE00EA8F34 /* PromiseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06AC225653CE00EA8F34 /* PromiseKit.swift */; };
 		82CE06AF225653CE00EA8F34 /* PromiseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06AC225653CE00EA8F34 /* PromiseKit.swift */; };
+		82CE06B1225656AC00EA8F34 /* LayoutKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06B0225656AC00EA8F34 /* LayoutKit.swift */; };
+		82CE06B2225656AC00EA8F34 /* LayoutKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06B0225656AC00EA8F34 /* LayoutKit.swift */; };
+		82CE06B3225656AC00EA8F34 /* LayoutKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06B0225656AC00EA8F34 /* LayoutKit.swift */; };
 		82DDB86A22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
 		82DDB86B22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
 		82DDB86C22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
@@ -183,6 +185,7 @@
 		82CE06A622564F6B00EA8F34 /* Spring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spring.swift; sourceTree = "<group>"; };
 		82CE06AA2256525F00EA8F34 /* RAMAnimatedTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAMAnimatedTabBarController.swift; sourceTree = "<group>"; };
 		82CE06AC225653CE00EA8F34 /* PromiseKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromiseKit.swift; sourceTree = "<group>"; };
+		82CE06B0225656AC00EA8F34 /* LayoutKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutKit.swift; sourceTree = "<group>"; };
 		82DDB8612251596F00A35E5B /* RxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxSwift.swift; sourceTree = "<group>"; };
 		82DDB86922515C2200A35E5B /* Kingfisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kingfisher.swift; sourceTree = "<group>"; };
 		82DDB87022515FDD00A35E5B /* SocketIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketIO.swift; sourceTree = "<group>"; };
@@ -402,6 +405,7 @@
 				82DDB87A22516AE800A35E5B /* FoldingCell.swift */,
 				8219BAD122524EDE003331E4 /* Hero.swift */,
 				82DDB86922515C2200A35E5B /* Kingfisher.swift */,
+				82CE06B0225656AC00EA8F34 /* LayoutKit.swift */,
 				8219BAE02252610F003331E4 /* Lottie.swift */,
 				8219BAB22252479F003331E4 /* Material.swift */,
 				82955BE2224D1DB300BC27CE /* Moya.swift */,
@@ -763,6 +767,7 @@
 				82CE06A722564F6B00EA8F34 /* Spring.swift in Sources */,
 				82DDB86D22515F2400A35E5B /* RxSwift.swift in Sources */,
 				8219BAA72252301B003331E4 /* SwifterSwift.swift in Sources */,
+				82CE06B1225656AC00EA8F34 /* LayoutKit.swift in Sources */,
 				82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -795,7 +800,7 @@
 				82DDB87222515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE4224D1DB300BC27CE /* Moya.swift in Sources */,
 				82DDB86E22515F2500A35E5B /* RxSwift.swift in Sources */,
-				82CE06A822564F6B00EA8F34 /* Spring.swift in Sources */,
+				82CE06B2225656AC00EA8F34 /* LayoutKit.swift in Sources */,
 				8219BAE22252610F003331E4 /* Lottie.swift in Sources */,
 				82CE06AE225653CE00EA8F34 /* PromiseKit.swift in Sources */,
 				8219BAA82252301B003331E4 /* SwifterSwift.swift in Sources */,
@@ -845,6 +850,7 @@
 				8219BAA92252301B003331E4 /* SwifterSwift.swift in Sources */,
 				8219BAB122523321003331E4 /* ReSwift.swift in Sources */,
 				82955BB5224CF14100BC27CE /* AppDelegate.swift in Sources */,
+				82CE06B3225656AC00EA8F34 /* LayoutKit.swift in Sources */,
 				8219BAB722524C7F003331E4 /* Cartography.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
