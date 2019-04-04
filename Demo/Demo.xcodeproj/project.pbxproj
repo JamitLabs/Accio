@@ -68,6 +68,9 @@
 		82CE06B1225656AC00EA8F34 /* LayoutKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06B0225656AC00EA8F34 /* LayoutKit.swift */; };
 		82CE06B2225656AC00EA8F34 /* LayoutKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06B0225656AC00EA8F34 /* LayoutKit.swift */; };
 		82CE06B3225656AC00EA8F34 /* LayoutKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06B0225656AC00EA8F34 /* LayoutKit.swift */; };
+		82CE06B522565B7900EA8F34 /* CryptoSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06B422565B7900EA8F34 /* CryptoSwift.swift */; };
+		82CE06B622565B7900EA8F34 /* CryptoSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06B422565B7900EA8F34 /* CryptoSwift.swift */; };
+		82CE06B722565B7900EA8F34 /* CryptoSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06B422565B7900EA8F34 /* CryptoSwift.swift */; };
 		82DDB86A22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
 		82DDB86B22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
 		82DDB86C22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
@@ -186,6 +189,7 @@
 		82CE06AA2256525F00EA8F34 /* RAMAnimatedTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAMAnimatedTabBarController.swift; sourceTree = "<group>"; };
 		82CE06AC225653CE00EA8F34 /* PromiseKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromiseKit.swift; sourceTree = "<group>"; };
 		82CE06B0225656AC00EA8F34 /* LayoutKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutKit.swift; sourceTree = "<group>"; };
+		82CE06B422565B7900EA8F34 /* CryptoSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoSwift.swift; sourceTree = "<group>"; };
 		82DDB8612251596F00A35E5B /* RxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxSwift.swift; sourceTree = "<group>"; };
 		82DDB86922515C2200A35E5B /* Kingfisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kingfisher.swift; sourceTree = "<group>"; };
 		82DDB87022515FDD00A35E5B /* SocketIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketIO.swift; sourceTree = "<group>"; };
@@ -402,6 +406,7 @@
 				82CE069A22563C6700EA8F34 /* Alamofire.swift */,
 				8219BAD822525B18003331E4 /* Bond.swift */,
 				8219BAB422524C7F003331E4 /* Cartography.swift */,
+				82CE06B422565B7900EA8F34 /* CryptoSwift.swift */,
 				82DDB87A22516AE800A35E5B /* FoldingCell.swift */,
 				8219BAD122524EDE003331E4 /* Hero.swift */,
 				82DDB86922515C2200A35E5B /* Kingfisher.swift */,
@@ -744,6 +749,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82CE06B522565B7900EA8F34 /* CryptoSwift.swift in Sources */,
 				8219BAE12252610F003331E4 /* Lottie.swift in Sources */,
 				82CE06AB2256525F00EA8F34 /* RAMAnimatedTabBarController.swift in Sources */,
 				8219BAD5225258A3003331E4 /* SwiftyStoreKit.swift in Sources */,
@@ -802,6 +808,7 @@
 				82DDB86E22515F2500A35E5B /* RxSwift.swift in Sources */,
 				82CE06B2225656AC00EA8F34 /* LayoutKit.swift in Sources */,
 				8219BAE22252610F003331E4 /* Lottie.swift in Sources */,
+				82CE06B622565B7900EA8F34 /* CryptoSwift.swift in Sources */,
 				82CE06AE225653CE00EA8F34 /* PromiseKit.swift in Sources */,
 				8219BAA82252301B003331E4 /* SwifterSwift.swift in Sources */,
 				8219BAB022523321003331E4 /* ReSwift.swift in Sources */,
@@ -842,6 +849,7 @@
 				8219BAE32252610F003331E4 /* Lottie.swift in Sources */,
 				82CE06AF225653CE00EA8F34 /* PromiseKit.swift in Sources */,
 				82DDB879225163ED00A35E5B /* SwiftDate.swift in Sources */,
+				82CE06B722565B7900EA8F34 /* CryptoSwift.swift in Sources */,
 				82DDB87322515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE5224D1DB300BC27CE /* Moya.swift in Sources */,
 				82DDB86F22515F2600A35E5B /* RxSwift.swift in Sources */,
