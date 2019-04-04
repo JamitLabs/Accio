@@ -60,6 +60,8 @@
 		82CE069B22563C6700EA8F34 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE069A22563C6700EA8F34 /* Alamofire.swift */; };
 		82CE069C22563C6700EA8F34 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE069A22563C6700EA8F34 /* Alamofire.swift */; };
 		82CE069D22563C6700EA8F34 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE069A22563C6700EA8F34 /* Alamofire.swift */; };
+		82CE06A722564F6B00EA8F34 /* Spring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06A622564F6B00EA8F34 /* Spring.swift */; };
+		82CE06A822564F6B00EA8F34 /* Spring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE06A622564F6B00EA8F34 /* Spring.swift */; };
 		82DDB86A22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
 		82DDB86B22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
 		82DDB86C22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
@@ -174,6 +176,7 @@
 		82955BD4224CF14200BC27CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		82955BE2224D1DB300BC27CE /* Moya.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moya.swift; sourceTree = "<group>"; };
 		82CE069A22563C6700EA8F34 /* Alamofire.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire.swift; sourceTree = "<group>"; };
+		82CE06A622564F6B00EA8F34 /* Spring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spring.swift; sourceTree = "<group>"; };
 		82DDB8612251596F00A35E5B /* RxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxSwift.swift; sourceTree = "<group>"; };
 		82DDB86922515C2200A35E5B /* Kingfisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kingfisher.swift; sourceTree = "<group>"; };
 		82DDB87022515FDD00A35E5B /* SocketIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketIO.swift; sourceTree = "<group>"; };
@@ -400,6 +403,7 @@
 				82DDB8612251596F00A35E5B /* RxSwift.swift */,
 				8219BAA422522E1E003331E4 /* Siren.swift */,
 				82DDB87022515FDD00A35E5B /* SocketIO.swift */,
+				82CE06A622564F6B00EA8F34 /* Spring.swift */,
 				8219BADC22525D8A003331E4 /* SQLite.swift */,
 				8219BAAA22523238003331E4 /* Starscream.swift */,
 				82DDB876225163ED00A35E5B /* SwiftDate.swift */,
@@ -746,6 +750,7 @@
 				8219BAAB22523238003331E4 /* Starscream.swift in Sources */,
 				8219BAD922525B18003331E4 /* Bond.swift in Sources */,
 				8219BADD22525D8A003331E4 /* SQLite.swift in Sources */,
+				82CE06A722564F6B00EA8F34 /* Spring.swift in Sources */,
 				82DDB86D22515F2400A35E5B /* RxSwift.swift in Sources */,
 				8219BAA72252301B003331E4 /* SwifterSwift.swift in Sources */,
 				82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */,
@@ -780,6 +785,7 @@
 				82DDB87222515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE4224D1DB300BC27CE /* Moya.swift in Sources */,
 				82DDB86E22515F2500A35E5B /* RxSwift.swift in Sources */,
+				82CE06A822564F6B00EA8F34 /* Spring.swift in Sources */,
 				8219BAE22252610F003331E4 /* Lottie.swift in Sources */,
 				8219BAA82252301B003331E4 /* SwifterSwift.swift in Sources */,
 				8219BAB022523321003331E4 /* ReSwift.swift in Sources */,
