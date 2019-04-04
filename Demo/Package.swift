@@ -5,6 +5,7 @@ let package = Package(
     name: "Demo",
     products: [],
     dependencies: [
+        .package(url: "https://github.com/AccioSupport/Alamofire.git", .upToNextMajor(from: "4.8.1")),
         .package(url: "https://github.com/AccioSupport/Bond.git", .upToNextMajor(from: "7.3.3")),
         .package(url: "https://github.com/AccioSupport/Cartography.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/folding-cell.git", .branch("master")),
@@ -28,6 +29,7 @@ let package = Package(
         .target(
             name: "Demo-iOS",
             dependencies: [
+                "Alamofire",
                 "Bond",
                 "Cartography",
                 "FoldingCell",
@@ -58,6 +60,7 @@ let package = Package(
         .target(
             name: "Demo-tvOS",
             dependencies: [
+                "Alamofire",
                 "Bond",
                 "Cartography",
                 "Hero",
@@ -84,6 +87,7 @@ let package = Package(
         .target(
             name: "Demo-macOS",
             dependencies: [
+                "Alamofire",
                 "Bond",
                 "Cartography",
                 "Kingfisher",

@@ -57,6 +57,9 @@
 		82955BE3224D1DB300BC27CE /* Moya.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955BE2224D1DB300BC27CE /* Moya.swift */; };
 		82955BE4224D1DB300BC27CE /* Moya.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955BE2224D1DB300BC27CE /* Moya.swift */; };
 		82955BE5224D1DB300BC27CE /* Moya.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955BE2224D1DB300BC27CE /* Moya.swift */; };
+		82CE069B22563C6700EA8F34 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE069A22563C6700EA8F34 /* Alamofire.swift */; };
+		82CE069C22563C6700EA8F34 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE069A22563C6700EA8F34 /* Alamofire.swift */; };
+		82CE069D22563C6700EA8F34 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CE069A22563C6700EA8F34 /* Alamofire.swift */; };
 		82DDB86A22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
 		82DDB86B22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
 		82DDB86C22515C2200A35E5B /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB86922515C2200A35E5B /* Kingfisher.swift */; };
@@ -170,6 +173,7 @@
 		82955BD2224CF14200BC27CE /* Demo_macOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demo_macOSUITests.swift; sourceTree = "<group>"; };
 		82955BD4224CF14200BC27CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		82955BE2224D1DB300BC27CE /* Moya.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moya.swift; sourceTree = "<group>"; };
+		82CE069A22563C6700EA8F34 /* Alamofire.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire.swift; sourceTree = "<group>"; };
 		82DDB8612251596F00A35E5B /* RxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxSwift.swift; sourceTree = "<group>"; };
 		82DDB86922515C2200A35E5B /* Kingfisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kingfisher.swift; sourceTree = "<group>"; };
 		82DDB87022515FDD00A35E5B /* SocketIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketIO.swift; sourceTree = "<group>"; };
@@ -383,6 +387,7 @@
 		82955BE0224D1D8900BC27CE /* AppDependencies */ = {
 			isa = PBXGroup;
 			children = (
+				82CE069A22563C6700EA8F34 /* Alamofire.swift */,
 				8219BAD822525B18003331E4 /* Bond.swift */,
 				8219BAB422524C7F003331E4 /* Cartography.swift */,
 				82DDB87A22516AE800A35E5B /* FoldingCell.swift */,
@@ -729,6 +734,7 @@
 				82955B54224CF10800BC27CE /* ViewController.swift in Sources */,
 				82DDB86A22515C2200A35E5B /* Kingfisher.swift in Sources */,
 				8219BAD222524EDE003331E4 /* Hero.swift in Sources */,
+				82CE069B22563C6700EA8F34 /* Alamofire.swift in Sources */,
 				82DDB877225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				8219BAA522522E1E003331E4 /* Siren.swift in Sources */,
 				82DDB87122515FDD00A35E5B /* SocketIO.swift in Sources */,
@@ -780,6 +786,7 @@
 				82955B86224CF12900BC27CE /* AppDelegate.swift in Sources */,
 				8219BADA22525B18003331E4 /* Bond.swift in Sources */,
 				8219BAB622524C7F003331E4 /* Cartography.swift in Sources */,
+				82CE069C22563C6700EA8F34 /* Alamofire.swift in Sources */,
 				8219BAD6225258A3003331E4 /* SwiftyStoreKit.swift in Sources */,
 				8219BAD322524EDE003331E4 /* Hero.swift in Sources */,
 			);
@@ -815,6 +822,7 @@
 				82DDB87322515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE5224D1DB300BC27CE /* Moya.swift in Sources */,
 				82DDB86F22515F2600A35E5B /* RxSwift.swift in Sources */,
+				82CE069D22563C6700EA8F34 /* Alamofire.swift in Sources */,
 				8219BADB22525B18003331E4 /* Bond.swift in Sources */,
 				8219BAA92252301B003331E4 /* SwifterSwift.swift in Sources */,
 				8219BAB122523321003331E4 /* ReSwift.swift in Sources */,
