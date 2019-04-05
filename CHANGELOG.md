@@ -17,6 +17,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Security
 - None.
 
+## [0.5.5] - 2019-04-05
+### Added
+- None.
+### Changed
+- The framework copy build phase now optimizes "dirty" build timing by specifying the output files. [#13](https://github.com/JamitLabs/Accio/issues/13)
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- Fixes an issue where broken previous install attempt leftovers cause errors on subsequent installs. [#12](https://github.com/JamitLabs/Accio/issues/12)
+### Security
+- None.
+
 ## [0.5.4] - 2019-04-03
 ### Added
 - None.

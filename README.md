@@ -13,8 +13,8 @@
              alt="Codebeat Badge">
     </a>
     <a href="https://github.com/JamitLabs/Accio/releases">
-        <img src="https://img.shields.io/badge/Version-0.5.4-blue.svg"
-             alt="Version: 0.5.4">
+        <img src="https://img.shields.io/badge/Version-0.5.5-blue.svg"
+             alt="Version: 0.5.5">
     </a>
     <img src="https://img.shields.io/badge/Swift-5.0-FFAC45.svg"
          alt="Swift: 5.0">
@@ -143,8 +143,8 @@ let package = Package(
         .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "2.8.0")),
         .package(url: "https://github.com/Flinesoft/HandyUIKit.git", .upToNextMajor(from: "1.9.1")),
         .package(url: "https://github.com/JamitLabs/MungoHealer.git", .upToNextMajor(from: "0.3.2")),
-        .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", .upToNextMajor(from: "1.6.2")),
-        .package(url: "https://github.com/radex/SwiftyUserDefaults.git", .upToNextMajor(from: "4.0.0-beta.1")),
+        .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", from: "1.6.2"),
+        .package(url: "https://github.com/radex/SwiftyUserDefaults.git", .branch("master")),
     ],
     targets: [
         .target(

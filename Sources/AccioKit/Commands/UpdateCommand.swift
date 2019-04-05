@@ -14,6 +14,7 @@ public class UpdateCommand: Command {
     // MARK: - Instance Methods
     public func execute() throws {
         let config = try Config.load()
+        try revertCheckoutChanges()
         try DependencyResolverService.shared.updateDependencies()
 
         let manifest = try loadManifest()

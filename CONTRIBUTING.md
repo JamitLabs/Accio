@@ -27,6 +27,16 @@ To check if all **tests** are passing correctly:
 swift test
 ```
 
+To check if the integration tests in the Demo project pass successfully:
+
+```
+cd Demo
+accio update
+open Demo.xcodeproj/
+```
+
+Then build & run the tests via `Cmd+U` for each of the available schemes schemes (iOS / tvOS / macOS).
+
 To check if the **linter** shows any warnings or errors:
 
 ```
@@ -47,7 +57,7 @@ cli.goAndExit()
 from the file at path `Sources/Accio/main.swift` with something like:
 
 ```swift
-cli.debugGo(with: "accio install -d /Users/You/path/to/a/demo/project -v")
+cli.debugGo(with: "accio update -d /Users/You/path/to/Accio/Demo -v")
 ```
 
 Note that the `-d` option specified the path from within to run Accio and `-v` makes sure the logging level is set to `verbose`.
