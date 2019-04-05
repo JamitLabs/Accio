@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removed
 - None.
 ### Fixed
-- None.
+- Fixes an issue where broken previous install attempt leftovers cause errors on subsequent installs. [#12](https://github.com/JamitLabs/Accio/issues/12)
 ### Security
 - None.
 
