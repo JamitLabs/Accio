@@ -35,6 +35,7 @@
 		8219BAE12252610F003331E4 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAE02252610F003331E4 /* Lottie.swift */; };
 		8219BAE22252610F003331E4 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAE02252610F003331E4 /* Lottie.swift */; };
 		8219BAE32252610F003331E4 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAE02252610F003331E4 /* Lottie.swift */; };
+		8288F4632257ADCE00F3FA47 /* XLActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4622257ADCE00F3FA47 /* XLActionController.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -145,6 +146,7 @@
 		8219BADC22525D8A003331E4 /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
 		8219BAE02252610F003331E4 /* Lottie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lottie.swift; sourceTree = "<group>"; };
 		8251C5A8224E7BD1006DFB7A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		8288F4622257ADCE00F3FA47 /* XLActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XLActionController.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82955B53224CF10800BC27CE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -427,6 +429,7 @@
 				8219BAA62252301B003331E4 /* SwifterSwift.swift */,
 				82DDB87C22516CE800A35E5B /* SwiftMessages.swift */,
 				8219BAD4225258A3003331E4 /* SwiftyStoreKit.swift */,
+				8288F4622257ADCE00F3FA47 /* XLActionController.swift */,
 			);
 			path = AppDependencies;
 			sourceTree = "<group>";
@@ -764,6 +767,7 @@
 				8219BAAF22523321003331E4 /* ReSwift.swift in Sources */,
 				82DDB87D22516CE800A35E5B /* SwiftMessages.swift in Sources */,
 				82955BE3224D1DB300BC27CE /* Moya.swift in Sources */,
+				8288F4632257ADCE00F3FA47 /* XLActionController.swift in Sources */,
 				82DDB87B22516AE800A35E5B /* FoldingCell.swift in Sources */,
 				8219BAB522524C7F003331E4 /* Cartography.swift in Sources */,
 				8219BAAB22523238003331E4 /* Starscream.swift in Sources */,

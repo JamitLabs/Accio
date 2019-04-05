@@ -29,6 +29,7 @@ let package = Package(
         .package(url: "https://github.com/AccioSupport/SwifterSwift.git", .upToNextMajor(from: "4.6.0")),
         .package(url: "https://github.com/AccioSupport/SwiftMessages.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/SwiftyStoreKit.git", .branch("master")),
+        .package(url: "https://github.com/AccioSupport/XLActionController.git", .branch("master")),
     ],
     targets: [
         .target(
@@ -58,6 +59,7 @@ let package = Package(
                 "SwifterSwift",
                 "SwiftMessages",
                 "SwiftyStoreKit",
+                "XLActionController",
             ],
             path: "Demo-iOS"
         ),
