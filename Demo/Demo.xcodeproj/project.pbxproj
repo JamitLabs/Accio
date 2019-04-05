@@ -36,6 +36,7 @@
 		8219BAE22252610F003331E4 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAE02252610F003331E4 /* Lottie.swift */; };
 		8219BAE32252610F003331E4 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAE02252610F003331E4 /* Lottie.swift */; };
 		8288F4632257ADCE00F3FA47 /* XLActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4622257ADCE00F3FA47 /* XLActionController.swift */; };
+		8288F4672257B74400F3FA47 /* Eureka.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4662257B74400F3FA47 /* Eureka.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -147,6 +148,7 @@
 		8219BAE02252610F003331E4 /* Lottie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lottie.swift; sourceTree = "<group>"; };
 		8251C5A8224E7BD1006DFB7A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		8288F4622257ADCE00F3FA47 /* XLActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XLActionController.swift; sourceTree = "<group>"; };
+		8288F4662257B74400F3FA47 /* Eureka.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eureka.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82955B53224CF10800BC27CE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -409,6 +411,7 @@
 				8219BAD822525B18003331E4 /* Bond.swift */,
 				8219BAB422524C7F003331E4 /* Cartography.swift */,
 				82CE06B422565B7900EA8F34 /* CryptoSwift.swift */,
+				8288F4662257B74400F3FA47 /* Eureka.swift */,
 				82DDB87A22516AE800A35E5B /* FoldingCell.swift */,
 				8219BAD122524EDE003331E4 /* Hero.swift */,
 				82DDB86922515C2200A35E5B /* Kingfisher.swift */,
@@ -760,6 +763,7 @@
 				82955B54224CF10800BC27CE /* ViewController.swift in Sources */,
 				82DDB86A22515C2200A35E5B /* Kingfisher.swift in Sources */,
 				8219BAD222524EDE003331E4 /* Hero.swift in Sources */,
+				8288F4672257B74400F3FA47 /* Eureka.swift in Sources */,
 				82CE069B22563C6700EA8F34 /* Alamofire.swift in Sources */,
 				82DDB877225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				8219BAA522522E1E003331E4 /* Siren.swift in Sources */,
