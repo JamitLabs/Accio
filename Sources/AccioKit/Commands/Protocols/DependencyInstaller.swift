@@ -34,8 +34,8 @@ extension DependencyInstaller {
                 let frameworkCheckoutPath: String = checkoutsDirUrl.appendingPathComponent(fileName).path
 
                 if try FileManager.default.isDirectory(atPath: frameworkCheckoutPath) {
-                    try run(bash: "git -C '\(frameworkCheckoutPath)' reset HEAD --hard --quiet")
-                    try run(bash: "git -C '\(frameworkCheckoutPath)' clean -fd --quiet")
+                    try bash("git -C '\(frameworkCheckoutPath)' reset HEAD --hard --quiet")
+                    try bash("git -C '\(frameworkCheckoutPath)' clean -fd --quiet")
                 }
             }
         }
