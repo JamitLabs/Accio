@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 - None.
 ### Changed
-- None.
+- The framework copy build phase now optimizes "diry" build timing by specifying the output files. [#13](https://github.com/JamitLabs/Accio/issues/13)
 ### Deprecated
 - None.
 ### Removed

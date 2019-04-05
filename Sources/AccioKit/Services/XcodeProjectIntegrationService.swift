@@ -197,6 +197,7 @@ final class XcodeProjectIntegrationService {
 
             print("Updating input paths in copy build script phase '\(Constants.copyBuildScript)' for target '\(appTarget.targetName)' ...", level: .info)
             copyBuildScript.inputPaths = targetGroup.children.map { "$(SRCROOT)/\($0.path!)" }
+            copyBuildScript.outputPaths = targetGroup.children.map { "$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/\($0.name!)"}
 
         case .test:
             // manage copy frameworks phase for test targets
