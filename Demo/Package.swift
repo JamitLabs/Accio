@@ -16,7 +16,7 @@ let package = Package(
         .package(url: "https://github.com/AccioSupport/LayoutKit.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/lottie-ios.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Material.git", .branch("development")),
-        .package(url: "https://github.com/AccioSupport/Moya.git", .upToNextMajor(from: "13.0.0-beta.1")),
+        .package(url: "https://github.com/AccioSupport/Moya.git", .branch("development")),
         .package(url: "https://github.com/AccioSupport/PromiseKit.git", .upToNextMajor(from: "6.8.4")),
         .package(url: "https://github.com/AccioSupport/ReSwift.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/RxSwift.git", .upToNextMajor(from: "4.4.2")),
