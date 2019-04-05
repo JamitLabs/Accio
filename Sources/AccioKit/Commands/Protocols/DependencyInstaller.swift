@@ -1,4 +1,5 @@
 import Foundation
+import SwiftCLI
 
 enum DependencyInstallerError: Error {
     case noTargetsInManifest
@@ -6,6 +7,7 @@ enum DependencyInstallerError: Error {
 
 protocol DependencyInstaller {
     func loadManifest() throws -> Manifest
+    func revertCheckoutChanges(workingDirectory: String) throws
     func buildFrameworksAndIntegrateWithXcode(manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws
 }
 
@@ -19,6 +21,24 @@ extension DependencyInstaller {
         }
 
         return manifest
+    }
+
+    func revertCheckoutChanges(workingDirectory: String = GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath) throws {
+        let workingDirectoryUrl = URL(fileURLWithPath: workingDirectory)
+        let checkoutsDirUrl = workingDirectoryUrl.appendingPathComponent("\(Constants.buildPath)/checkouts")
+
+        if FileManager.default.fileExists(atPath: checkoutsDirUrl.path) {
+            print("Reverting any changes in previous checkouts ...", level: .info)
+
+            for fileName in try FileManager.default.contentsOfDirectory(atPath: checkoutsDirUrl.path) {
+                let frameworkCheckoutPath: String = checkoutsDirUrl.appendingPathComponent(fileName).path
+
+                if try FileManager.default.isDirectory(atPath: frameworkCheckoutPath) {
+                    try run(bash: "git -C '\(frameworkCheckoutPath)' reset HEAD --hard --quiet")
+                    try run(bash: "git -C '\(frameworkCheckoutPath)' clean -fd --quiet")
+                }
+            }
+        }
     }
 
     func buildFrameworksAndIntegrateWithXcode(manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws {

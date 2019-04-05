@@ -14,6 +14,7 @@ public class InstallCommand: Command {
     // MARK: - Instance Methods
     public func execute() throws {
         let config = try Config.load()
+        try revertCheckoutChanges()
         try DependencyResolverService.shared.resolveDependencies()
 
         let manifest = try loadManifest()
