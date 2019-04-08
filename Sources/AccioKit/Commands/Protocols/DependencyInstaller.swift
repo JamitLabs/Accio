@@ -75,6 +75,6 @@ extension DependencyInstaller {
         }
 
         try XcodeProjectIntegrationService.shared.handleRemovedTargets(keepingTargets: manifest.appTargets)
-        try bash("rm -rf '\(Constants.temporaryFrameworksUrl)'")
+        try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")
     }
 }
