@@ -226,7 +226,7 @@ import PackageDescription
 
 let package = Package(
     name: "LibraryName",
-    // platforms: [.iOS("8.0"), .macOS("10.10"), tvOS("9.0"), .watchOS("2.0")],
+    // platforms: [.iOS("8.0"), .macOS("10.10"), .tvOS("9.0"), .watchOS("2.0")],
     products: [
         .library(name: "LibraryName", targets: ["LibraryName"])
     ],
@@ -249,7 +249,7 @@ import PackageDescription
 
 let package = Package(
     name: "LibraryName",
-    // platforms: [.iOS("8.0"), .macOS("10.10"), tvOS("9.0"), .watchOS("2.0")],
+    // platforms: [.iOS("8.0"), .macOS("10.10"), .tvOS("9.0"), .watchOS("2.0")],
     products: [
         .library(name: "LibraryName", targets: ["LibraryName"])
     ],
