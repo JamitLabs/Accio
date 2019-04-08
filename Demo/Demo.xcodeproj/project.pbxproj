@@ -40,6 +40,8 @@
 		8288F46D225B401A00F3FA47 /* XCDYouTubeKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F46C225B401A00F3FA47 /* XCDYouTubeKit.swift */; };
 		8288F46E225B401A00F3FA47 /* XCDYouTubeKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F46C225B401A00F3FA47 /* XCDYouTubeKit.swift */; };
 		8288F46F225B401A00F3FA47 /* XCDYouTubeKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F46C225B401A00F3FA47 /* XCDYouTubeKit.swift */; };
+		8288F471225B42A600F3FA47 /* JGProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F470225B42A600F3FA47 /* JGProgressHUD.swift */; };
+		8288F472225B42A600F3FA47 /* JGProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F470225B42A600F3FA47 /* JGProgressHUD.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -153,6 +155,7 @@
 		8288F4622257ADCE00F3FA47 /* XLActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XLActionController.swift; sourceTree = "<group>"; };
 		8288F4662257B74400F3FA47 /* Eureka.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eureka.swift; sourceTree = "<group>"; };
 		8288F46C225B401A00F3FA47 /* XCDYouTubeKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCDYouTubeKit.swift; sourceTree = "<group>"; };
+		8288F470225B42A600F3FA47 /* JGProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JGProgressHUD.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82955B53224CF10800BC27CE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -418,6 +421,7 @@
 				8288F4662257B74400F3FA47 /* Eureka.swift */,
 				82DDB87A22516AE800A35E5B /* FoldingCell.swift */,
 				8219BAD122524EDE003331E4 /* Hero.swift */,
+				8288F470225B42A600F3FA47 /* JGProgressHUD.swift */,
 				82DDB86922515C2200A35E5B /* Kingfisher.swift */,
 				82CE06B0225656AC00EA8F34 /* LayoutKit.swift */,
 				8219BAE02252610F003331E4 /* Lottie.swift */,
@@ -779,6 +783,7 @@
 				8288F4632257ADCE00F3FA47 /* XLActionController.swift in Sources */,
 				82DDB87B22516AE800A35E5B /* FoldingCell.swift in Sources */,
 				8288F46D225B401A00F3FA47 /* XCDYouTubeKit.swift in Sources */,
+				8288F471225B42A600F3FA47 /* JGProgressHUD.swift in Sources */,
 				8219BAB522524C7F003331E4 /* Cartography.swift in Sources */,
 				8219BAAB22523238003331E4 /* Starscream.swift in Sources */,
 				8219BAD922525B18003331E4 /* Bond.swift in Sources */,
@@ -825,6 +830,7 @@
 				8288F46E225B401A00F3FA47 /* XCDYouTubeKit.swift in Sources */,
 				82CE06B622565B7900EA8F34 /* CryptoSwift.swift in Sources */,
 				82CE06AE225653CE00EA8F34 /* PromiseKit.swift in Sources */,
+				8288F472225B42A600F3FA47 /* JGProgressHUD.swift in Sources */,
 				8219BAA82252301B003331E4 /* SwifterSwift.swift in Sources */,
 				8219BAB022523321003331E4 /* ReSwift.swift in Sources */,
 				82955B86224CF12900BC27CE /* AppDelegate.swift in Sources */,
