@@ -43,6 +43,7 @@
 		8288F471225B42A600F3FA47 /* JGProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F470225B42A600F3FA47 /* JGProgressHUD.swift */; };
 		8288F472225B42A600F3FA47 /* JGProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F470225B42A600F3FA47 /* JGProgressHUD.swift */; };
 		8288F474225B468C00F3FA47 /* XLPagerTabStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F473225B468C00F3FA47 /* XLPagerTabStrip.swift */; };
+		8288F478225B590200F3FA47 /* Chatto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F477225B590200F3FA47 /* Chatto.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -158,6 +159,7 @@
 		8288F46C225B401A00F3FA47 /* XCDYouTubeKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCDYouTubeKit.swift; sourceTree = "<group>"; };
 		8288F470225B42A600F3FA47 /* JGProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JGProgressHUD.swift; sourceTree = "<group>"; };
 		8288F473225B468C00F3FA47 /* XLPagerTabStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XLPagerTabStrip.swift; sourceTree = "<group>"; };
+		8288F477225B590200F3FA47 /* Chatto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chatto.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82955B53224CF10800BC27CE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 				82CE069A22563C6700EA8F34 /* Alamofire.swift */,
 				8219BAD822525B18003331E4 /* Bond.swift */,
 				8219BAB422524C7F003331E4 /* Cartography.swift */,
+				8288F477225B590200F3FA47 /* Chatto.swift */,
 				82CE06B422565B7900EA8F34 /* CryptoSwift.swift */,
 				8288F4662257B74400F3FA47 /* Eureka.swift */,
 				82DDB87A22516AE800A35E5B /* FoldingCell.swift */,
@@ -777,6 +780,7 @@
 				8219BAD222524EDE003331E4 /* Hero.swift in Sources */,
 				8288F4672257B74400F3FA47 /* Eureka.swift in Sources */,
 				82CE069B22563C6700EA8F34 /* Alamofire.swift in Sources */,
+				8288F478225B590200F3FA47 /* Chatto.swift in Sources */,
 				82DDB877225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				8219BAA522522E1E003331E4 /* Siren.swift in Sources */,
 				82DDB87122515FDD00A35E5B /* SocketIO.swift in Sources */,
