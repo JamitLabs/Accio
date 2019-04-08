@@ -5,7 +5,7 @@ let package = Package(
     name: "Demo",
     products: [],
     dependencies: [
-        .package(url: "https://github.com/AccioSupport/Alamofire.git", .upToNextMajor(from: "4.8.1")),
+        .package(url: "https://github.com/AccioSupport/Alamofire.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/animated-tab-bar.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Bond.git", .upToNextMajor(from: "7.3.3")),
         .package(url: "https://github.com/AccioSupport/Cartography.git", .branch("master")),
@@ -33,6 +33,7 @@ let package = Package(
         .package(url: "https://github.com/AccioSupport/SwifterSwift.git", .upToNextMajor(from: "4.6.0")),
         .package(url: "https://github.com/AccioSupport/SwiftMessages.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/SwiftyStoreKit.git", .branch("master")),
+        .package(url: "https://github.com/AccioSupport/SwiftyUserDefaults.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/XCDYouTubeKit.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/XLActionController.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/XLPagerTabStrip.git", .branch("master")),
@@ -70,6 +71,7 @@ let package = Package(
                 "SwifterSwift",
                 "SwiftMessages",
                 "SwiftyStoreKit",
+                "SwiftyUserDefaults",
                 "XCDYouTubeKit",
                 "XLActionController",
                 "XLPagerTabStrip",
@@ -105,6 +107,7 @@ let package = Package(
                 "SwiftDate",
                 "SwifterSwift",
                 "SwiftyStoreKit",
+                "SwiftyUserDefaults",
                 "XCDYouTubeKit",
             ],
             path: "Demo-tvOS"
@@ -135,6 +138,7 @@ let package = Package(
                 "SwiftDate",
                 "SwifterSwift",
                 "SwiftyStoreKit",
+                "SwiftyUserDefaults",
                 "XCDYouTubeKit",
             ],
             path: "Demo-macOS"

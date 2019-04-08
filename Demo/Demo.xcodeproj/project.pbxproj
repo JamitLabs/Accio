@@ -90,6 +90,9 @@
 		8288F478225B590200F3FA47 /* Chatto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F477225B590200F3FA47 /* Chatto.swift */; };
 		8288F47A225B5CFE00F3FA47 /* Haneke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F479225B5CFE00F3FA47 /* Haneke.swift */; };
 		8288F47B225B5CFE00F3FA47 /* Haneke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F479225B5CFE00F3FA47 /* Haneke.swift */; };
+		8288F47D225B647900F3FA47 /* SwiftyUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F47C225B647900F3FA47 /* SwiftyUserDefaults.swift */; };
+		8288F47E225B647900F3FA47 /* SwiftyUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F47C225B647900F3FA47 /* SwiftyUserDefaults.swift */; };
+		8288F47F225B647900F3FA47 /* SwiftyUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F47C225B647900F3FA47 /* SwiftyUserDefaults.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -284,6 +287,7 @@
 		8288F473225B468C00F3FA47 /* XLPagerTabStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XLPagerTabStrip.swift; sourceTree = "<group>"; };
 		8288F477225B590200F3FA47 /* Chatto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chatto.swift; sourceTree = "<group>"; };
 		8288F479225B5CFE00F3FA47 /* Haneke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haneke.swift; sourceTree = "<group>"; };
+		8288F47C225B647900F3FA47 /* SwiftyUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyUserDefaults.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82955B53224CF10800BC27CE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -756,6 +760,7 @@
 				8219BAA62252301B003331E4 /* SwifterSwift.swift */,
 				82DDB87C22516CE800A35E5B /* SwiftMessages.swift */,
 				8219BAD4225258A3003331E4 /* SwiftyStoreKit.swift */,
+				8288F47C225B647900F3FA47 /* SwiftyUserDefaults.swift */,
 				8288F46C225B401A00F3FA47 /* XCDYouTubeKit.swift */,
 				8288F4622257ADCE00F3FA47 /* XLActionController.swift */,
 				8288F473225B468C00F3FA47 /* XLPagerTabStrip.swift */,
@@ -1350,6 +1355,7 @@
 				8219BAE12252610F003331E4 /* Lottie.swift in Sources */,
 				82CE06AB2256525F00EA8F34 /* RAMAnimatedTabBarController.swift in Sources */,
 				8219BAD5225258A3003331E4 /* SwiftyStoreKit.swift in Sources */,
+				8288F47D225B647900F3FA47 /* SwiftyUserDefaults.swift in Sources */,
 				8288F47A225B5CFE00F3FA47 /* Haneke.swift in Sources */,
 				8219BAB32252479F003331E4 /* Material.swift in Sources */,
 				82955B54224CF10800BC27CE /* ViewController.swift in Sources */,
@@ -1410,6 +1416,7 @@
 				82DDB878225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				82DDB87222515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE4224D1DB300BC27CE /* Moya.swift in Sources */,
+				8288F47E225B647900F3FA47 /* SwiftyUserDefaults.swift in Sources */,
 				82DDB86E22515F2500A35E5B /* RxSwift.swift in Sources */,
 				82CE06B2225656AC00EA8F34 /* LayoutKit.swift in Sources */,
 				8219BAE22252610F003331E4 /* Lottie.swift in Sources */,
@@ -1468,6 +1475,7 @@
 				82955BB5224CF14100BC27CE /* AppDelegate.swift in Sources */,
 				82CE06B3225656AC00EA8F34 /* LayoutKit.swift in Sources */,
 				8219BAB722524C7F003331E4 /* Cartography.swift in Sources */,
+				8288F47F225B647900F3FA47 /* SwiftyUserDefaults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
