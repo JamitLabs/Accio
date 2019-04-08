@@ -33,6 +33,7 @@ let package = Package(
         .package(url: "https://github.com/AccioSupport/SwiftyStoreKit.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/XCDYouTubeKit.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/XLActionController.git", .branch("master")),
+        .package(url: "https://github.com/AccioSupport/XLPagerTabStrip.git", .branch("master")),
     ],
     targets: [
         .target(
@@ -66,6 +67,7 @@ let package = Package(
                 "SwiftyStoreKit",
                 "XCDYouTubeKit",
                 "XLActionController",
+                "XLPagerTabStrip",
             ],
             path: "Demo-iOS"
         ),

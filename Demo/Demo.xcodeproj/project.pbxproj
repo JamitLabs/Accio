@@ -42,6 +42,7 @@
 		8288F46F225B401A00F3FA47 /* XCDYouTubeKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F46C225B401A00F3FA47 /* XCDYouTubeKit.swift */; };
 		8288F471225B42A600F3FA47 /* JGProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F470225B42A600F3FA47 /* JGProgressHUD.swift */; };
 		8288F472225B42A600F3FA47 /* JGProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F470225B42A600F3FA47 /* JGProgressHUD.swift */; };
+		8288F474225B468C00F3FA47 /* XLPagerTabStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F473225B468C00F3FA47 /* XLPagerTabStrip.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -156,6 +157,7 @@
 		8288F4662257B74400F3FA47 /* Eureka.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eureka.swift; sourceTree = "<group>"; };
 		8288F46C225B401A00F3FA47 /* XCDYouTubeKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCDYouTubeKit.swift; sourceTree = "<group>"; };
 		8288F470225B42A600F3FA47 /* JGProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JGProgressHUD.swift; sourceTree = "<group>"; };
+		8288F473225B468C00F3FA47 /* XLPagerTabStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XLPagerTabStrip.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82955B53224CF10800BC27CE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -442,6 +444,7 @@
 				8219BAD4225258A3003331E4 /* SwiftyStoreKit.swift */,
 				8288F46C225B401A00F3FA47 /* XCDYouTubeKit.swift */,
 				8288F4622257ADCE00F3FA47 /* XLActionController.swift */,
+				8288F473225B468C00F3FA47 /* XLPagerTabStrip.swift */,
 			);
 			path = AppDependencies;
 			sourceTree = "<group>";
@@ -792,6 +795,7 @@
 				82CE06A722564F6B00EA8F34 /* Spring.swift in Sources */,
 				82DDB86D22515F2400A35E5B /* RxSwift.swift in Sources */,
 				8219BAA72252301B003331E4 /* SwifterSwift.swift in Sources */,
+				8288F474225B468C00F3FA47 /* XLPagerTabStrip.swift in Sources */,
 				82CE06B1225656AC00EA8F34 /* LayoutKit.swift in Sources */,
 				82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */,
 			);
