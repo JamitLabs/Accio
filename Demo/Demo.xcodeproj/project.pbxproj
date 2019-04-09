@@ -57,6 +57,8 @@
 		8288F4A4225CA3C100F3FA47 /* Nimble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4A1225CA3C100F3FA47 /* Nimble.swift */; };
 		8288F4A6225CA6BD00F3FA47 /* NVActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4A5225CA6BD00F3FA47 /* NVActivityIndicatorView.swift */; };
 		8288F4A7225CA6BD00F3FA47 /* NVActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4A5225CA6BD00F3FA47 /* NVActivityIndicatorView.swift */; };
+		8288F51A225CD05B00F3FA47 /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F519225CD05B00F3FA47 /* SkeletonView.swift */; };
+		8288F51B225CD05B00F3FA47 /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F519225CD05B00F3FA47 /* SkeletonView.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -178,6 +180,7 @@
 		8288F49D225C9DF700F3FA47 /* Quick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quick.swift; sourceTree = "<group>"; };
 		8288F4A1225CA3C100F3FA47 /* Nimble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nimble.swift; sourceTree = "<group>"; };
 		8288F4A5225CA6BD00F3FA47 /* NVActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NVActivityIndicatorView.swift; sourceTree = "<group>"; };
+		8288F519225CD05B00F3FA47 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82955B53224CF10800BC27CE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -457,6 +460,7 @@
 				8219BAAE22523321003331E4 /* ReSwift.swift */,
 				82DDB8612251596F00A35E5B /* RxSwift.swift */,
 				8219BAA422522E1E003331E4 /* Siren.swift */,
+				8288F519225CD05B00F3FA47 /* SkeletonView.swift */,
 				82DDB87022515FDD00A35E5B /* SocketIO.swift */,
 				82CE06A622564F6B00EA8F34 /* Spring.swift */,
 				8219BADC22525D8A003331E4 /* SQLite.swift */,
@@ -798,6 +802,7 @@
 				82CE06AB2256525F00EA8F34 /* RAMAnimatedTabBarController.swift in Sources */,
 				8219BAD5225258A3003331E4 /* SwiftyStoreKit.swift in Sources */,
 				8288F47D225B647900F3FA47 /* SwiftyUserDefaults.swift in Sources */,
+				8288F51A225CD05B00F3FA47 /* SkeletonView.swift in Sources */,
 				8288F47A225B5CFE00F3FA47 /* Haneke.swift in Sources */,
 				8219BAB32252479F003331E4 /* Material.swift in Sources */,
 				82955B54224CF10800BC27CE /* ViewController.swift in Sources */,
@@ -858,6 +863,7 @@
 				8288F47B225B5CFE00F3FA47 /* Haneke.swift in Sources */,
 				82DDB86B22515C2200A35E5B /* Kingfisher.swift in Sources */,
 				8219BAAC22523238003331E4 /* Starscream.swift in Sources */,
+				8288F51B225CD05B00F3FA47 /* SkeletonView.swift in Sources */,
 				82DDB878225163ED00A35E5B /* SwiftDate.swift in Sources */,
 				82DDB87222515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE4224D1DB300BC27CE /* Moya.swift in Sources */,
