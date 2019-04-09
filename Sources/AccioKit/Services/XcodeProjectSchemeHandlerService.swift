@@ -10,10 +10,16 @@ final class XcodeProjectSchemeHandlerService {
         let expectedSchemeNames: [String] = platform.specifiers.flatMap { platformSpecifier in
             return [
                 framework.libraryName,
+                "\(framework.libraryName) Framework",
+                "\(framework.libraryName) Library",
                 "\(framework.libraryName) \(platformSpecifier)",
                 "\(framework.libraryName) (\(platformSpecifier))",
                 "\(framework.libraryName)-\(platformSpecifier)",
                 "\(framework.libraryName)_\(platformSpecifier)",
+                "\(framework.libraryName) Framework \(platformSpecifier)",
+                "\(framework.libraryName) Library \(platformSpecifier)",
+                "\(framework.libraryName) Framework (\(platformSpecifier))",
+                "\(framework.libraryName) Library (\(platformSpecifier))",
                 "\(framework.libraryName)-Package"
             ].map { $0.lowercased() }
         }
