@@ -13,7 +13,10 @@ final class CarthageBuilderService {
     }
 
     func build(framework: Framework, platform: Platform, alreadyBuiltFrameworkProducts: [FrameworkProduct]) throws -> FrameworkProduct {
-        print("Building scheme \(framework.libraryName) with Carthage ...", level: .info)
+        print("Building library \(framework.libraryName) with Carthage ...", level: .info)
+
+        try bash("git -C '\(framework.projectDirectory)' reset HEAD --hard --quiet")
+        try bash("git -C '\(framework.projectDirectory)' clean -fd --quiet")
 
         // link already built subdependencies from previous calls of this method
         for requiredFramework in framework.requiredFrameworks.flattenedDeepFirstOrder() {

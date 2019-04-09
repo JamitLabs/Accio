@@ -50,4 +50,20 @@ enum Platform: String, CaseIterable {
             return "Mac"
         }
     }
+
+    var specifiers: [String] {
+        switch self {
+        case .iOS:
+            return [rawValue, "iPhone", "iPad"]
+
+        case .macOS:
+            return [rawValue, "OSX", "OS X", "Mac", "Mac OSX", "Mac OS X"]
+
+        case .tvOS:
+            return [rawValue, "Apple TV", "AppleTV"]
+
+        case .watchOS:
+            return [rawValue, "Apple Watch", "AppleWatch"]
+        }
+    }
 }

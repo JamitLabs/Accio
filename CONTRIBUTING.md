@@ -60,7 +60,7 @@ from the file at path `Sources/Accio/main.swift` with something like:
 cli.debugGo(with: "accio update -d /Users/You/path/to/Accio/Demo -v")
 ```
 
-Note that the `-d` option specified the path from within to run Accio and `-v` makes sure the logging level is set to `verbose`.
+Note that the `-d` option specifies the path from within to run Accio and `-v` makes sure the logging level is set to `verbose`.
 
 ### Commit Messages
 

@@ -28,7 +28,7 @@ extension DependencyInstaller {
         let checkoutsDirUrl = workingDirectoryUrl.appendingPathComponent("\(Constants.buildPath)/checkouts")
 
         if FileManager.default.fileExists(atPath: checkoutsDirUrl.path) {
-            print("Reverting any changes in previous checkouts ...", level: .info)
+            print("Reverting any changes in the checkouts directory ...", level: .info)
 
             for fileName in try FileManager.default.contentsOfDirectory(atPath: checkoutsDirUrl.path) {
                 let frameworkCheckoutPath: String = checkoutsDirUrl.appendingPathComponent(fileName).path
@@ -75,6 +75,6 @@ extension DependencyInstaller {
         }
 
         try XcodeProjectIntegrationService.shared.handleRemovedTargets(keepingTargets: manifest.appTargets)
-        try bash("rm -rf '\(Constants.temporaryFrameworksUrl)'")
+        try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")
     }
 }

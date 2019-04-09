@@ -7,25 +7,34 @@ final class XcodeProjectSchemeHandlerService {
         let sharedSchemePaths: [String] = try framework.sharedSchemePaths()
         let librarySchemePaths: [String] = framework.librarySchemePaths(in: sharedSchemePaths, framework: framework)
 
-        let expectedSchemeNames: [String] = [
-            framework.libraryName,
-            "\(framework.libraryName) \(platform.rawValue)",
-            "\(framework.libraryName) (\(platform.rawValue))",
-            "\(framework.libraryName)-\(platform.rawValue)",
-            "\(framework.libraryName)_\(platform.rawValue)",
-            "\(framework.libraryName)-Package"
-        ]
-        let matchingSchemePaths: [String] = librarySchemePaths.filter { expectedSchemeNames.contains($0.fileNameWithoutExtension) }
+        let expectedSchemeNames: [String] = platform.specifiers.flatMap { platformSpecifier in
+            return [
+                framework.libraryName,
+                "\(framework.libraryName) Framework",
+                "\(framework.libraryName) Library",
+                "\(framework.libraryName) \(platformSpecifier)",
+                "\(framework.libraryName) (\(platformSpecifier))",
+                "\(framework.libraryName)-\(platformSpecifier)",
+                "\(framework.libraryName)_\(platformSpecifier)",
+                "\(framework.libraryName) Framework \(platformSpecifier)",
+                "\(framework.libraryName) Library \(platformSpecifier)",
+                "\(framework.libraryName) Framework (\(platformSpecifier))",
+                "\(framework.libraryName) Library (\(platformSpecifier))",
+                "\(framework.libraryName)-Package"
+            ].map { $0.lowercased() }
+        }
+        let matchingSchemePaths: [String] = librarySchemePaths.filter { expectedSchemeNames.contains($0.fileNameWithoutExtension.lowercased()) }
+        let matchingSchemeNames: [String] = matchingSchemePaths.map { $0.fileNameWithoutExtension }
 
         if !matchingSchemePaths.isEmpty {
             let schemePathsToRemove: [String] = sharedSchemePaths.filter { !matchingSchemePaths.contains($0) }
-            print("Found shared scheme with exact name '\(framework.libraryName)' – removing others: \(schemePathsToRemove.map { $0.fileNameWithoutExtension })", level: .verbose)
+            print("Found shared scheme(s) \(matchingSchemeNames) matching specified library – removing others: \(schemePathsToRemove.map { $0.fileNameWithoutExtension })", level: .verbose)
 
             for schemePathToRemove in schemePathsToRemove {
                 try FileManager.default.removeItem(atPath: schemePathToRemove)
             }
         } else {
-            print("No shared schemes found matching framework '\(framework.libraryName)' – can't remove unnecessary shared schemes, keeping all", level: .warning)
+            print("No shared scheme(s) found matching library name '\(framework.libraryName)' – can't remove potentially unnecessary shared schemes, keeping all", level: .warning)
         }
     }
 }
