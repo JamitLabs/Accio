@@ -71,15 +71,19 @@ Detailed Explanation
 
 For developers on Apple platforms there are already well established dependency managers, namely [CocoaPods](https://github.com/CocoaPods/CocoaPods) & [Carthage](https://github.com/Carthage/Carthage). If you like how CocoaPods deals with things, you probably won't ever need to use Accio. It doesn't do anything that CocoaPods doesn't.
 
-But if you are like the many developers who prefer to use Carthage because it's written in Swift (not Ruby) and it doesn't create an Xcode workspace but is rather unintrusive, you might find that Accio solves some of the problems you might have come across with Carthage. Namely:
+But if you are like the many developers who prefer to use Carthage because it's written in Swift (not Ruby) and it doesn't create an Xcode workspace but is rather unintrusive, you might find that Accio solves some of the problems you might have come across with Carthage. 
 
-1. Carthage doesn't support cached builds *across projects*
-2. Carthage always builds *all* shared schemes of a dependency
-3. You need to *manually* link/unlink dependencies at two different places (project hierarchy & copy build phase)
+Accios **main advantages** over Carthage as of now are:
+1. Allows to specify *which schemes should be built* and skips all others.   
+(#1227, #1990, #1616)
+2. *Automates the linkage & cleanup* of your specified frameworks within your Xcode project.  
+(#1131, #2605, #145, #2477, replaces [Carting](https://github.com/artemnovichkov/Carting))
+3. Automatically uses a device-local cache to *prevent rebuilding* the same commit of a framework *for a different project*.  
+(#2400, #2716)
+4. Has an option to use a *shared cache* path (instead of the device-local cache) within a team so only a single person ever needs to build a specific commit of a dependency and all others in the team can reuse that cached build cutting off build times of the team considerably.  
+(Replaces [Rome](https://github.com/blender/Rome))
 
-While for some users these missing features might not make a huge difference at all, there's also many who really suffer from them.
-
-That's why Accio was designed as the all-in-one tool for any improvements you might need for managing dependencies using Carthage. It's explicitly open for new features from the community as long as they improve aspects of dependency management for the Apple developer community.
+Accio was designed as the all-in-one tool for any improvements you might need for managing dependencies using Carthage. It's explicitly open for new features from the community as long as they improve aspects of dependency management for the Apple developer community.
 
 Additionally, the core of Accio was designed to use [SwiftPM](https://github.com/apple/swift-package-manager) as much as possible because we think it will at some point replace the need for an extra dependency manager completely. Until that time, making an open source project "Accio compliant" basically means adding a manifest file that exactly matches that of `SwiftPM`. This way Accio is trying to fill the gap between now and the time when Xcode properly supports `SwiftPM` for Apple platform projects (which we guess to be at WWDC 2020) and most Accio compatible projects might already be compatible out of the box when the time comes.
 
