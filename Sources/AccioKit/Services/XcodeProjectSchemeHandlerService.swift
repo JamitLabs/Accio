@@ -18,16 +18,17 @@ final class XcodeProjectSchemeHandlerService {
             ].map { $0.lowercased() }
         }
         let matchingSchemePaths: [String] = librarySchemePaths.filter { expectedSchemeNames.contains($0.fileNameWithoutExtension.lowercased()) }
+        let matchingSchemeNames: [String] = matchingSchemePaths.map { $0.fileNameWithoutExtension }
 
         if !matchingSchemePaths.isEmpty {
             let schemePathsToRemove: [String] = sharedSchemePaths.filter { !matchingSchemePaths.contains($0) }
-            print("Found shared scheme(s) with exact name '\(framework.libraryName)' – removing others: \(schemePathsToRemove.map { $0.fileNameWithoutExtension })", level: .verbose)
+            print("Found shared scheme(s) \(matchingSchemeNames) matching specified library – removing others: \(schemePathsToRemove.map { $0.fileNameWithoutExtension })", level: .verbose)
 
             for schemePathToRemove in schemePathsToRemove {
                 try FileManager.default.removeItem(atPath: schemePathToRemove)
             }
         } else {
-            print("No shared scheme(s) found matching framework '\(framework.libraryName)' – can't remove unnecessary shared schemes, keeping all", level: .warning)
+            print("No shared scheme(s) found matching library name '\(framework.libraryName)' – can't remove potentially unnecessary shared schemes, keeping all", level: .warning)
         }
     }
 }
