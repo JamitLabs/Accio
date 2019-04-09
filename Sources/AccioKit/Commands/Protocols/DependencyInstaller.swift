@@ -61,8 +61,6 @@ extension DependencyInstaller {
                 return nil
             }
 
-            try revertCheckoutChanges()
-
             let platform = try PlatformDetectorService.shared.detectPlatform(of: appTarget)
             print("Resolving dependencies for target '\(appTarget.targetName)' on platform '\(platform.rawValue)' ...", level: .info)
 
