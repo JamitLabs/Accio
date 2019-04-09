@@ -17,6 +17,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Security
 - None.
 
+## [0.5.6] - 2019-04-09
+### Added
+- Adds support for automatically finding schemes named like 'MBProgressHUD Framework tvOS'.
+### Changed
+- Some improvements that make the output information on the console more precise.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- Fixes the broken cleanup command of temporary frameworks after completing install.
+- Fixes an issue with multiple targets linking a single framework with schemes named after their platforms.
+- Fixes an issue with different platform specifiers used in scheme names.
+### Security
+- None.
+
 ## [0.5.5] - 2019-04-05
 ### Added
 - None.
