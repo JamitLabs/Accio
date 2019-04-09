@@ -28,7 +28,7 @@ extension DependencyInstaller {
         let checkoutsDirUrl = workingDirectoryUrl.appendingPathComponent("\(Constants.buildPath)/checkouts")
 
         if FileManager.default.fileExists(atPath: checkoutsDirUrl.path) {
-            print("Reverting any changes in previous checkouts ...", level: .info)
+            print("Reverting any changes in the checkouts directory ...", level: .info)
 
             for fileName in try FileManager.default.contentsOfDirectory(atPath: checkoutsDirUrl.path) {
                 let frameworkCheckoutPath: String = checkoutsDirUrl.appendingPathComponent(fileName).path
@@ -60,6 +60,8 @@ extension DependencyInstaller {
                 print("No dependencies specified for target '\(appTarget.targetName)'. Please add at least one dependency scheme to the 'dependencies' array of the target in Package.swift.", level: .warning)
                 return nil
             }
+
+            try revertCheckoutChanges()
 
             let platform = try PlatformDetectorService.shared.detectPlatform(of: appTarget)
             print("Resolving dependencies for target '\(appTarget.targetName)' on platform '\(platform.rawValue)' ...", level: .info)
