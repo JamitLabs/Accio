@@ -62,7 +62,7 @@ brew upgrade accio
 
 ## Why should I use this?
 
-**TL;DR**: It's an improvement over Carthage, both regarding supported features & community openness. Also, it's targeted towards official SwiftPM's support for Apple platforms.
+**TL;DR**: It offers many improvements over Carthage, and it's targeted towards official SwiftPM's support for Apple platforms.
 
 <details>
 <summary>
@@ -77,17 +77,9 @@ But if you are like the many developers who prefer to use Carthage because it's 
 2. Carthage always builds *all* shared schemes of a dependency
 3. You need to *manually* link/unlink dependencies at two different places (project hierarchy & copy build phase)
 
-While for some users these missing features might not make a huge difference at all, there's also many who really suffer from them. So adding these to Carthage might sound like the most obvious step to take from here and wouldn't need yet another tool. And there actually have been attempts to tackle each of the above issues within Carthage. But Carthage doesn't have a particularly welcoming community so they all failed. Apart from the fact that the project is written in [ReactiveSwift](https://github.com/ReactiveCocoa/ReactiveSwift), which is not bad in itself but still prevents many developers from being able to contribute new features, the main maintainer(s) don't take much responsibility in the concerns of the community. Here's what I mean:
+While for some users these missing features might not make a huge difference at all, there's also many who really suffer from them.
 
-For example problem #2 is tracked in [this](https://github.com/Carthage/Carthage/issues/1227) issue since March 2016 and has many upvotes. But the maintainers seem not to care about it at all. There was even [this PR](https://github.com/Carthage/Carthage/pull/1990)  attempting to fix the issue that was very well received by the community and has (currently) 38 👍s and 14 ❤s. But after ignoring it for a year, the [main maintainers reaction](https://github.com/Carthage/Carthage/pull/1990#issuecomment-407409116) basically was "this is insufficient" and "I don't think we should solve this problem", earning 6 👎s for this comment alone. There was even an earlier approach to fix this issue in [this PR](https://github.com/Carthage/Carthage/pull/1616), but again, the main maintainer [basically said](https://github.com/Carthage/Carthage/pull/1616#issuecomment-271125684) "this is a minor case" and "Apple should fix this in Xcode".
-
-The manual linking problem (#3) was reported several times (for example [here](https://github.com/Carthage/Carthage/issues/1131), [here](https://github.com/Carthage/Carthage/issues/2605) and [here](https://github.com/Carthage/Carthage/issues/145)). While it might have been ["an intentional design decision"](https://github.com/Carthage/Carthage/issues/145#issuecomment-64676821) at the beginning, it is nowadays agreed on to be a bad decision (even by the [main maintainer](https://github.com/Carthage/Carthage/issues/1131#issuecomment-185209513)). But there's no solution to the problem implemented as of now. The most recent attempt to *kind of* fix this was in [this PR](https://github.com/Carthage/Carthage/issues/2477) which was opened in June 2018 and didn't make any real progress since.
-
-Problem #1 is tracked [here](https://github.com/Carthage/Carthage/issues/2400) since April 2018 and was actually tackled recently by [this PR](https://github.com/Carthage/Carthage/pull/2716). But only god knows if and when it will be merged.
-
-The unwelcomingness (is there such a word?) of the Carthage community is so much so that developers tended to rather write another tool than to add the feature to Carthage itself. [Rome](https://github.com/blender/Rome) which attempts to fix the caching problem and [Carting](https://github.com/artemnovichkov/Carting) trying to fix the linking problem are two such examples. But more tools means higher chances that something could break over time and also complicates the configuration for both each developer and also the CI setup.
-
-That's why Accio was designed as the all-in-one tool for any improvements you might need for managing dependencies using Carthage. It's explicitly open for new features from the community as long as they improve aspects of dependency management for the Apple developer community. Also, the implementation of Accio is pretty straight-forward, without the need to learn any reactive programming.
+That's why Accio was designed as the all-in-one tool for any improvements you might need for managing dependencies using Carthage. It's explicitly open for new features from the community as long as they improve aspects of dependency management for the Apple developer community.
 
 Additionally, the core of Accio was designed to use [SwiftPM](https://github.com/apple/swift-package-manager) as much as possible because we think it will at some point replace the need for an extra dependency manager completely. Until that time, making an open source project "Accio compliant" basically means adding a manifest file that exactly matches that of `SwiftPM`. This way Accio is trying to fill the gap between now and the time when Xcode properly supports `SwiftPM` for Apple platform projects (which we guess to be at WWDC 2020) and most Accio compatible projects might already be compatible out of the box when the time comes.
 
