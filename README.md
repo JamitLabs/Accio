@@ -75,11 +75,11 @@ But if you are like the many developers who prefer to use Carthage because it's 
 
 Accios **main advantages** over Carthage as of now are:
 1. Allows to specify *which schemes should be built* and skips all others.   
-(#1227, #1990, #1616)
+([#1227](https://github.com/Carthage/Carthage/issues/1227), [#1990](https://github.com/Carthage/Carthage/pull/1990), [#1616](https://github.com/Carthage/Carthage/pull/1616))
 2. *Automates the linkage & cleanup* of your specified frameworks within your Xcode project.  
-(#1131, #2605, #145, #2477, replaces [Carting](https://github.com/artemnovichkov/Carting))
+([#1131](https://github.com/Carthage/Carthage/issues/1131), [#2605](https://github.com/Carthage/Carthage/issues/2605), [#145](https://github.com/Carthage/Carthage/issues/145), [#2477](https://github.com/Carthage/Carthage/issues/2477), replaces [Carting](https://github.com/artemnovichkov/Carting))
 3. Automatically uses a device-local cache to *prevent rebuilding* the same commit of a framework *for a different project*.  
-(#2400, #2716)
+([#2400](https://github.com/Carthage/Carthage/issues/2400), [#2716](https://github.com/Carthage/Carthage/pull/2716))
 4. Has an option to use a *shared cache* path (instead of the device-local cache) within a team so only a single person ever needs to build a specific commit of a dependency and all others in the team can reuse that cached build cutting off build times of the team considerably.  
 (Replaces [Rome](https://github.com/blender/Rome))
 
