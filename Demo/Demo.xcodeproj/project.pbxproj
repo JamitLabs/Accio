@@ -64,6 +64,8 @@
 		8288F53B225CE49C00F3FA47 /* AFNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F53A225CE49C00F3FA47 /* AFNetworking.swift */; };
 		8288F53C225CE49C00F3FA47 /* AFNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F53A225CE49C00F3FA47 /* AFNetworking.swift */; };
 		8288F53D225CE49C00F3FA47 /* AFNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F53A225CE49C00F3FA47 /* AFNetworking.swift */; };
+		8288F543225CE91F00F3FA47 /* MBProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F542225CE91F00F3FA47 /* MBProgressHUD.swift */; };
+		8288F544225CE91F00F3FA47 /* MBProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F542225CE91F00F3FA47 /* MBProgressHUD.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -188,6 +190,7 @@
 		8288F519225CD05B00F3FA47 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 		8288F537225CD62800F3FA47 /* LTMorphingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTMorphingLabel.swift; sourceTree = "<group>"; };
 		8288F53A225CE49C00F3FA47 /* AFNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFNetworking.swift; sourceTree = "<group>"; };
+		8288F542225CE91F00F3FA47 /* MBProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBProgressHUD.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82955B53224CF10800BC27CE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -462,6 +465,7 @@
 				8219BAE02252610F003331E4 /* Lottie.swift */,
 				8288F537225CD62800F3FA47 /* LTMorphingLabel.swift */,
 				8219BAB22252479F003331E4 /* Material.swift */,
+				8288F542225CE91F00F3FA47 /* MBProgressHUD.swift */,
 				82955BE2224D1DB300BC27CE /* Moya.swift */,
 				8288F4A5225CA6BD00F3FA47 /* NVActivityIndicatorView.swift */,
 				82CE06AC225653CE00EA8F34 /* PromiseKit.swift */,
@@ -825,6 +829,7 @@
 				8219BAA522522E1E003331E4 /* Siren.swift in Sources */,
 				8288F538225CD62800F3FA47 /* LTMorphingLabel.swift in Sources */,
 				82DDB87122515FDD00A35E5B /* SocketIO.swift in Sources */,
+				8288F543225CE91F00F3FA47 /* MBProgressHUD.swift in Sources */,
 				8219BAAF22523321003331E4 /* ReSwift.swift in Sources */,
 				82DDB87D22516CE800A35E5B /* SwiftMessages.swift in Sources */,
 				82955BE3224D1DB300BC27CE /* Moya.swift in Sources */,
@@ -888,6 +893,7 @@
 				82CE06B622565B7900EA8F34 /* CryptoSwift.swift in Sources */,
 				82CE06AE225653CE00EA8F34 /* PromiseKit.swift in Sources */,
 				8288F472225B42A600F3FA47 /* JGProgressHUD.swift in Sources */,
+				8288F544225CE91F00F3FA47 /* MBProgressHUD.swift in Sources */,
 				8288F4A7225CA6BD00F3FA47 /* NVActivityIndicatorView.swift in Sources */,
 				8219BAA82252301B003331E4 /* SwifterSwift.swift in Sources */,
 				8219BAB022523321003331E4 /* ReSwift.swift in Sources */,
