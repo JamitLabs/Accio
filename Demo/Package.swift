@@ -21,6 +21,7 @@ let package = Package(
         .package(url: "https://github.com/AccioSupport/lottie-ios.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Material.git", .branch("development")),
         .package(url: "https://github.com/AccioSupport/Moya.git", .branch("development")),
+        .package(url: "https://github.com/AccioSupport/Nimble.git", .upToNextMajor(from: "8.0.1")),
         .package(url: "https://github.com/AccioSupport/PromiseKit.git", .upToNextMajor(from: "6.8.4")),
         .package(url: "https://github.com/AccioSupport/Quick.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/AccioSupport/ReSwift.git", .branch("master")),
@@ -82,6 +83,7 @@ let package = Package(
         .testTarget(
             name: "Demo-iOSTests",
             dependencies: [
+                "Nimble",
                 "Quick",
             ],
             path: "Demo-iOSTests"
@@ -117,6 +119,7 @@ let package = Package(
         .testTarget(
             name: "Demo-tvOSTests",
             dependencies: [
+                "Nimble",
                 "Quick",
             ],
             path: "Demo-tvOSTests"
@@ -149,6 +152,7 @@ let package = Package(
         .testTarget(
             name: "Demo-macOSTests",
             dependencies: [
+                "Nimble",
                 "Quick",
             ],
             path: "Demo-macOSTests"
