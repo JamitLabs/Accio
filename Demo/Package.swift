@@ -5,6 +5,7 @@ let package = Package(
     name: "Demo",
     products: [],
     dependencies: [
+        .package(url: "https://github.com/AccioSupport/AFNetworking.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Alamofire.git", .upToNextMajor(from: "4.8.2")),
         .package(url: "https://github.com/AccioSupport/animated-tab-bar.git", .branch("master")),
 //        .package(url: "https://github.com/AccioSupport/Bond.git", .branch("master")),
@@ -47,6 +48,7 @@ let package = Package(
         .target(
             name: "Demo-iOS",
             dependencies: [
+                "AFNetworking",
                 "Alamofire",
 //                "Bond",
                 "Cartography",
@@ -97,6 +99,7 @@ let package = Package(
         .target(
             name: "Demo-tvOS",
             dependencies: [
+                "AFNetworking",
                 "Alamofire",
 //                "Bond",
                 "Cartography",
@@ -136,6 +139,7 @@ let package = Package(
         .target(
             name: "Demo-macOS",
             dependencies: [
+                "AFNetworking",
                 "Alamofire",
 //                "Bond",
                 "Cartography",

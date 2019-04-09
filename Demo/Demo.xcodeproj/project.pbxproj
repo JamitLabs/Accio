@@ -61,6 +61,9 @@
 		8288F51B225CD05B00F3FA47 /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F519225CD05B00F3FA47 /* SkeletonView.swift */; };
 		8288F538225CD62800F3FA47 /* LTMorphingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F537225CD62800F3FA47 /* LTMorphingLabel.swift */; };
 		8288F539225CD62800F3FA47 /* LTMorphingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F537225CD62800F3FA47 /* LTMorphingLabel.swift */; };
+		8288F53B225CE49C00F3FA47 /* AFNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F53A225CE49C00F3FA47 /* AFNetworking.swift */; };
+		8288F53C225CE49C00F3FA47 /* AFNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F53A225CE49C00F3FA47 /* AFNetworking.swift */; };
+		8288F53D225CE49C00F3FA47 /* AFNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F53A225CE49C00F3FA47 /* AFNetworking.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -184,6 +187,7 @@
 		8288F4A5225CA6BD00F3FA47 /* NVActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NVActivityIndicatorView.swift; sourceTree = "<group>"; };
 		8288F519225CD05B00F3FA47 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 		8288F537225CD62800F3FA47 /* LTMorphingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTMorphingLabel.swift; sourceTree = "<group>"; };
+		8288F53A225CE49C00F3FA47 /* AFNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFNetworking.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82955B53224CF10800BC27CE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -442,6 +446,7 @@
 		82955BE0224D1D8900BC27CE /* AppDependencies */ = {
 			isa = PBXGroup;
 			children = (
+				8288F53A225CE49C00F3FA47 /* AFNetworking.swift */,
 				82CE069A22563C6700EA8F34 /* Alamofire.swift */,
 				8219BAD822525B18003331E4 /* Bond.swift */,
 				8219BAB422524C7F003331E4 /* Cartography.swift */,
@@ -801,6 +806,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8288F53B225CE49C00F3FA47 /* AFNetworking.swift in Sources */,
 				82CE06B522565B7900EA8F34 /* CryptoSwift.swift in Sources */,
 				8219BAE12252610F003331E4 /* Lottie.swift in Sources */,
 				82CE06AB2256525F00EA8F34 /* RAMAnimatedTabBarController.swift in Sources */,
@@ -871,6 +877,7 @@
 				8219BAAC22523238003331E4 /* Starscream.swift in Sources */,
 				8288F51B225CD05B00F3FA47 /* SkeletonView.swift in Sources */,
 				82DDB878225163ED00A35E5B /* SwiftDate.swift in Sources */,
+				8288F53C225CE49C00F3FA47 /* AFNetworking.swift in Sources */,
 				82DDB87222515FDD00A35E5B /* SocketIO.swift in Sources */,
 				82955BE4224D1DB300BC27CE /* Moya.swift in Sources */,
 				8288F47E225B647900F3FA47 /* SwiftyUserDefaults.swift in Sources */,
@@ -935,6 +942,7 @@
 				82955BB5224CF14100BC27CE /* AppDelegate.swift in Sources */,
 				82CE06B3225656AC00EA8F34 /* LayoutKit.swift in Sources */,
 				8219BAB722524C7F003331E4 /* Cartography.swift in Sources */,
+				8288F53D225CE49C00F3FA47 /* AFNetworking.swift in Sources */,
 				8288F47F225B647900F3FA47 /* SwiftyUserDefaults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
