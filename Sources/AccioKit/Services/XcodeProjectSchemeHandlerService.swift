@@ -9,10 +9,12 @@ final class XcodeProjectSchemeHandlerService {
 
         let expectedSchemeNames: [String] = platform.specifiers.flatMap { platformSpecifier in
             return [
+                framework.libraryName,
                 "\(framework.libraryName) \(platformSpecifier)",
                 "\(framework.libraryName) (\(platformSpecifier))",
                 "\(framework.libraryName)-\(platformSpecifier)",
                 "\(framework.libraryName)_\(platformSpecifier)",
+                "\(framework.libraryName)-Package"
             ].map { $0.lowercased() }
         }
         let matchingSchemePaths: [String] = librarySchemePaths.filter { expectedSchemeNames.contains($0.fileNameWithoutExtension.lowercased()) }
