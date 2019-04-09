@@ -55,6 +55,8 @@
 		8288F4A2225CA3C100F3FA47 /* Nimble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4A1225CA3C100F3FA47 /* Nimble.swift */; };
 		8288F4A3225CA3C100F3FA47 /* Nimble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4A1225CA3C100F3FA47 /* Nimble.swift */; };
 		8288F4A4225CA3C100F3FA47 /* Nimble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4A1225CA3C100F3FA47 /* Nimble.swift */; };
+		8288F4A6225CA6BD00F3FA47 /* NVActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4A5225CA6BD00F3FA47 /* NVActivityIndicatorView.swift */; };
+		8288F4A7225CA6BD00F3FA47 /* NVActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4A5225CA6BD00F3FA47 /* NVActivityIndicatorView.swift */; };
 		82955B52224CF10800BC27CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B51224CF10800BC27CE /* AppDelegate.swift */; };
 		82955B54224CF10800BC27CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82955B53224CF10800BC27CE /* ViewController.swift */; };
 		82955B57224CF10800BC27CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82955B55224CF10800BC27CE /* Main.storyboard */; };
@@ -175,6 +177,7 @@
 		8288F47C225B647900F3FA47 /* SwiftyUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyUserDefaults.swift; sourceTree = "<group>"; };
 		8288F49D225C9DF700F3FA47 /* Quick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quick.swift; sourceTree = "<group>"; };
 		8288F4A1225CA3C100F3FA47 /* Nimble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nimble.swift; sourceTree = "<group>"; };
+		8288F4A5225CA6BD00F3FA47 /* NVActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NVActivityIndicatorView.swift; sourceTree = "<group>"; };
 		82955B4E224CF10800BC27CE /* Demo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82955B51224CF10800BC27CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82955B53224CF10800BC27CE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -448,6 +451,7 @@
 				8219BAE02252610F003331E4 /* Lottie.swift */,
 				8219BAB22252479F003331E4 /* Material.swift */,
 				82955BE2224D1DB300BC27CE /* Moya.swift */,
+				8288F4A5225CA6BD00F3FA47 /* NVActivityIndicatorView.swift */,
 				82CE06AC225653CE00EA8F34 /* PromiseKit.swift */,
 				82CE06AA2256525F00EA8F34 /* RAMAnimatedTabBarController.swift */,
 				8219BAAE22523321003331E4 /* ReSwift.swift */,
@@ -472,8 +476,8 @@
 		82955BE1224D1D9300BC27CE /* TestDependencies */ = {
 			isa = PBXGroup;
 			children = (
-				8288F49D225C9DF700F3FA47 /* Quick.swift */,
 				8288F4A1225CA3C100F3FA47 /* Nimble.swift */,
+				8288F49D225C9DF700F3FA47 /* Quick.swift */,
 			);
 			path = TestDependencies;
 			sourceTree = "<group>";
@@ -810,6 +814,7 @@
 				82955BE3224D1DB300BC27CE /* Moya.swift in Sources */,
 				8288F4632257ADCE00F3FA47 /* XLActionController.swift in Sources */,
 				82DDB87B22516AE800A35E5B /* FoldingCell.swift in Sources */,
+				8288F4A6225CA6BD00F3FA47 /* NVActivityIndicatorView.swift in Sources */,
 				8288F46D225B401A00F3FA47 /* XCDYouTubeKit.swift in Sources */,
 				8288F471225B42A600F3FA47 /* JGProgressHUD.swift in Sources */,
 				8219BAB522524C7F003331E4 /* Cartography.swift in Sources */,
@@ -864,6 +869,7 @@
 				82CE06B622565B7900EA8F34 /* CryptoSwift.swift in Sources */,
 				82CE06AE225653CE00EA8F34 /* PromiseKit.swift in Sources */,
 				8288F472225B42A600F3FA47 /* JGProgressHUD.swift in Sources */,
+				8288F4A7225CA6BD00F3FA47 /* NVActivityIndicatorView.swift in Sources */,
 				8219BAA82252301B003331E4 /* SwifterSwift.swift in Sources */,
 				8219BAB022523321003331E4 /* ReSwift.swift in Sources */,
 				82955B86224CF12900BC27CE /* AppDelegate.swift in Sources */,
