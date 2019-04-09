@@ -5,9 +5,9 @@ let package = Package(
     name: "Demo",
     products: [],
     dependencies: [
-        .package(url: "https://github.com/AccioSupport/Alamofire.git", .branch("master")),
+        .package(url: "https://github.com/AccioSupport/Alamofire.git", .upToNextMajor(from: "4.8.2")),
         .package(url: "https://github.com/AccioSupport/animated-tab-bar.git", .branch("master")),
-        .package(url: "https://github.com/AccioSupport/Bond.git", .upToNextMajor(from: "7.3.3")),
+//        .package(url: "https://github.com/AccioSupport/Bond.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Cartography.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/Chatto.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/CryptoSwift.git", .upToNextMajor(from: "0.15.0")),
@@ -22,6 +22,7 @@ let package = Package(
         .package(url: "https://github.com/AccioSupport/Material.git", .branch("development")),
         .package(url: "https://github.com/AccioSupport/Moya.git", .branch("development")),
         .package(url: "https://github.com/AccioSupport/PromiseKit.git", .upToNextMajor(from: "6.8.4")),
+        .package(url: "https://github.com/AccioSupport/Quick.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/AccioSupport/ReSwift.git", .branch("master")),
         .package(url: "https://github.com/AccioSupport/RxSwift.git", .upToNextMajor(from: "4.4.2")),
         .package(url: "https://github.com/AccioSupport/Siren.git", .branch("master")),
@@ -43,7 +44,7 @@ let package = Package(
             name: "Demo-iOS",
             dependencies: [
                 "Alamofire",
-                "Bond",
+//                "Bond",
                 "Cartography",
                 "Chatto",
                 "ChattoAdditions",
@@ -78,9 +79,10 @@ let package = Package(
             ],
             path: "Demo-iOS"
         ),
-        .target(
+        .testTarget(
             name: "Demo-iOSTests",
             dependencies: [
+                "Quick",
             ],
             path: "Demo-iOSTests"
         ),
@@ -88,7 +90,7 @@ let package = Package(
             name: "Demo-tvOS",
             dependencies: [
                 "Alamofire",
-                "Bond",
+//                "Bond",
                 "Cartography",
                 "CryptoSwift",
                 "Haneke",
@@ -112,9 +114,10 @@ let package = Package(
             ],
             path: "Demo-tvOS"
         ),
-        .target(
+        .testTarget(
             name: "Demo-tvOSTests",
             dependencies: [
+                "Quick",
             ],
             path: "Demo-tvOSTests"
         ),
@@ -122,7 +125,7 @@ let package = Package(
             name: "Demo-macOS",
             dependencies: [
                 "Alamofire",
-                "Bond",
+//                "Bond",
                 "Cartography",
                 "CryptoSwift",
                 "Kingfisher",
@@ -143,9 +146,10 @@ let package = Package(
             ],
             path: "Demo-macOS"
         ),
-        .target(
+        .testTarget(
             name: "Demo-macOSTests",
             dependencies: [
+                "Quick",
             ],
             path: "Demo-macOSTests"
         ),
