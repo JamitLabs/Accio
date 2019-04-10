@@ -35,6 +35,10 @@
 		8219BAE12252610F003331E4 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAE02252610F003331E4 /* Lottie.swift */; };
 		8219BAE22252610F003331E4 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAE02252610F003331E4 /* Lottie.swift */; };
 		8219BAE32252610F003331E4 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8219BAE02252610F003331E4 /* Lottie.swift */; };
+		8221EBD3225DE4E700B802C4 /* Bagel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8221EBD2225DE4E700B802C4 /* Bagel.swift */; };
+		8221EBD5225DEA1600B802C4 /* CocoaAsyncSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8221EBD4225DEA1600B802C4 /* CocoaAsyncSocket.swift */; };
+		8221EBD6225DEA1600B802C4 /* CocoaAsyncSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8221EBD4225DEA1600B802C4 /* CocoaAsyncSocket.swift */; };
+		8221EBD7225DEA1600B802C4 /* CocoaAsyncSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8221EBD4225DEA1600B802C4 /* CocoaAsyncSocket.swift */; };
 		8288F4632257ADCE00F3FA47 /* XLActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4622257ADCE00F3FA47 /* XLActionController.swift */; };
 		8288F4672257B74400F3FA47 /* Eureka.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F4662257B74400F3FA47 /* Eureka.swift */; };
 		8288F46D225B401A00F3FA47 /* XCDYouTubeKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8288F46C225B401A00F3FA47 /* XCDYouTubeKit.swift */; };
@@ -181,6 +185,8 @@
 		8219BAD822525B18003331E4 /* Bond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bond.swift; sourceTree = "<group>"; };
 		8219BADC22525D8A003331E4 /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
 		8219BAE02252610F003331E4 /* Lottie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lottie.swift; sourceTree = "<group>"; };
+		8221EBD2225DE4E700B802C4 /* Bagel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bagel.swift; sourceTree = "<group>"; };
+		8221EBD4225DEA1600B802C4 /* CocoaAsyncSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocoaAsyncSocket.swift; sourceTree = "<group>"; };
 		8251C5A8224E7BD1006DFB7A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		8288F4622257ADCE00F3FA47 /* XLActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XLActionController.swift; sourceTree = "<group>"; };
 		8288F4662257B74400F3FA47 /* Eureka.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eureka.swift; sourceTree = "<group>"; };
@@ -459,9 +465,11 @@
 			children = (
 				8288F53A225CE49C00F3FA47 /* AFNetworking.swift */,
 				82CE069A22563C6700EA8F34 /* Alamofire.swift */,
+				8221EBD2225DE4E700B802C4 /* Bagel.swift */,
 				8219BAD822525B18003331E4 /* Bond.swift */,
 				8219BAB422524C7F003331E4 /* Cartography.swift */,
 				8288F477225B590200F3FA47 /* Chatto.swift */,
+				8221EBD4225DEA1600B802C4 /* CocoaAsyncSocket.swift */,
 				82CE06B422565B7900EA8F34 /* CryptoSwift.swift */,
 				8288F4662257B74400F3FA47 /* Eureka.swift */,
 				82DDB87A22516AE800A35E5B /* FoldingCell.swift */,
@@ -823,6 +831,7 @@
 				8288F53B225CE49C00F3FA47 /* AFNetworking.swift in Sources */,
 				82CE06B522565B7900EA8F34 /* CryptoSwift.swift in Sources */,
 				8219BAE12252610F003331E4 /* Lottie.swift in Sources */,
+				8221EBD5225DEA1600B802C4 /* CocoaAsyncSocket.swift in Sources */,
 				82CE06AB2256525F00EA8F34 /* RAMAnimatedTabBarController.swift in Sources */,
 				8219BAD5225258A3003331E4 /* SwiftyStoreKit.swift in Sources */,
 				8288F47D225B647900F3FA47 /* SwiftyUserDefaults.swift in Sources */,
@@ -831,6 +840,7 @@
 				8219BAB32252479F003331E4 /* Material.swift in Sources */,
 				82955B54224CF10800BC27CE /* ViewController.swift in Sources */,
 				82DDB86A22515C2200A35E5B /* Kingfisher.swift in Sources */,
+				8221EBD3225DE4E700B802C4 /* Bagel.swift in Sources */,
 				8219BAD222524EDE003331E4 /* Hero.swift in Sources */,
 				8288F4672257B74400F3FA47 /* Eureka.swift in Sources */,
 				82CE069B22563C6700EA8F34 /* Alamofire.swift in Sources */,
@@ -915,6 +925,7 @@
 				8219BADA22525B18003331E4 /* Bond.swift in Sources */,
 				8219BAB622524C7F003331E4 /* Cartography.swift in Sources */,
 				82CE069C22563C6700EA8F34 /* Alamofire.swift in Sources */,
+				8221EBD6225DEA1600B802C4 /* CocoaAsyncSocket.swift in Sources */,
 				8219BAD6225258A3003331E4 /* SwiftyStoreKit.swift in Sources */,
 				8219BAD322524EDE003331E4 /* Hero.swift in Sources */,
 			);
@@ -957,6 +968,7 @@
 				82DDB86F22515F2600A35E5B /* RxSwift.swift in Sources */,
 				82CE069D22563C6700EA8F34 /* Alamofire.swift in Sources */,
 				8219BADB22525B18003331E4 /* Bond.swift in Sources */,
+				8221EBD7225DEA1600B802C4 /* CocoaAsyncSocket.swift in Sources */,
 				8219BAA92252301B003331E4 /* SwifterSwift.swift in Sources */,
 				8219BAB122523321003331E4 /* ReSwift.swift in Sources */,
 				8288F57E225CF38000F3FA47 /* RealmSwift.swift in Sources */,
