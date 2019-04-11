@@ -46,8 +46,8 @@ final class CarthageBuilderService {
 
         // revert any changes to prevent issues when removing checked out dependency
         try bash("rm -rf '\(framework.projectDirectory)/Carthage/Build'")
-        try bash("git -C '\(framework.projectDirectory)' reset HEAD --hard --quiet")
-        try bash("git -C '\(framework.projectDirectory)' clean -fd --quiet")
+        try bash("git -C '\(framework.projectDirectory)' reset HEAD --hard --quiet 2> /dev/null")
+        try bash("git -C '\(framework.projectDirectory)' clean -fd --quiet 2> /dev/null")
 
         guard FileManager.default.fileExists(atPath: frameworkProduct.frameworkDirPath) && FileManager.default.fileExists(atPath: frameworkProduct.symbolsFilePath) else {
             print("Failed to build products to \(platformBuildDir)/\(framework.libraryName).framework(.dSYM).", level: .error)
