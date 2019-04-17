@@ -36,6 +36,7 @@ extension DependencyInstaller {
                 if try FileManager.default.isDirectory(atPath: frameworkCheckoutPath) {
                     try bash("git -C '\(frameworkCheckoutPath)' reset HEAD --hard --quiet 2> /dev/null")
                     try bash("git -C '\(frameworkCheckoutPath)' clean -fd --quiet 2> /dev/null")
+                    try bash("git -C '\(frameworkCheckoutPath)' clean -fdX --quiet 2> /dev/null")
                 }
             }
         }
