@@ -33,10 +33,24 @@ class Manifest: Decodable {
 }
 
 extension Manifest {
-    var appTargets: [AppTarget] {
-        return targets.compactMap {
-            guard let targetType = AppTarget.TargetType(rawValue: $0.type) else { return nil }
-            return AppTarget(projectName: name, targetName: $0.name, dependentLibraryNames: $0.dependencies.flatMap { $0.byName }, targetType: targetType)
+    func appTargets(workingDirectory: String = GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath) throws -> [AppTarget] {
+        return try targets.compactMap {
+            var targetType: AppTarget.TargetType?
+
+            switch $0.type {
+            case AppTarget.TargetType.test.rawValue:
+                targetType = AppTarget.TargetType.test
+
+            default:
+                let targetTypeDetectorService = TargetTypeDetectorService(workingDirectory: workingDirectory)
+                targetType = try targetTypeDetectorService.detectTargetType(ofTarget: $0.name, in: name)
+
+                if targetType! == .test {
+                    print("Unexpectedly found '\(targetType!.wrapperExtension)' wrapper extension product for non-test target '\($0.name)'.", level: .warning)
+                }
+            }
+
+            return AppTarget(projectName: name, targetName: $0.name, dependentLibraryNames: $0.dependencies.flatMap { $0.byName }, targetType: targetType!)
         }
     }
 

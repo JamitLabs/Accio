@@ -17,6 +17,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Security
 - None.
 
+## [0.6.0] - 2019-04-19
+### Added
+- Correctly recognizes App Extensions and doesn't add build phases for them. Fixes [#25](https://github.com/JamitLabs/Accio/issues/25).
+- Points to detailed information about conflicting name issues with SwiftPM. Fixes [#26](https://github.com/JamitLabs/Accio/issues/26).
+- The `init` command now properly detects test targets and lists them as such in the created manifest file. Fixes [#23](https://github.com/JamitLabs/Accio/issues/23).
+### Changed
+- Improves reading of supported deployment targets.
+- Improves init command by treating empty manifest files like non-existing ones. Fixes [#24](https://github.com/JamitLabs/Accio/issues/24).
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- Fixes an issue where Accio commands where failing when Git resets failed.
+- Fixes an issue where Accio didn't reset changed files untracked by Git.
+### Security
+- None.
+
 ## [0.5.6] - 2019-04-09
 ### Added
 - Adds support for automatically finding schemes named like 'MBProgressHUD Framework tvOS'.

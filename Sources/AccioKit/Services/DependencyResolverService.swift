@@ -39,6 +39,8 @@ final class DependencyResolverService {
                     """,
                     level: .warning
                 )
+            } else if output.stderror.contains("multiple targets named") {
+                print("This is a known issue. For more details, please see here: https://github.com/JamitLabs/Accio/issues/26", level: .warning)
             }
 
             throw DependencyResolverError.dependencyGraphGenerationFailed

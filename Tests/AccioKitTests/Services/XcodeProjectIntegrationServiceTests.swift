@@ -6,7 +6,7 @@ import XCTest
 class XcodeProjectIntegrationServiceTests: XCTestCase {
     private let testResourcesDir: URL = FileManager.userCacheDirUrl.appendingPathComponent("AccioTestResources")
     private let testFrameworkNames: [String] = ["Alamofire", "HandySwift", "HandyUIKit", "MungoHealer"]
-    private let regularTarget: AppTarget = AppTarget(projectName: "TestProject", targetName: "TestProject-iOS", dependentLibraryNames: [], targetType: .regular)
+    private let regularTarget: AppTarget = AppTarget(projectName: "TestProject", targetName: "TestProject-iOS", dependentLibraryNames: [], targetType: .app)
     private let testTarget: AppTarget = AppTarget(projectName: "TestProject", targetName: "TestProject-iOSTests", dependentLibraryNames: [], targetType: .test)
 
     private var xcodeProjectResource: Resource {
@@ -94,13 +94,13 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
 
                 // test updateBuildPhase
                 switch appTarget.targetType {
-                case .regular:
+                case .app:
                     let accioBuildScript = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as! PBXShellScriptBuildPhase
 
                     XCTAssertEqual(accioBuildScript.inputPaths.count, testFrameworkNames.count)
                     XCTAssertEqual(accioBuildScript.inputPaths, testFrameworkNames.map { "$(SRCROOT)/\(Constants.dependenciesPath)/iOS/\($0).framework" })
 
-                case .test:
+                case .test, .appExtension:
                     let accioBuildScript = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript }
                     XCTAssertNil(accioBuildScript)
                 }

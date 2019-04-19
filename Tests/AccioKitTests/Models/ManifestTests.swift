@@ -82,7 +82,7 @@ class ManifestTests: XCTestCase {
         resourcesLoaded([manifestResource, xcodeProjectResource, exampleSwiftFile, exampleSwiftTestFile]) {
             let manifest = try! ManifestHandlerService(workingDirectory: testResourcesDir.path).loadManifest(isDependency: false)
 
-            let appTargets = manifest.appTargets
+            let appTargets = try! manifest.appTargets(workingDirectory: testResourcesDir.path)
             XCTAssertEqual(appTargets.count, 2)
 
             XCTAssertEqual(appTargets[0].projectName, "TestProject")

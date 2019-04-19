@@ -65,7 +65,7 @@ class AppTargetTests: XCTestCase {
         resourcesLoaded([manifestResource, xcodeProjectResource, exampleSwiftFile]) {
             let manifest = try! ManifestHandlerService(workingDirectory: testResourcesDir.path).loadManifest(isDependency: false)
             let dependencyGraph = try! DependencyResolverService(workingDirectory: testResourcesDir.path).dependencyGraph()
-            let appTarget = manifest.appTargets.first!
+            let appTarget = try! manifest.appTargets(workingDirectory: testResourcesDir.path).first!
 
             let frameworks: [Framework] = try! appTarget.frameworkDependencies(manifest: manifest, dependencyGraph: dependencyGraph).flattenedDeepFirstOrder()
             XCTAssertEqual(frameworks.map { $0.libraryName }, ["HandySwift", "HandyUIKit", "Imperio", "MungoHealer", "Alamofire", "Result", "Moya"])

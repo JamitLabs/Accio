@@ -71,7 +71,7 @@ class ManifestCreatorServiceTests: XCTestCase {
             XCTAssertEqual(manifest.targets.count, 1)
             XCTAssertEqual(manifest.targets.first!.name, "TestProject-iOS")
 
-            let foundFrameworks = try! manifest.appTargets.first!.frameworkDependencies(manifest: manifest, dependencyGraph: dependencyGraph)
+            let foundFrameworks = try! manifest.appTargets(workingDirectory: testResourcesDir.path).first!.frameworkDependencies(manifest: manifest, dependencyGraph: dependencyGraph)
             XCTAssertEqual(foundFrameworks.count, 5)
 
             XCTAssertEqual(foundFrameworks[0].libraryName, "HandySwift")
@@ -102,48 +102,58 @@ class ManifestCreatorServiceTests: XCTestCase {
     }
 
     func testCreateManifestWithoutExistingManifest() {
-        let manifestCreatorService = ManifestHandlerService(workingDirectory: testResourcesDir.path)
+        resourcesLoaded([xcodeProjectResource, exampleSwiftFile]) {
+            let manifestCreatorService = ManifestHandlerService(workingDirectory: testResourcesDir.path)
 
-        XCTAssertFalse(FileManager.default.fileExists(atPath: manifestResource.url.path))
+            XCTAssertFalse(FileManager.default.fileExists(atPath: manifestResource.url.path))
 
-        try! manifestCreatorService.createManifestFromDefaultTemplateIfNeeded(projectName: "TestProject", targetNames: ["iOS-App", "tvOS-App"])
+            try! manifestCreatorService.createManifestFromDefaultTemplateIfNeeded(projectName: "TestProject", targetNames: ["iOS-App", "iOS-AppTests", "tvOS-App"])
 
-        XCTAssertTrue(FileManager.default.fileExists(atPath: manifestResource.url.path))
-        XCTAssertEqual(
-            try! String(contentsOf: manifestResource.url),
-            """
-                // swift-tools-version:5.0
-                import PackageDescription
-
-                let package = Package(
-                    name: \"TestProject\",
-                    products: [],
-                    dependencies: [
-                        // add your dependencies here, for example:
-                        // .package(url: \"https://github.com/User/Project.git\", .upToNextMajor(from: \"1.0.0\")),
-                    ],
-                    targets: [
-                        .target(
-                            name: \"iOS-App\",
-                            dependencies: [
-                                // add your dependencies scheme names here, for example:
-                                // \"Project\",
-                            ],
-                            path: \"iOS-App\"
-                        ),
-                        .target(
-                            name: \"tvOS-App\",
-                            dependencies: [
-                                // add your dependencies scheme names here, for example:
-                                // \"Project\",
-                            ],
-                            path: \"tvOS-App\"
-                        ),
-                    ]
-                )
-
+            XCTAssertTrue(FileManager.default.fileExists(atPath: manifestResource.url.path))
+            XCTAssertEqual(
+                try! String(contentsOf: manifestResource.url),
                 """
-        )
+                    // swift-tools-version:5.0
+                    import PackageDescription
+
+                    let package = Package(
+                        name: \"TestProject\",
+                        products: [],
+                        dependencies: [
+                            // add your dependencies here, for example:
+                            // .package(url: \"https://github.com/User/Project.git\", .upToNextMajor(from: \"1.0.0\")),
+                        ],
+                        targets: [
+                            .target(
+                                name: \"iOS-App\",
+                                dependencies: [
+                                    // add your dependencies scheme names here, for example:
+                                    // \"Project\",
+                                ],
+                                path: \"iOS-App\"
+                            ),
+                            .testTarget(
+                                name: \"iOS-AppTests\",
+                                dependencies: [
+                                    // add your dependencies scheme names here, for example:
+                                    // \"Project\",
+                                ],
+                                path: \"iOS-AppTests\"
+                            ),
+                            .target(
+                                name: \"tvOS-App\",
+                                dependencies: [
+                                    // add your dependencies scheme names here, for example:
+                                    // \"Project\",
+                                ],
+                                path: \"tvOS-App\"
+                            ),
+                        ]
+                    )
+
+                    """
+            )
+        }
     }
 
     func testCreateManifestWitExistingManifest() {
