@@ -36,7 +36,7 @@ class PlatformDetectorServiceTests: XCTestCase {
         resourcesLoaded([iOSTestProjectFile]) {
             let xcodeProjectUrl = iOSTestProjectFile.url.deletingLastPathComponent()
             let platformDetectorService = PlatformDetectorService(workingDirectory: xcodeProjectUrl.deletingLastPathComponent().path)
-            let appTarget = AppTarget(projectName: "TestProject-iOS", targetName: "TestProject-iOS", dependentLibraryNames: [], targetType: .regular)
+            let appTarget = AppTarget(projectName: "TestProject-iOS", targetName: "TestProject-iOS", dependentLibraryNames: [], targetType: .app)
             let detectedPlatform = try! platformDetectorService.detectPlatform(of: appTarget)
             XCTAssertEqual(detectedPlatform, Platform.iOS)
         }
@@ -44,7 +44,7 @@ class PlatformDetectorServiceTests: XCTestCase {
         resourcesLoaded([macOSTestProjectFile]) {
             let xcodeProjectUrl = macOSTestProjectFile.url.deletingLastPathComponent()
             let platformDetectorService = PlatformDetectorService(workingDirectory: xcodeProjectUrl.deletingLastPathComponent().path)
-            let appTarget = AppTarget(projectName: "TestProject-macOS", targetName: "TestProject-macOS", dependentLibraryNames: [], targetType: .regular)
+            let appTarget = AppTarget(projectName: "TestProject-macOS", targetName: "TestProject-macOS", dependentLibraryNames: [], targetType: .app)
             let detectedPlatform = try! platformDetectorService.detectPlatform(of: appTarget)
             XCTAssertEqual(detectedPlatform, Platform.macOS)
         }
@@ -52,7 +52,7 @@ class PlatformDetectorServiceTests: XCTestCase {
         resourcesLoaded([tvOSTestProjectFile]) {
             let xcodeProjectUrl = tvOSTestProjectFile.url.deletingLastPathComponent()
             let platformDetectorService = PlatformDetectorService(workingDirectory: xcodeProjectUrl.deletingLastPathComponent().path)
-            let appTarget = AppTarget(projectName: "TestProject-tvOS", targetName: "TestProject-tvOS", dependentLibraryNames: [], targetType: .regular)
+            let appTarget = AppTarget(projectName: "TestProject-tvOS", targetName: "TestProject-tvOS", dependentLibraryNames: [], targetType: .app)
             let detectedPlatform = try! platformDetectorService.detectPlatform(of: appTarget)
             XCTAssertEqual(detectedPlatform, Platform.tvOS)
         }
@@ -60,7 +60,7 @@ class PlatformDetectorServiceTests: XCTestCase {
         resourcesLoaded([watchOSTestProjectFile]) {
             let xcodeProjectUrl = watchOSTestProjectFile.url.deletingLastPathComponent()
             let platformDetectorService = PlatformDetectorService(workingDirectory: xcodeProjectUrl.deletingLastPathComponent().path)
-            let appTarget = AppTarget(projectName: "TestProject-watchOS", targetName: "TestProject-watchOS WatchKit App", dependentLibraryNames: [], targetType: .regular)
+            let appTarget = AppTarget(projectName: "TestProject-watchOS", targetName: "TestProject-watchOS WatchKit App", dependentLibraryNames: [], targetType: .app)
             let detectedPlatform = try! platformDetectorService.detectPlatform(of: appTarget)
             XCTAssertEqual(detectedPlatform, Platform.watchOS)
         }
