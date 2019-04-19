@@ -56,7 +56,8 @@ extension DependencyInstaller {
 
         typealias ParsingResult = (target: AppTarget, platform: Platform, frameworkProducts: [FrameworkProduct])
 
-        let parsingResults: [ParsingResult] = try manifest.appTargets.compactMap { appTarget in
+        let appTargets: [AppTarget] = try manifest.appTargets()
+        let parsingResults: [ParsingResult] = try appTargets.compactMap { appTarget in
             guard !appTarget.dependentLibraryNames.isEmpty else {
                 print("No dependencies specified for target '\(appTarget.targetName)'. Please add at least one dependency scheme to the 'dependencies' array of the target in Package.swift.", level: .warning)
                 return nil
@@ -75,7 +76,7 @@ extension DependencyInstaller {
             try XcodeProjectIntegrationService.shared.updateDependencies(of: parsingResult.target, for: parsingResult.platform, with: parsingResult.frameworkProducts)
         }
 
-        try XcodeProjectIntegrationService.shared.handleRemovedTargets(keepingTargets: manifest.appTargets)
+        try XcodeProjectIntegrationService.shared.handleRemovedTargets(keepingTargets: appTargets)
         try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")
     }
 }

@@ -1,9 +1,23 @@
 import Foundation
 
 struct AppTarget {
-    enum TargetType: String {
-        case regular
+    enum TargetType: String, CaseIterable {
+        case app
         case test
+        case appExtension
+
+        var wrapperExtension: String {
+            switch self {
+            case .app:
+                return "app"
+
+            case .appExtension:
+                return "appex"
+
+            case .test:
+                fatalError()
+            }
+        }
     }
 
     let projectName: String

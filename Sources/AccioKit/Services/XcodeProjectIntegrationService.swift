@@ -185,7 +185,7 @@ final class XcodeProjectIntegrationService {
         targetGroup.children.sort { $0.name! < $1.name! }
 
         switch appTarget.targetType {
-        case .regular:
+        case .app:
             // manage copy build script for regular targets
             var copyBuildScript: PBXShellScriptBuildPhase! = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as? PBXShellScriptBuildPhase
             if copyBuildScript == nil {
@@ -216,6 +216,9 @@ final class XcodeProjectIntegrationService {
             print("Updating frameworks in copy frameworks phase '\(Constants.copyFilesPhase)' for target '\(appTarget.targetName)' ...", level: .info)
             try targetGroup.children.forEach { _ = try copyFrameworksPhase.add(file: $0) }
             copyFrameworksPhase.files?.forEach { $0.settings = ["ATTRIBUTES": ["CodeSignOnCopy"]] }
+
+        case .appExtension:
+            break
         }
 
         try projectFile.write(path: Path(xcodeProjectPath), override: true)

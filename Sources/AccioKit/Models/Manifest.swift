@@ -33,10 +33,19 @@ class Manifest: Decodable {
 }
 
 extension Manifest {
-    var appTargets: [AppTarget] {
-        return targets.compactMap {
-            guard let targetType = AppTarget.TargetType(rawValue: $0.type) else { return nil }
-            return AppTarget(projectName: name, targetName: $0.name, dependentLibraryNames: $0.dependencies.flatMap { $0.byName }, targetType: targetType)
+    func appTargets() throws -> [AppTarget] {
+        return try targets.compactMap {
+            var targetType: AppTarget.TargetType?
+
+            switch $0.type {
+            case AppTarget.TargetType.test.rawValue:
+                targetType = AppTarget.TargetType.test
+
+            default:
+                targetType = try TargetTypeDetectorService.shared.detectTargetType(ofTarget: $0.name, in: name)
+            }
+
+            return AppTarget(projectName: name, targetName: $0.name, dependentLibraryNames: $0.dependencies.flatMap { $0.byName }, targetType: targetType!)
         }
     }
 
