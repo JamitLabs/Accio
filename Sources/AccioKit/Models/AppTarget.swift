@@ -6,6 +6,16 @@ struct AppTarget {
         case test
         case appExtension
 
+        var packageSpecifier: String {
+            switch self {
+            case .app, .appExtension:
+                return "target"
+
+            case .test:
+                return "testTarget"
+            }
+        }
+
         var wrapperExtension: String {
             switch self {
             case .app:
@@ -15,7 +25,7 @@ struct AppTarget {
                 return "appex"
 
             case .test:
-                fatalError()
+                return "xctest"
             }
         }
     }

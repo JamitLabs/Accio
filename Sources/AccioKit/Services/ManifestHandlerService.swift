@@ -29,7 +29,7 @@ final class ManifestHandlerService {
             try FileManager.default.removeItem(atPath: packageManifestPath)
         }
 
-        let targetsContents = self.targetsContents(targetNames: targetNames)
+        let targetsContents = try self.targetsContents(workingDirectory: workingDirectory, projectName: projectName, targetNames: targetNames)
         let manifestTemplate = self.manifestTemplate(projectName: projectName, targetsContents: targetsContents)
 
         FileManager.default.createFile(atPath: packageManifestPath, contents: manifestTemplate.data(using: .utf8), attributes: nil)
@@ -55,10 +55,12 @@ final class ManifestHandlerService {
             """
     }
 
-    private func targetsContents(targetNames: [String]) -> String {
-        return targetNames.reduce("") { result, targetName in
+    private func targetsContents(workingDirectory: String, projectName: String, targetNames: [String]) throws -> String {
+        return try targetNames.reduce("") { result, targetName in
+            let targetTypeDetectorService = TargetTypeDetectorService(workingDirectory: workingDirectory)
+            let targetType: AppTarget.TargetType = try targetTypeDetectorService.detectTargetType(ofTarget: targetName, in: projectName)
             return result + """
-                        .target(
+                        .\(targetType.packageSpecifier)(
                             name: \"\(targetName)\",
                             dependencies: [
                                 // add your dependencies scheme names here, for example:

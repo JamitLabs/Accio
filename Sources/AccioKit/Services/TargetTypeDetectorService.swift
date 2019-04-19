@@ -26,6 +26,6 @@ final class TargetTypeDetectorService {
             }
         }
 
-        return .app // fall back to App type
+        return targetName.contains("Tests") ? .test : .app // fall back to target name based logic
     }
 }
