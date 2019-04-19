@@ -20,9 +20,13 @@ final class ManifestHandlerService {
     func createManifestFromDefaultTemplateIfNeeded(projectName: String, targetNames: [String]) throws {
         let packageManifestPath = URL(fileURLWithPath: workingDirectory).appendingPathComponent("Package.swift").path
 
-        guard !FileManager.default.fileExists(atPath: packageManifestPath) else {
-            print("Package.swift file already exists, skipping template based creation.", level: .warning)
-            return
+        if FileManager.default.fileExists(atPath: packageManifestPath) {
+            guard let manifestContents = try? String(contentsOfFile: packageManifestPath), manifestContents.isBlank else {
+                print("A non-empty Package.swift file already exists, skipping template based creation.", level: .warning)
+                return
+            }
+
+            try FileManager.default.removeItem(atPath: packageManifestPath)
         }
 
         let targetsContents = self.targetsContents(targetNames: targetNames)
