@@ -37,7 +37,7 @@
 
 A dependency manager driven by SwiftPM that works for iOS/tvOS/watchOS/macOS projects.
 
-## Correct Pronunciation
+### Pronunciation
 
 Since this question comes up pretty often, here's the official way to pronounce the name of this library: **"AH-kee-oh"**
 
