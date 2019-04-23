@@ -69,13 +69,16 @@ brew upgrade accio
 
 ## Why should I use this?
 
-**TL;DR**: It offers many improvements over Carthage, and it's targeted towards official SwiftPM's support for Apple platforms.
+**TL;DR**: It offers many improvements over Carthage and is targeted towards SwiftPM's integration into Xcode.
+
+To learn more about the motivation, rationale & design of Accio, read [this blog post](https://medium.com/@Dschee/accio-swiftpm-for-ios-co-today-ab4d19cefb74).
+
+Alternatively, read the following expandable summary:
 
 <details>
 <summary>
-Detailed Explanation
+Summary of the Motivation & Advantages
 </summary>
-
 For developers on Apple platforms there are already well established dependency managers, namely [CocoaPods](https://github.com/CocoaPods/CocoaPods) & [Carthage](https://github.com/Carthage/Carthage). If you like how CocoaPods deals with things, you probably won't ever need to use Accio. It doesn't do anything that CocoaPods doesn't.
 
 But if you are like the many developers who prefer to use Carthage because it's written in Swift (not Ruby) and it doesn't create an Xcode workspace but is rather unintrusive, you might find that Accio solves some of the problems you might have come across with Carthage.
