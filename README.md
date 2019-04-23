@@ -37,6 +37,13 @@
 
 A dependency manager driven by SwiftPM that works for iOS/tvOS/watchOS/macOS projects.
 
+## Correct Pronunciation
+
+Since this question comes up pretty often, here's the official way to pronounce the name of this library: **"AH-kee-oh"**
+
+*Rationale:*
+While [different opinions](https://scifi.stackexchange.com/questions/192022/what-is-the-correct-pronunciation-of-accio) seem to exist, the official movies (like in [this](https://www.youtube.com/watch?v=ROVjUuAVWyg) video), [this](https://harrypotter.fandom.com/wiki/Summoning_Charm) Harry Potter Wiki article and many latin advocates seem to support the above pronunciation.
+
 ## Requirements
 
 - Xcode 10.2+ and Swift 5.0+
