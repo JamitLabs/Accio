@@ -1,6 +1,6 @@
 @testable import AccioKit
 import PathKit
-import xcodeproj
+import XcodeProj
 import XCTest
 
 class XcodeProjectIntegrationServiceTests: XCTestCase {

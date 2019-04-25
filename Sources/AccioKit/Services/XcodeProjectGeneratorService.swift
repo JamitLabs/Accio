@@ -1,7 +1,7 @@
 import Foundation
 import HandySwift
 import PathKit
-import xcodeproj
+import XcodeProj
 
 final class XcodeProjectGeneratorService {
     static let shared = XcodeProjectGeneratorService()
