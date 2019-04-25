@@ -1,6 +1,6 @@
 import Foundation
 import PathKit
-import xcodeproj
+import XcodeProj
 
 enum XcodeProjectIntegrationError: Error {
     case targetNotFound
@@ -157,7 +157,10 @@ final class XcodeProjectIntegrationService {
             print("Adding frameworks \(frameworkNames) to project navigator group '\(platformGroupName)' & linking with target '\(appTarget.targetName)' ...", level: .info)
 
             for frameworkToAdd in frameworksToAdd {
-                let frameworkFileRef = try targetGroup.addFile(at: Path(frameworkToAdd.frameworkDirPath), sourceRoot: Path(workingDirectory))
+                let frameworkFileRef = try targetGroup.addNewFile(
+                    at: Path(frameworkToAdd.frameworkDirPath),
+                    sourceRoot: Path(workingDirectory)
+                )
 
                 if let files = frameworksBuildPhase.files, !files.contains(where: { $0.file?.path == frameworkFileRef.path }) {
                     _ = try frameworksBuildPhase.add(file: frameworkFileRef)

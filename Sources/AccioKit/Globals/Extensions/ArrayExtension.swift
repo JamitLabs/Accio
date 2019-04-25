@@ -1,5 +1,5 @@
 import Foundation
-import xcodeproj
+import XcodeProj
 
 extension Array where Element == Framework {
     /// Flattens frameworks including subdependencies returns all in correct build order.
