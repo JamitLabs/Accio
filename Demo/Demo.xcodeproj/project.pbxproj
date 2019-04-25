@@ -126,9 +126,6 @@
 		82DDB879225163ED00A35E5B /* SwiftDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB876225163ED00A35E5B /* SwiftDate.swift */; };
 		82DDB87B22516AE800A35E5B /* FoldingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB87A22516AE800A35E5B /* FoldingCell.swift */; };
 		82DDB87D22516CE800A35E5B /* SwiftMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DDB87C22516CE800A35E5B /* SwiftMessages.swift */; };
-		82F16BB822676FF200A7B95B /* NIOTransportServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82F16BB722676FF200A7B95B /* NIOTransportServices.swift */; };
-		82F16BB922676FF200A7B95B /* NIOTransportServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82F16BB722676FF200A7B95B /* NIOTransportServices.swift */; };
-		82F16BBA22676FF200A7B95B /* NIOTransportServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82F16BB722676FF200A7B95B /* NIOTransportServices.swift */; };
 		82F16E062268C31A00A7B95B /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82F16E052268C31A00A7B95B /* ShareViewController.swift */; };
 		82F16E092268C31A00A7B95B /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82F16E072268C31A00A7B95B /* MainInterface.storyboard */; };
 		82F16E0D2268C31A00A7B95B /* Demo-ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 82F16E032268C31A00A7B95B /* Demo-ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -283,7 +280,6 @@
 		82DDB876225163ED00A35E5B /* SwiftDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDate.swift; sourceTree = "<group>"; };
 		82DDB87A22516AE800A35E5B /* FoldingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldingCell.swift; sourceTree = "<group>"; };
 		82DDB87C22516CE800A35E5B /* SwiftMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMessages.swift; sourceTree = "<group>"; };
-		82F16BB722676FF200A7B95B /* NIOTransportServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIOTransportServices.swift; sourceTree = "<group>"; };
 		82F16E032268C31A00A7B95B /* Demo-ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Demo-ShareExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82F16E052268C31A00A7B95B /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		82F16E082268C31A00A7B95B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -524,7 +520,6 @@
 				8219BAB22252479F003331E4 /* Material.swift */,
 				8288F542225CE91F00F3FA47 /* MBProgressHUD.swift */,
 				82955BE2224D1DB300BC27CE /* Moya.swift */,
-				82F16BB722676FF200A7B95B /* NIOTransportServices.swift */,
 				8288F4A5225CA6BD00F3FA47 /* NVActivityIndicatorView.swift */,
 				82CE06AC225653CE00EA8F34 /* PromiseKit.swift */,
 				82CE06AA2256525F00EA8F34 /* RAMAnimatedTabBarController.swift */,
@@ -943,7 +938,6 @@
 				8288F4A6225CA6BD00F3FA47 /* NVActivityIndicatorView.swift in Sources */,
 				8288F46D225B401A00F3FA47 /* XCDYouTubeKit.swift in Sources */,
 				8288F471225B42A600F3FA47 /* JGProgressHUD.swift in Sources */,
-				82F16BB822676FF200A7B95B /* NIOTransportServices.swift in Sources */,
 				8219BAB522524C7F003331E4 /* Cartography.swift in Sources */,
 				8219BAAB22523238003331E4 /* Starscream.swift in Sources */,
 				8219BAD922525B18003331E4 /* Bond.swift in Sources */,
@@ -1001,7 +995,6 @@
 				82CE06B622565B7900EA8F34 /* CryptoSwift.swift in Sources */,
 				82CE06AE225653CE00EA8F34 /* PromiseKit.swift in Sources */,
 				8288F472225B42A600F3FA47 /* JGProgressHUD.swift in Sources */,
-				82F16BB922676FF200A7B95B /* NIOTransportServices.swift in Sources */,
 				8288F544225CE91F00F3FA47 /* MBProgressHUD.swift in Sources */,
 				8288F4A7225CA6BD00F3FA47 /* NVActivityIndicatorView.swift in Sources */,
 				8219BAA82252301B003331E4 /* SwifterSwift.swift in Sources */,
@@ -1044,7 +1037,6 @@
 				82DDB86C22515C2200A35E5B /* Kingfisher.swift in Sources */,
 				8219BAD7225258A3003331E4 /* SwiftyStoreKit.swift in Sources */,
 				8219BAAD22523238003331E4 /* Starscream.swift in Sources */,
-				82F16BBA22676FF200A7B95B /* NIOTransportServices.swift in Sources */,
 				8219BAE32252610F003331E4 /* Lottie.swift in Sources */,
 				82CE06AF225653CE00EA8F34 /* PromiseKit.swift in Sources */,
 				82DDB879225163ED00A35E5B /* SwiftDate.swift in Sources */,
