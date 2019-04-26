@@ -1,4 +1,4 @@
-import xcodeproj
+import XcodeProj
 
 extension PBXProj {
     func deleteAllTemporaryFileReferences() {
