@@ -19,10 +19,22 @@ final class CachedBuilderService {
                 switch try InstallationTypeDetectorService.shared.detectInstallationType(for: framework) {
                 case .swiftPackageManager:
                     try XcodeProjectGeneratorService.shared.generateXcodeProject(framework: framework)
-                    fallthrough
+                    let frameworkProduct = try carthageBuilderService.build(
+                        framework: framework,
+                        platform: platform,
+                        alreadyBuiltFrameworkProducts: frameworkProducts
+                    )
+                    frameworkProducts.append(frameworkProduct)
 
                 case .carthage:
-                    let frameworkProduct = try carthageBuilderService.build(framework: framework, platform: platform, alreadyBuiltFrameworkProducts: frameworkProducts)
+                    try bash("git -C '\(framework.projectDirectory)' reset HEAD --hard --quiet")
+                    try bash("git -C '\(framework.projectDirectory)' clean -fd --quiet")
+
+                    let frameworkProduct = try carthageBuilderService.build(
+                        framework: framework,
+                        platform: platform,
+                        alreadyBuiltFrameworkProducts: frameworkProducts
+                    )
                     frameworkProducts.append(frameworkProduct)
                 }
             }
