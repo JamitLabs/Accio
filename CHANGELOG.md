@@ -17,6 +17,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Security
 - None.
 
+## [0.6.1] - 2019-04-26
+### Added
+- Adds several popular GitHub projects for official integration support testing to the Demo project.  
+  PR: [#10](https://github.com/JamitLabs/Accio/pull/10) | Author: [Cihat Gündüz](https://github.com/Dschee)
+### Changed
+- None.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- Fixes an issue where two or more targets for the same platform would cause project linking issues.  
+  Issue: [#29](https://github.com/JamitLabs/Accio/issues/29) | PR: [#34](https://github.com/JamitLabs/Accio/pull/34) | Author: [Murat Yilmaz](https://github.com/mrylmz)
+- Fixes an issue where temporary changes to SwiftPM-only frameworks would be reset before building.  
+  Issue: [#35](https://github.com/JamitLabs/Accio/issues/35) | PR: [#36](https://github.com/JamitLabs/Accio/pull/36) | Author: [Cihat Gündüz](https://github.com/Dschee)
+### Security
+- None.
+
 ## [0.6.0] - 2019-04-19
 ### Added
 - Correctly recognizes App Extensions and doesn't add build phases for them. Fixes [#25](https://github.com/JamitLabs/Accio/issues/25).
