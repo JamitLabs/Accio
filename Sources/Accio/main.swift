@@ -5,6 +5,15 @@ import SwiftCLI
 // MARK: - CLI
 let cli = CLI(name: "accio", version: "0.6.2", description: "A dependency manager driven by SwiftPM that works for iOS/tvOS/watchOS/macOS projects.")
 
-cli.commands = [InitCommand(), InstallCommand(), UpdateCommand(), CleanCommand(), ClearCacheCommand(), SetSharedCacheCommand()]
+cli.commands = [
+    InitCommand(),
+    InstallCommand(),
+    UpdateCommand(),
+    CleanCommand(),
+    ClearCacheCommand(),
+    SetSharedCacheCommand(),
+    SupportCommand()
+]
+
 cli.globalOptions.append(contentsOf: GlobalOptions.all)
 cli.goAndExit()
