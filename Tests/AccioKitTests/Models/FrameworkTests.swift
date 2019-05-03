@@ -16,7 +16,7 @@ class FrameworkTests: XCTestCase {
                     products: [],
                     dependencies: [
                         .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "2.8.0")),
-                        .package(url: "https://github.com/Moya/Moya.git", .revision("43209d6ac45d244d8be08f4cf6df684b96190616")),
+                        .package(url: "https://github.com/Moya/Moya.git", .upToNextMajor(from: "13.0.1")),
                         .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "4.0.0")),
                     ],
                     targets: [

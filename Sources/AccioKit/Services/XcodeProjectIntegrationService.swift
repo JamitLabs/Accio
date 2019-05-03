@@ -157,9 +157,10 @@ final class XcodeProjectIntegrationService {
             print("Adding frameworks \(frameworkNames) to project navigator group '\(platformGroupName)' & linking with target '\(appTarget.targetName)' ...", level: .info)
 
             for frameworkToAdd in frameworksToAdd {
-                let frameworkFileRef = try targetGroup.addNewFile(
+                let frameworkFileRef = try targetGroup.addFile(
                     at: Path(frameworkToAdd.frameworkDirPath),
-                    sourceRoot: Path(workingDirectory)
+                    sourceRoot: Path(workingDirectory),
+                    override: false
                 )
 
                 if let files = frameworksBuildPhase.files, !files.contains(where: { $0.file?.path == frameworkFileRef.path }) {
