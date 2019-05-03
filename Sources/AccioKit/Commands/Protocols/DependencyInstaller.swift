@@ -42,7 +42,7 @@ extension DependencyInstaller {
                     catch {
                         // Remove checkout if git reset fails for some reason
                         // If the checkout is missing, SPM will automatically clone again in the next step
-                        FileManager.default.removeItem(atPath: frameworkCheckoutPath)
+                        try FileManager.default.removeItem(atPath: frameworkCheckoutPath)
                     }
                 }
             }
