@@ -27,9 +27,7 @@ final class CachedBuilderService {
                     frameworkProducts.append(frameworkProduct)
 
                 case .carthage:
-                    try bash("git -C '\(framework.projectDirectory)' reset HEAD --hard --quiet")
-                    try bash("git -C '\(framework.projectDirectory)' clean -fd --quiet")
-
+                    try GitResetService.shared.resetGit(atPath: framework.projectDirectory)
                     let frameworkProduct = try carthageBuilderService.build(
                         framework: framework,
                         platform: platform,
