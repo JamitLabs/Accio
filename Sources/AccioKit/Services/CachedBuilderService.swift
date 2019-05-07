@@ -27,7 +27,7 @@ final class CachedBuilderService {
                     frameworkProducts.append(frameworkProduct)
 
                 case .carthage:
-                    try GitResetService.shared.resetGit(atPath: framework.projectDirectory, performfdXReset: false)
+                    try GitResetService.shared.resetGit(atPath: framework.projectDirectory, includeUntrackedFiles: false)
                     let frameworkProduct = try carthageBuilderService.build(
                         framework: framework,
                         platform: platform,

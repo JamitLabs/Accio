@@ -5,11 +5,11 @@ final class GitResetService {
 
     private init() { }
 
-    func resetGit(atPath directory: String, performfdXReset: Bool = true) throws {
+    func resetGit(atPath directory: String, includeUntrackedFiles: Bool = true) throws {
         try bash("git -C '\(directory)' reset HEAD --hard --quiet 2> /dev/null")
         try bash("git -C '\(directory)' clean -fd --quiet 2> /dev/null")
 
-        if performfdXReset {
+        if includeUntrackedFiles {
             try bash("git -C '\(directory)' clean -fdX --quiet 2> /dev/null")
         }
     }
