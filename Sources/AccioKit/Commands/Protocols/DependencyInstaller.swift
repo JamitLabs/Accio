@@ -34,9 +34,14 @@ extension DependencyInstaller {
                 let frameworkCheckoutPath: String = checkoutsDirUrl.appendingPathComponent(fileName).path
 
                 if try FileManager.default.isDirectory(atPath: frameworkCheckoutPath) {
-                    try bash("git -C '\(frameworkCheckoutPath)' reset HEAD --hard --quiet 2> /dev/null")
-                    try bash("git -C '\(frameworkCheckoutPath)' clean -fd --quiet 2> /dev/null")
-                    try bash("git -C '\(frameworkCheckoutPath)' clean -fdX --quiet 2> /dev/null")
+                    do {
+                        try GitResetService.shared.resetGit(atPath: frameworkCheckoutPath)
+                    }
+                    catch {
+                        // Remove checkout if git reset fails for some reason
+                        // If the checkout is missing, SPM will automatically clone again in the next step
+                        try bash("rm -rf '\(frameworkCheckoutPath)'")
+                    }
                 }
             }
         }
