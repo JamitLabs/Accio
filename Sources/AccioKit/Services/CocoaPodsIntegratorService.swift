@@ -9,7 +9,7 @@ enum CocoaPodsIntegratorServiceError: Error {
 
 final class CocoaPodsIntegratorService {
     private static let targetNameSuffix = "-AccioCocoaPodsIntegration"
-    private static let groupName = "accio_integrated_pods"
+    private static let groupNameSuffix = "_accio_cocoapods_integration"
 
     static let shared = CocoaPodsIntegratorService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
 
@@ -47,7 +47,7 @@ final class CocoaPodsIntegratorService {
 
         let podfilePath = "\(workingDirectory)/Podfile"
         var podfile = try String(contentsOf: URL(fileURLWithPath: podfilePath))
-        let groupName = "\(targetName)_\(CocoaPodsIntegratorService.groupName)".lowercased()
+        let groupName = "\(targetName)\(CocoaPodsIntegratorService.groupNameSuffix)".lowercased()
         let targetPattern = "(.*?)target\\s+'\(targetName)'\\s+do"
         let groupPattern = "(.*?)def\\s+\(groupName)[\\S\\s]+?end\\b"
 

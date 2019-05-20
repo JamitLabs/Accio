@@ -221,6 +221,75 @@ This will remove all build products from the cache and tell you how much file si
 
 Note: There is also a `clean` command which this should not be confused with. The `clean` command will only remove the files within the `.accio` build path leading to all dependencies being freshly checked out on next install. Also it deletes any temporary leftover files from failed or cancelled runs of Accio.
 
+### Integrating dependencies in a CocoaPods setup
+It is possible to use Accio to integrate dependencies built as frameworks in a CocoaPods setup. The main benefits are:
+
+* Allow pods to have dependencies integrated with Accio.
+* Replace source code pods with their corresponding frameworks, improving Xcode responsiveness and shortening the build times.
+
+#### A usecase example
+Imagine the following scenario, where CocoaPods is used to manage and integrate the dependencies:
+
+**| Your App |** ---*depends on*---> **| Your framework |** ---*depends on*---> **| BigSourceCodeDependency |**
+
+*In this scenario, `BigSourceCodeDependency` is any big dependency that is distributed through CocoaPods as source code.*
+
+The source code inside `BigSourceCodeDependency` has to be indexed and built by Xcode every time a clean action is performed. This results in a less responsive IDE and longer build times.
+
+In order to avoid these problems, you can use Accio to integrate `BigSourceCodeDependency` as a framework instead:
+
+* Accio will download the source code of `BigSourceCodeDependency` and pack it into a framework.
+* Accio will create the necesary `.podspec` files for `BigSourceCodeDependency` and its dependencies, with the correct version numbers.
+* Accio will then edit your `Podfile` and add the pods pointing to the newly created `.podspec` files into the corresponding targets.
+
+#### Package.swift setup
+In order to indicate Accio that the dependencies for a target should be integrated as pods, the target name has to include the `-AccioCocoaPodsIntegration` suffix. For example, if you have a target named `App` that depends on `RxCocoa`, your `Package.swift` will look similar to the following:
+
+```
+// swift-tools-version:5.0
+import PackageDescription
+
+let package = Package(
+    name: "YourProjectName",
+    products: [],
+    dependencies: [
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", .exact("5.0.1"))
+    ],
+    targets: [
+        .target(
+            name: "App-AccioCocoaPodsIntegration",
+            dependencies: [
+                "RxCocoa"
+            ],
+            path: "AppSourceCode"
+        )
+    ]
+)
+```
+
+#### Podfile update
+After running Accio, your Podfile will be updated with the following information:
+
+```
+def app_accio_cocoapods_integration
+    pod 'RxCocoa', :path => './Dependencies/iOS'
+    pod 'RxRelay', :path => './Dependencies/iOS'
+    pod 'RxSwift', :path => './Dependencies/iOS'
+end
+
+target 'App' do
+    app_accio_cocoapods_integration
+    ...
+end
+```
+
+What happened here is:
+
+* Accio created a group with the name `<targetName>_accio_cocoapods_integration` and the pods pointing to the local path where your dependencies as stored.
+* Accio added the group to the corresponding target.
+
+You can move the group around in your `Podfile` and Accio should be able to update it in place the next time you update your dependencies.
+
 ## Adding support for Accio
 
 Most libraries that are compatible with SwiftPM should automatically work with Accio. There's also a Demo project with integration tests on the CI to ensure most Swift frameworks on GitHub with [at least 1,000 stars](https://github.com/search?q=stars%3A%3E1000+language%3Aswift&type=Repositories) support Accio. Libraries that are compatible with Carthage can be easily made compatible with Accio by simply adding a `Package.swift` file similar to this:
