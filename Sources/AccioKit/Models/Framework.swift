@@ -1,5 +1,6 @@
 import Foundation
 import SwiftShell
+import Version
 
 enum FrameworkError: Error {
     case noSharedSchemes
@@ -8,6 +9,7 @@ enum FrameworkError: Error {
 struct Framework {
     let projectName: String
     let libraryName: String
+    let version: Version?
     let projectDirectory: String
     let requiredFrameworks: [Framework]
 

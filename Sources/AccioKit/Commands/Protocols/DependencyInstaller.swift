@@ -61,8 +61,7 @@ extension DependencyInstaller {
 
         typealias ParsingResult = (target: AppTarget, platform: Platform, frameworkProducts: [FrameworkProduct])
 
-        let appTargets: [AppTarget] = try manifest.appTargets()
-        let parsingResults: [ParsingResult] = try appTargets.compactMap { appTarget in
+        let parsingResults: [ParsingResult] = try manifest.appTargets().compactMap { appTarget in
             guard !appTarget.dependentLibraryNames.isEmpty else {
                 print("No dependencies specified for target '\(appTarget.targetName)'. Please add at least one dependency scheme to the 'dependencies' array of the target in Package.swift.", level: .warning)
                 return nil
@@ -77,10 +76,17 @@ extension DependencyInstaller {
 
         try XcodeProjectIntegrationService.shared.clearDependenciesFolder()
 
-        for parsingResult in parsingResults {
-            try XcodeProjectIntegrationService.shared.updateDependencies(of: parsingResult.target, for: parsingResult.platform, with: parsingResult.frameworkProducts)
+        try parsingResults.forEach {
+            let installedFrameworks = try XcodeProjectIntegrationService.shared.updateDependencies(of: $0.target, for: $0.platform, with: $0.frameworkProducts)
+
+            if CocoaPodsIntegratorService.matches($0.target) {
+                try CocoaPodsIntegratorService.shared.updateDependencies(of: $0.target, with: installedFrameworks)
+            } else {
+                try XcodeProjectIntegrationService.shared.link(frameworkProducts: installedFrameworks, with: $0.target, for: $0.platform)
+            }
         }
 
+        let appTargets = try manifest.appTargets().filter { CocoaPodsIntegratorService.matches($0) == false }
         try XcodeProjectIntegrationService.shared.handleRemovedTargets(keepingTargets: appTargets)
         try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")
     }

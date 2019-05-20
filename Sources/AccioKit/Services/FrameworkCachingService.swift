@@ -14,7 +14,7 @@ final class FrameworkCachingService {
 
         if FileManager.default.fileExists(atPath: localCachedFileUrl.path) {
             print("Found cached build products for \(framework.libraryName) in local cache - skipping build.", level: .info)
-            return try frameworkProduct(forCachedFileAt: localCachedFileUrl)
+            return try frameworkProduct(for: framework, with: localCachedFileUrl)
         }
 
         if let sharedCachePath = sharedCachePath {
@@ -22,7 +22,7 @@ final class FrameworkCachingService {
 
             if FileManager.default.fileExists(atPath: sharedCacheFileUrl.path) {
                 print("Found cached build products for \(framework.libraryName) in shared cache - skipping build.", level: .info)
-                return try frameworkProduct(forCachedFileAt: sharedCacheFileUrl)
+                return try frameworkProduct(for: framework, with: sharedCacheFileUrl)
             }
         }
 
@@ -44,11 +44,11 @@ final class FrameworkCachingService {
         }
     }
 
-    private func frameworkProduct(forCachedFileAt cachedFileUrl: URL) throws -> FrameworkProduct {
+    private func frameworkProduct(for framework: Framework, with cachedFileUrl: URL) throws -> FrameworkProduct {
         let libraryName: String = cachedFileUrl.pathComponents.suffix(3).first!
-        let platformName: String = cachedFileUrl.deletingPathExtension().lastPathComponent
+        let platform = Platform(rawValue: cachedFileUrl.deletingPathExtension().lastPathComponent)!
 
-        let frameworkProduct = FrameworkProduct(libraryName: libraryName, platformName: platformName)
+        let frameworkProduct = FrameworkProduct(framework: framework, platform: platform)
 
         let subpath: String = cachedFileUrl.deletingPathExtension().pathComponents.suffix(3).joined(separator: "/")
         let unzippingUrl: URL = Constants.temporaryUncachingUrl.appendingPathComponent(subpath)

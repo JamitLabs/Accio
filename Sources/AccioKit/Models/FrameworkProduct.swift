@@ -1,17 +1,20 @@
 import Foundation
 
 struct FrameworkProduct {
+    let framework: Framework
     let frameworkDirPath: String
     let symbolsFilePath: String
 
-    init(frameworkDirPath: String, symbolsFilePath: String) {
+    init(framework: Framework, frameworkDirPath: String, symbolsFilePath: String) {
+        self.framework = framework
         self.frameworkDirPath = frameworkDirPath
         self.symbolsFilePath = symbolsFilePath
     }
 
-    init(libraryName: String, platformName: String) {
-        self.frameworkDirPath = Constants.temporaryFrameworksUrl.appendingPathComponent("\(platformName)/\(libraryName).framework").path
-        self.symbolsFilePath = Constants.temporaryFrameworksUrl.appendingPathComponent("\(platformName)/\(libraryName).framework.dSYM").path
+    init(framework: Framework, platform: Platform) {
+        self.framework = framework
+        self.frameworkDirPath = Constants.temporaryFrameworksUrl.appendingPathComponent("\(platform.rawValue)/\(framework.libraryName).framework").path
+        self.symbolsFilePath = Constants.temporaryFrameworksUrl.appendingPathComponent("\(platform.rawValue)/\(framework.libraryName).framework.dSYM").path
     }
 
     var frameworkDirUrl: URL {

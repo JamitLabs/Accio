@@ -1,4 +1,5 @@
 import Foundation
+import Version
 
 enum DependencyGraphError: Error {
     case libraryNotFound
@@ -9,6 +10,7 @@ class DependencyGraph: Decodable {
     class Dependency: Decodable {
         let name: String
         let path: String
+        let version: String
         let dependencies: [Dependency]
 
         private var cachedManifest: Manifest?
@@ -52,9 +54,12 @@ extension DependencyGraph {
             throw DependencyGraphError.libraryNotFound
         }
 
+
+
         return Framework(
             projectName: dependency.name,
             libraryName: libraryName,
+            version: Version(tolerant: dependency.version),
             projectDirectory: dependency.path,
             requiredFrameworks: try dependency.manifest().frameworkDependencies(ofLibrary: libraryName, dependencyGraph: self)
         )

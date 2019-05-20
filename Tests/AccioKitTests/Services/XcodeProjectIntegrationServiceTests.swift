@@ -27,7 +27,9 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
 
     private var frameworkProducts: [FrameworkProduct] {
         return testFrameworkNames.map {
-            FrameworkProduct(
+            let framework = Framework(projectName: $0, libraryName: $0, version: nil, projectDirectory: "", requiredFrameworks: [])
+            return FrameworkProduct(
+                framework: framework,
                 frameworkDirPath: testResourcesDir.appendingPathComponent(Constants.buildPath).appendingPathComponent("iOS/\($0).framework").path,
                 symbolsFilePath: testResourcesDir.appendingPathComponent(Constants.buildPath).appendingPathComponent("iOS/\($0).framework.dSYM").path
             )
@@ -36,7 +38,9 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
 
     private var copiedFrameworkProducts: [FrameworkProduct] {
         return testFrameworkNames.map {
-            FrameworkProduct(
+            let framework = Framework(projectName: "", libraryName: $0, version: nil, projectDirectory: "", requiredFrameworks: [])
+            return FrameworkProduct(
+                framework: framework,
                 frameworkDirPath: testResourcesDir.appendingPathComponent(Constants.dependenciesPath).appendingPathComponent("iOS/\($0).framework").path,
                 symbolsFilePath: testResourcesDir.appendingPathComponent(Constants.dependenciesPath).appendingPathComponent("iOS/\($0).framework.dSYM").path
             )

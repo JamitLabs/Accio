@@ -85,10 +85,10 @@ final class XcodeProjectIntegrationService {
         try bash("rm -rf \(dependenciesPath)")
     }
 
-    func updateDependencies(of appTarget: AppTarget, for platform: Platform, with frameworkProducts: [FrameworkProduct]) throws {
+    func updateDependencies(of appTarget: AppTarget, for platform: Platform, with frameworkProducts: [FrameworkProduct]) throws -> [FrameworkProduct] {
         let dependenciesPlatformPath = "\(workingDirectory)/\(Constants.dependenciesPath)/\(platform.rawValue)"
         let copiedFrameworkProducts: [FrameworkProduct] = try copy(frameworkProducts: frameworkProducts, of: appTarget, to: dependenciesPlatformPath)
-        try link(frameworkProducts: copiedFrameworkProducts, with: appTarget, for: platform)
+        return copiedFrameworkProducts
     }
 
     private func copy(frameworkProducts: [FrameworkProduct], of appTarget: AppTarget, to targetPath: String) throws -> [FrameworkProduct] {
@@ -112,7 +112,11 @@ final class XcodeProjectIntegrationService {
             try bash("cp -R '\(frameworkProduct.frameworkDirPath)' '\(frameworkDirPath)'")
             try bash("cp -R '\(frameworkProduct.symbolsFilePath)' '\(symbolsFilePath)'")
 
-            let frameworkProduct = FrameworkProduct(frameworkDirPath: frameworkDirPath, symbolsFilePath: symbolsFilePath)
+            let frameworkProduct = FrameworkProduct(
+                framework: frameworkProduct.framework,
+                frameworkDirPath: frameworkDirPath,
+                symbolsFilePath: symbolsFilePath
+            )
             try frameworkProduct.cleanupRecursiveFrameworkIfNeeded()
 
             copiedFrameworkProducts.append(frameworkProduct)
@@ -121,7 +125,7 @@ final class XcodeProjectIntegrationService {
         return copiedFrameworkProducts
     }
 
-    private func link(frameworkProducts: [FrameworkProduct], with appTarget: AppTarget, for platform: Platform) throws {
+    func link(frameworkProducts: [FrameworkProduct], with appTarget: AppTarget, for platform: Platform) throws {
         let xcodeProjectPath = "\(workingDirectory)/\(appTarget.projectName).xcodeproj"
         let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
         let pbxproj = projectFile.pbxproj

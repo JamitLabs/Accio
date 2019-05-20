@@ -17,6 +17,11 @@ final class PlatformDetectorService {
     }
 
     func detectPlatform(of appTarget: AppTarget) throws -> Platform {
+        if CocoaPodsIntegratorService.matches(appTarget) {
+            // The reserved CocoaPods target name always has iOS platform
+            return .iOS
+        }
+
         let xcodeProjectPath = "\(workingDirectory)/\(appTarget.projectName).xcodeproj"
         let projectFile = try XcodeProj(path: Path(xcodeProjectPath))
         let rootProject = try projectFile.pbxproj.rootProject()
