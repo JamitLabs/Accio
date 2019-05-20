@@ -10,7 +10,6 @@ enum CocoaPodsIntegratorServiceError: Error {
 final class CocoaPodsIntegratorService {
     private static let targetNameSuffix = "-AccioCocoaPodsIntegration"
     private static let groupName = "accio_integrated_pods"
-    private static let newLineWithIndentation = "\n    "
 
     static let shared = CocoaPodsIntegratorService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
 
@@ -49,16 +48,16 @@ final class CocoaPodsIntegratorService {
         let podfilePath = "\(workingDirectory)/Podfile"
         var podfile = try String(contentsOf: URL(fileURLWithPath: podfilePath))
         let groupName = "\(targetName)_\(CocoaPodsIntegratorService.groupName)".lowercased()
-        let targetPattern = "target\\s+'\(targetName)'\\s+do"
-        let groupPattern = "def\\s+\(groupName)[\\S\\s]+?end\\b"
+        let targetPattern = "(.*?)target\\s+'\(targetName)'\\s+do"
+        let groupPattern = "(.*?)def\\s+\(groupName)[\\S\\s]+?end\\b"
 
         // Add the cocoapods group if not found
         if try NSRegularExpression(pattern: groupPattern).matches(podfile) == false {
             let template = """
-            def \(groupName)
-            end
+            $1def \(groupName)
+            $1end
 
-            target '\(targetName)' do
+            $1target '\(targetName)' do
             """
             let targetRegex = try NSRegularExpression(pattern: targetPattern)
             podfile = targetRegex.stringByReplacingMatches(in: podfile, range: podfile.fullNSRange, withTemplate: template)
@@ -66,9 +65,9 @@ final class CocoaPodsIntegratorService {
 
         // Update the cocoapods group
         let template = """
-        def \(groupName)
-            \(localPods.joined(separator: CocoaPodsIntegratorService.newLineWithIndentation))
-        end
+        $1def \(groupName)
+        $1    \(localPods.joined(separator: "\n$1    "))
+        $1end
         """
         let groupRegex = try NSRegularExpression(pattern: groupPattern)
         podfile = groupRegex.stringByReplacingMatches(in: podfile, range: podfile.fullNSRange, withTemplate: template)
@@ -76,8 +75,8 @@ final class CocoaPodsIntegratorService {
         // Add the cocoapods group to the target if not found
         if try NSRegularExpression(pattern: "\(targetPattern)[\\S\\s]+\(groupName)").matches(podfile) == false {
             let template = """
-            target '\(targetName)' do
-                \(groupName)
+            $1target '\(targetName)' do
+            $1    \(groupName)
             """
             let targetRegex = try NSRegularExpression(pattern: targetPattern)
             podfile = targetRegex.stringByReplacingMatches(in: podfile, range: podfile.fullNSRange, withTemplate: template)
@@ -99,7 +98,7 @@ final class CocoaPodsIntegratorService {
         }
 
         let version = try frameworkProduct.framework.version ?? getVersionFor(frameworkProduct)
-        let dependenciesString = dependencies.joined(separator: CocoaPodsIntegratorService.newLineWithIndentation)
+        let dependenciesString = dependencies.joined(separator: "\n    ")
         return """
         Pod::Spec.new do |s|
             s.name                   = '\(frameworkProduct.framework.libraryName)'
