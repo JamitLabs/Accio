@@ -79,7 +79,8 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
                 // ensure build phase not yet updated
                 XCTAssert(!targetObject.buildPhases.contains { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript })
 
-                try! xcodeProjectIntegrationService.updateDependencies(of: appTarget, for: .iOS, with: frameworkProducts)
+                let installedFrameworks = try! xcodeProjectIntegrationService.updateDependencies(of: appTarget, for: .iOS, with: frameworkProducts)
+                try! xcodeProjectIntegrationService.link(frameworkProducts: installedFrameworks, with: appTarget, for: .iOS)
 
                 // test copyFrameworkProducts
                 for frameworkProduct in copiedFrameworkProducts {
