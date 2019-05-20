@@ -5,6 +5,7 @@ enum CocoaPodsIntegratorServiceError: Error {
     case frameworkPlistNotFound
     case versionKeyNotFoundInFrameworkPlist
     case versionInFrameworkPlistNotValid
+    case dependencyDoesNotHaveFrameworkProduct(Framework)
 }
 
 final class CocoaPodsIntegratorService {
@@ -31,7 +32,7 @@ final class CocoaPodsIntegratorService {
 
     private func generatePodspecFiles(_ frameworkProducts: [FrameworkProduct]) throws {
         for frameworkProduct in frameworkProducts {
-            let podspecContent = try generatePodspec(frameworkProduct)
+            let podspecContent = try generatePodspec(for: frameworkProduct, using: frameworkProducts)
             let podspecPath = frameworkProduct.frameworkDirUrl.deletingPathExtension().appendingPathExtension("podspec")
             try podspecContent.write(toFile: podspecPath.path, atomically: false, encoding: .utf8)
         }
@@ -85,10 +86,16 @@ final class CocoaPodsIntegratorService {
         try podfile.write(toFile: podfilePath, atomically: false, encoding: .utf8)
     }
 
-    private func generatePodspec(_ frameworkProduct: FrameworkProduct) throws -> String {
+    private func generatePodspec(for frameworkProduct: FrameworkProduct, using frameworkProducts: [FrameworkProduct]) throws -> String {
         // Get the dependency strings to be added to the podspec
-        var dependencies = try frameworkProduct.framework.requiredFrameworks.map {
-            "s.dependency '\($0.libraryName)', '\(try $0.version ?? getVersionFor(frameworkProduct))'"
+        var dependencies: [String] = try frameworkProduct.framework.requiredFrameworks.map { dependency in
+            let version = try dependency.version ?? {
+                guard let dependencyProduct = frameworkProducts.first(where: { $0.framework.libraryName == dependency.libraryName }) else {
+                    throw CocoaPodsIntegratorServiceError.dependencyDoesNotHaveFrameworkProduct(dependency)
+                }
+                return try getVersionFor(dependencyProduct)
+            }()
+            return "s.dependency '\(dependency.libraryName)', '\(version)'"
         }
 
         // Add blank lines around the dependencies in case there are any
