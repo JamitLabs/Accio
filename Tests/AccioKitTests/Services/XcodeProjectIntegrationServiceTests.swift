@@ -38,7 +38,7 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
 
     private var copiedFrameworkProducts: [FrameworkProduct] {
         return testFrameworkNames.map {
-            let framework = Framework(projectName: "", libraryName: $0, version: nil, projectDirectory: "", requiredFrameworks: [])
+            let framework = Framework(projectName: $0, libraryName: $0, version: nil, projectDirectory: "", requiredFrameworks: [])
             return FrameworkProduct(
                 framework: framework,
                 frameworkDirPath: testResourcesDir.appendingPathComponent(Constants.dependenciesPath).appendingPathComponent("iOS/\($0).framework").path,

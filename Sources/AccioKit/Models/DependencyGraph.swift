@@ -54,8 +54,6 @@ extension DependencyGraph {
             throw DependencyGraphError.libraryNotFound
         }
 
-
-
         return Framework(
             projectName: dependency.name,
             libraryName: libraryName,
