@@ -70,7 +70,7 @@ brew upgrade accio
 
 ### Via [Mint](https://github.com/yonaskolb/Mint):
 
-To **install** the latest version of Accio, run this command:
+To **install** Accio or **update** to the latest version, run this command:
 
 ```bash
 mint install JamitLabs/Accio
