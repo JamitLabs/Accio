@@ -68,6 +68,14 @@ To **update** it to the latest version, run this instead:
 brew upgrade accio
 ```
 
+### Via [Mint](https://github.com/yonaskolb/Mint):
+
+To **install** Accio or **update** to the latest version, run this command:
+
+```bash
+mint install JamitLabs/Accio
+```
+
 ## Why should I use this?
 
 **TL;DR**: It offers many improvements over Carthage and is targeted towards SwiftPM's integration into Xcode.
