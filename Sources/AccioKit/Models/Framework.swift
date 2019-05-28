@@ -5,7 +5,7 @@ enum FrameworkError: Error {
     case noSharedSchemes
 }
 
-struct Framework {
+struct Framework: Hashable {
     let projectName: String
     let libraryName: String
     let projectDirectory: String
