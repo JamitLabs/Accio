@@ -12,8 +12,12 @@ final class CachedBuilderService {
     func frameworkProducts(manifest: Manifest, appTarget: AppTarget, dependencyGraph: DependencyGraph, platform: Platform) throws -> [FrameworkProduct] {
         var frameworkProducts: [FrameworkProduct] = []
 
-        let frameworks = Set(try appTarget.frameworkDependencies(manifest: manifest, dependencyGraph: dependencyGraph).flattenedDeepFirstOrder())
-        for framework in frameworks {
+        let frameworks = try appTarget.frameworkDependencies(manifest: manifest, dependencyGraph: dependencyGraph).flattenedDeepFirstOrder()
+        let frameworksWithoutDuplicates: [Framework] = frameworks.reduce(into: []) { result, framework in
+            if !result.contains(framework) { result.append(framework) }
+        }
+
+        for framework in frameworksWithoutDuplicates {
             if let cachedFrameworkProduct = try frameworkCachingService.cachedProduct(framework: framework, platform: platform) {
                 frameworkProducts.append(cachedFrameworkProduct)
             } else {
