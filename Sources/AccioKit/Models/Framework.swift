@@ -79,7 +79,7 @@ enum IntegrationType: String, CaseIterable {
 }
 
 /// Additional configuration for the frameworks
-struct AdditionalConfiguration {
+struct AdditionalConfiguration: Equatable {
     var productType: ProductType
     var integrationType: IntegrationType
 

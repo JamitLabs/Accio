@@ -156,8 +156,15 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
 
     func testWithoutComments() {
         resourcesLoaded([manifestResourceWithoutComments]) {
-            let manifestComments = try! ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
+            let sut = ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path)
+            let manifestComments = try! sut.manifestComments()
             XCTAssertEqual(manifestComments, [])
+
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandySwift"), .default)
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandyUIKit"), .default)
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "Imperio"), .default)
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "MungoHealer"), .default)
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "SwiftyBeaver"), .default)
         }
     }
 
@@ -209,7 +216,9 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
 
     func testValidComments() {
         resourcesLoaded([manifestResourceWithValidComments]) {
-            let manifestComments = try! ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
+            let sut = ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path)
+            let manifestComments = try! sut.manifestComments()
+            
             XCTAssertEqual(manifestComments, [
                 ManifestComment.productType(
                     productType: .staticFramework,
@@ -224,6 +233,12 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
                     dependencies: ["MungoHealer", "SwiftyBeaver"]
                 ),
             ])
+
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandySwift"), AdditionalConfiguration(productType: .staticFramework, integrationType: .default))
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandyUIKit"), AdditionalConfiguration(productType: .staticFramework, integrationType: .default))
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "Imperio"), AdditionalConfiguration(productType: .staticFramework, integrationType: .cocoapods))
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "MungoHealer"), AdditionalConfiguration(productType: .staticFramework, integrationType: .default))
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "SwiftyBeaver"), AdditionalConfiguration(productType: .staticFramework, integrationType: .default))
         }
     }
 }
