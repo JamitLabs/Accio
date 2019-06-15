@@ -62,7 +62,7 @@ struct Framework {
 
 /// The type of the product to be generated for a dependency
 enum ProductType: String, CaseIterable {
-    /// The default one: generate the product as the author of the dependency has configured it
+    /// Generate the product as the author of the dependency has configured it
     case `default`
     /// Generate a static framework
     case staticFramework = "static-framework"
@@ -72,9 +72,11 @@ enum ProductType: String, CaseIterable {
 
 /// The type of integration to be used when adding the dependencies to the Xcode project
 enum IntegrationType: String, CaseIterable {
-    /// The default one: adding the dependencies to the Xcode project
-    case `default`
-    /// Adding the dependencies to a cocoapods setup
+    /// Adding the dependencies to the Xcode project as already compiled binaries (the option by default)
+    case binary = "default"
+    /// Adding the dependencies to the Xcode project as source code
+    case source
+    /// Adding the dependencies to a cocoapods setup (using the compiled binaries, not source code)
     case cocoapods
 }
 
@@ -83,6 +85,6 @@ struct AdditionalConfiguration: Equatable {
     var productType: ProductType
     var integrationType: IntegrationType
 
-    static let `default` = AdditionalConfiguration(productType: .default, integrationType: .default)
+    static let `default` = AdditionalConfiguration(productType: .default, integrationType: .binary)
 }
 
