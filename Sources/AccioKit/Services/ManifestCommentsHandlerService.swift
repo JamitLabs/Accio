@@ -3,12 +3,13 @@ import SwiftShell
 
 /// Possible errors thrown by the ManifestCommentsHandlerService
 enum ManifestCommentsHandlerError: Error, Equatable {
-    case sameKeyAppearsMoreThanOnceInTheSameComment(count: Int)
-    case keyWithoutValue(key: CommentKey)
-    case invalidValue(key: CommentKey, value: String, possibleValues: [String])
+    case sameKeyAppearsMoreThanOnceInTheSameComment(comment: String, count: Int)
+    case keyWithoutValue(comment: String, key: CommentKey)
+    case invalidValue(comment: String, key: CommentKey, value: String, possibleValues: [String])
     case commentWithoutKnownKeys(comment: String, possibleKeys: [String])
 }
 
+/// A convenient enum containing logic related with regular expressions
 private enum Regex {
     /// Pattern to detect an accio comment
     private static let accioPattern = #"(.*)//\s*accio"#
@@ -46,7 +47,7 @@ final class ManifestCommentsHandlerService {
     }
     
     private var cachedAdditionalConfiguration: [String: AdditionalConfiguration] = [:]
-    /// additional configuration per dependency. Fetched once and cached
+    /// Additional configuration per dependency. Fetched once and cached
     func additionalConfiguration(for dependencyName: String) throws -> AdditionalConfiguration {
         if cachedAdditionalConfiguration[dependencyName] == nil {
             var additionalConfiguration = AdditionalConfiguration.default
@@ -76,7 +77,7 @@ final class ManifestCommentsHandlerService {
         let comments: [RawComment] = matches.map {
             var lines = $0.lines()
             let firstLine = lines.removeFirst()
-            return RawComment(header: firstLine, content: lines.joined(separator: "\n"))
+            return RawComment(header: firstLine.trimmingCharacters(in: .whitespaces), content: lines.joined(separator: "\n"))
         }
 
         return try comments.flatMap { comment -> [ManifestComment] in
@@ -108,7 +109,9 @@ final class ManifestCommentsHandlerService {
 
 /// A raw comment
 struct RawComment {
+    /// The line containing the accio comment
     let header: String
+    /// The lines at the same indentation level as the header
     let content: String
 }
 
@@ -124,14 +127,17 @@ enum CommentKey: String, CaseIterable {
 
     /// Parses the comment, extracting all the information associated with a key
     func parse(_ comment: RawComment) throws -> ManifestComment {
-        guard let value = try getValue(from: comment.header) else {
-            throw ManifestCommentsHandlerError.keyWithoutValue(key: self)
-        }
+        let value = try getValue(from: comment.header)
 
         switch self {
         case .productType:
             guard let productType = ProductType(rawValue: value) else {
-                throw ManifestCommentsHandlerError.invalidValue(key: self, value: value, possibleValues: ProductType.allCases.map { $0.rawValue })
+                throw ManifestCommentsHandlerError.invalidValue(
+                    comment: comment.header,
+                    key: self,
+                    value: value,
+                    possibleValues: ProductType.allCases.map { $0.rawValue }
+                )
             }
 
             let dependencies = Regex.parseQuotedStrings(comment.content)
@@ -139,7 +145,12 @@ enum CommentKey: String, CaseIterable {
 
         case .integrationType:
             guard let integrationType = IntegrationType(rawValue: value) else {
-                throw ManifestCommentsHandlerError.invalidValue(key: self, value: value, possibleValues: IntegrationType.allCases.map { $0.rawValue })
+                throw ManifestCommentsHandlerError.invalidValue(
+                    comment: comment.header,
+                    key: self,
+                    value: value,
+                    possibleValues: IntegrationType.allCases.map { $0.rawValue }
+                )
             }
 
             let dependencies = Regex.parseQuotedStrings(comment.content)
@@ -148,16 +159,15 @@ enum CommentKey: String, CaseIterable {
     }
 
     /// Extracts the value for a key from the string
-    private func getValue(from string: String) throws -> String? {
+    private func getValue(from string: String) throws -> String {
         let regex = NSRegularExpression(pattern)
         let matches = string.matches(for: regex)
         guard let match = matches.first else {
-            // The accio comment does not include the comment key
-            return nil
+            throw ManifestCommentsHandlerError.keyWithoutValue(comment: string, key: self)
         }
 
         guard matches.count == 1 else {
-            throw ManifestCommentsHandlerError.sameKeyAppearsMoreThanOnceInTheSameComment(count: matches.count)
+            throw ManifestCommentsHandlerError.sameKeyAppearsMoreThanOnceInTheSameComment(comment: string, count: matches.count)
         }
 
         let value = match.components(separatedBy: ":")[1]
@@ -173,7 +183,7 @@ enum ManifestComment: Equatable {
     case integrationType(integrationType: IntegrationType, dependencies: [String])
 }
 
-/// MARK: helper extension to match strings with regular expressions
+/// MARK: convenient extensions to work with regular expressions
 
 private extension String {
     /// Get all matches of the regex from the string

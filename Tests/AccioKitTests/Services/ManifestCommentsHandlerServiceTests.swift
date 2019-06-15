@@ -120,6 +120,31 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
         )
     }
 
+    private var manifestResourceWithSameKeyMultipleTimesInTheSameComment: Resource {
+        return Resource(
+            url: testResourcesDir.appendingPathComponent("Package.swift"),
+            contents: """
+                \(manifestResourceTopContent)
+                    targets: [
+                        .target(
+                            name: "TestProject-iOS",
+                            dependencies: [
+                              // accio product-type:static-framework product-type:dynamic-framework
+                              "HandySwift",
+                              "HandyUIKit",
+                              "Imperio",
+                              "MungoHealer",
+                              "SwiftyBeaver",
+                            ],
+                            path: "TestProject-iOS"
+                        )
+                    ]
+                )
+
+                """
+        )
+    }
+
     private var manifestResourceWithValidComments: Resource {
         return Resource(
             url: testResourcesDir.appendingPathComponent("Package.swift"),
@@ -171,7 +196,7 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
     func testWithEmptyComment() {
         resourcesLoaded([manifestResourceWithEmptyComment]) {
             let expectedError = ManifestCommentsHandlerError.commentWithoutKnownKeys(
-                comment: "              // accio",
+                comment: "// accio",
                 possibleKeys: possibleProductKeys
             )
             do {
@@ -186,7 +211,7 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
     func testWithUnknownKey() {
         resourcesLoaded([manifestResourceWithUnknownKey]) {
             let expectedError = ManifestCommentsHandlerError.commentWithoutKnownKeys(
-                comment: "              // accio unknown-key",
+                comment: "// accio unknown-key",
                 possibleKeys: possibleProductKeys
             )
             do {
@@ -201,9 +226,25 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
     func testWithInvalidValue() {
         resourcesLoaded([manifestResourceWithInvalidValue]) {
             let expectedError = ManifestCommentsHandlerError.invalidValue(
+                comment: "// accio integration-type:invalid-value",
                 key: .integrationType,
                 value: "invalid-value",
                 possibleValues: possibleIntegrationValues
+            )
+            do {
+                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
+                XCTFail("Function was expected to throw")
+            } catch {
+                XCTAssertEqual(error as? ManifestCommentsHandlerError, expectedError)
+            }
+        }
+    }
+
+    func testWithSameKeyMultipleTimesInTheSameComment() {
+        resourcesLoaded([manifestResourceWithSameKeyMultipleTimesInTheSameComment]) {
+            let expectedError = ManifestCommentsHandlerError.sameKeyAppearsMoreThanOnceInTheSameComment(
+                comment: "// accio product-type:static-framework product-type:dynamic-framework",
+                count: 2
             )
             do {
                 _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()

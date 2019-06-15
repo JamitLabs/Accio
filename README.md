@@ -206,7 +206,7 @@ let package = Package(
 In the above example:
 - All the dependencies in the `AppTargetName` are built as static frameworks.
 - `Imperio` is integrated into the Xcode project using a `Podfile`.
-- `MungoHealer` and `SwiftyBeaver` are integrated in the Xcode project following the default approach (as linked frameworks).
+- `HandySwift`, `HandyUIKit`, `MungoHealer` and `SwiftyBeaver` are integrated in the Xcode project following the default approach (as linked frameworks).
 
 
 ### Installing Dependencies
