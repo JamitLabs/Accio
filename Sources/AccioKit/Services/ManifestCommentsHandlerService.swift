@@ -76,8 +76,8 @@ final class ManifestCommentsHandlerService {
         let matches = packageManifestContent.nestedMatches(for: Regex.accioComment)
         let comments: [RawComment] = matches.map {
             var lines = $0.lines()
-            let firstLine = lines.removeFirst()
-            return RawComment(header: firstLine.trimmingCharacters(in: .whitespaces), content: lines.joined(separator: "\n"))
+            let firstLine = lines.removeFirst().trimmingCharacters(in: .whitespaces)
+            return RawComment(header: firstLine, content: lines.joined(separator: "\n"))
         }
 
         return try comments.flatMap { comment -> [ManifestComment] in
