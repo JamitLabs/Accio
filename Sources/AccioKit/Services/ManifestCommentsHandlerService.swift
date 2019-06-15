@@ -2,24 +2,33 @@ import Foundation
 import SwiftShell
 
 /// Possible errors thrown by the ManifestCommentsHandlerService
-enum ManifestCommentsHandlerError: Error {
+enum ManifestCommentsHandlerError: Error, Equatable {
     case sameKeyAppearsMoreThanOnceInTheSameComment(count: Int)
     case keyWithoutValue(key: CommentKey)
     case invalidValue(key: CommentKey, value: String, possibleValues: [String])
     case commentWithoutKnownKeys(comment: String, possibleKeys: [String])
 }
 
+private enum Regex {
+    /// Pattern to detect an accio comment
+    private static let accioPattern = #"(.*)//\s*accio"#
+    /// Capture all text that follows the same level of indentation
+    private static let sameIndentationPattern = #"(\n\1.*)*"#
+    /// Regex matching all text that starts with an accio comment and has the same indentation level
+    static let accioComment = NSRegularExpression("\(accioPattern).*\(sameIndentationPattern)")
+
+    /// Swift string regex. From: https://stackoverflow.com/questions/171480/regex-grabbing-values-between-quotation-marks
+    private static let quotedString = NSRegularExpression(#"(["'])(?:(?=(\\?))\2.)*?\1"#)
+    /// Parses multiple quoted strings
+    static func parseQuotedStrings(_ string: String) -> [String] {
+        return string.matches(for: quotedString)
+            .map { $0.replacingOccurrences(of: "\"|'", with: "", options: .regularExpression) }
+    }
+}
+
 /// A service that handles all logic related with parsing all the information from the manifest that is passed as accio comments
 final class ManifestCommentsHandlerService {
     static let shared = ManifestCommentsHandlerService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
-    /// Pattern to detect an accio comment
-    static let accioPattern = #"(.*)//\s*accio"#
-    /// Capture all text that follows the same level of indentation
-    static let sameIndentationPattern = #"(\n\1.*)*"#
-    /// Swift string regex. From: https://stackoverflow.com/questions/171480/regex-grabbing-values-between-quotation-marks
-    static let swiftStringRegex = NSRegularExpression(#"(["'])(?:(?=(\\?))\2.)*?\1"#)
-    /// Regex matching all text that starts with an accio comment and has the same indentation level
-    static let commentRegex = NSRegularExpression("\(accioPattern).*\(sameIndentationPattern)")
 
     private let workingDirectory: URL
 
@@ -31,7 +40,7 @@ final class ManifestCommentsHandlerService {
     func loadManifestComments() throws -> [ManifestComment] {
         let packageManifestPath = workingDirectory.appendingPathComponent("Package.swift")
         let packageManifestContent = try String(contentsOf: packageManifestPath)
-        let matches = packageManifestContent.matches(for: ManifestCommentsHandlerService.commentRegex)
+        let matches = packageManifestContent.nestedMatches(for: Regex.accioComment)
         let comments: [RawComment] = matches.map {
             var lines = $0.lines()
             let firstLine = lines.removeFirst()
@@ -93,7 +102,7 @@ enum CommentKey: String, CaseIterable {
                 throw ManifestCommentsHandlerError.invalidValue(key: self, value: value, possibleValues: ProductType.allCases.map { $0.rawValue })
             }
 
-            let dependencies = comment.content.matches(for: ManifestCommentsHandlerService.swiftStringRegex)
+            let dependencies = Regex.parseQuotedStrings(comment.content)
             return ManifestComment.productType(productType: productType, dependencies: dependencies)
 
         case .integrationType:
@@ -101,7 +110,7 @@ enum CommentKey: String, CaseIterable {
                 throw ManifestCommentsHandlerError.invalidValue(key: self, value: value, possibleValues: IntegrationType.allCases.map { $0.rawValue })
             }
 
-            let dependencies = comment.content.matches(for: ManifestCommentsHandlerService.swiftStringRegex)
+            let dependencies = Regex.parseQuotedStrings(comment.content)
             return ManifestComment.integrationType(integrationType: integrationType, dependencies: dependencies)
         }
     }
@@ -125,7 +134,7 @@ enum CommentKey: String, CaseIterable {
 }
 
 /// The configuration in the manifest that is passed as comments
-enum ManifestComment {
+enum ManifestComment: Equatable {
     /// Product type to be used when generating the dependency products
     case productType(productType: ProductType, dependencies: [String])
     /// Integration type to be used when integrating the dependencies in the Xcode project
@@ -158,6 +167,23 @@ private extension String {
         let results = regex.matches(in: self, range: NSRange(self.startIndex..., in: self))
         return results.map {
             String(self[Range($0.range, in: self)!])
+        }
+    }
+
+    func nestedMatches(for regex: NSRegularExpression) -> [String] {
+        return nestedMatches(for: regex, in: fullNSRange)
+    }
+
+    /// Get all matches of the regex from the string, including nested matching patterns
+    private func nestedMatches(for regex: NSRegularExpression, in range: NSRange) -> [String] {
+        let results = regex.matches(in: self, range: range)
+        return results.flatMap { result -> [String] in
+            let string = String(self[Range(result.range, in: self)!])
+            let firstLineRange = string.lineRange(for: string.startIndex ..< string.index(after: string.startIndex))
+            // Match nested text after the first line, that is where the accio comment is
+            let newRange = string.index(after: firstLineRange.upperBound) ..< string.endIndex
+            let newNSRange = NSRange(newRange, in: string)
+            return [string] + string.nestedMatches(for: regex, in: newNSRange)
         }
     }
 
