@@ -167,6 +167,48 @@ let package = Package(
 )
 ```
 
+#### Adding custom configuration
+It is possible to add Accio comments to the `Package.swift` file. They are used for passing to Accio additional configuration that can not be specified using the official manifest format. Example:
+
+```swift
+// swift-tools-version:5.0
+import PackageDescription
+
+let package = Package(
+    name: "XcodeProjectName",
+    products: [],
+    dependencies: [
+        .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "2.8.0")),
+        .package(url: "https://github.com/Flinesoft/HandyUIKit.git", .upToNextMajor(from: "1.9.0")),
+        .package(url: "https://github.com/Flinesoft/Imperio.git", .upToNextMajor(from: "3.0.0")),
+        .package(url: "https://github.com/JamitLabs/MungoHealer.git", .upToNextMajor(from: "0.3.0")),
+        .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", .upToNextMajor(from: "1.6.2")),
+    ],
+    targets: [
+        .target(
+            name: "AppTargetName",
+            dependencies: [
+              // accio product-type:static-framework
+              "HandySwift",
+              "HandyUIKit",
+              // accio integration-type:cocoapods
+              "Imperio",
+              // accio integration-type:default
+              "MungoHealer",
+              "SwiftyBeaver",
+            ],
+            path: "TestProject-iOS"
+        ),
+    ]
+)
+```
+
+In the above example:
+- All the dependencies in the `AppTargetName` are built as static frameworks.
+- `Imperio` is integrated into the Xcode project using a `Podfile`.
+- `MungoHealer` and `SwiftyBeaver` are integrated in the Xcode project following the default approach (as linked frameworks).
+
+
 ### Installing Dependencies
 
 To install the dependencies, you can use either the `install` or `update` command. The only difference is, that `install` won't update any dependency versions if they were already previously resolved. `update` will always update to the latest version within the specified range. For example:
