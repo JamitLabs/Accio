@@ -4,7 +4,7 @@ import XCTest
 class FrameworkCachingServiceTests: XCTestCase {
     private let sharedCachePath: String = FileManager.userCacheDirUrl.appendingPathComponent("AccioTestSharedCache").path
 
-    private let testFramework = Framework(projectName: "TestProject", libraryName: "Example", projectDirectory: "", requiredFrameworks: [])
+    private let testFramework = Framework(projectName: "TestProject", libraryName: "Example", projectDirectory: "", additionalConfiguration: .default, requiredFrameworks: [])
     private let testFrameworkProduct = FrameworkProduct(
         frameworkDirPath: FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework").path,
         symbolsFilePath: FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework.dSYM").path

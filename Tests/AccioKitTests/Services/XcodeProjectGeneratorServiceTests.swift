@@ -34,7 +34,7 @@ class XcodeProjectGeneratorServiceTests: XCTestCase {
 
     func testPlatformToVersionWithSingleLineCommentedStringSpecifiers() {
         let projectGeneratorService = XcodeProjectGeneratorService()
-        let framework = Framework(projectName: "X", libraryName: "X", projectDirectory: testResourcesDir.path, requiredFrameworks: [])
+        let framework = Framework(projectName: "X", libraryName: "X", projectDirectory: testResourcesDir.path, additionalConfiguration: .default, requiredFrameworks: [])
 
         resourcesLoaded([singleLineCommentedManifestResourceWithStringSpecifiers]) {
             let platformToVersion: [Platform: String] = try! projectGeneratorService.platformToVersion(framework: framework)
@@ -48,7 +48,7 @@ class XcodeProjectGeneratorServiceTests: XCTestCase {
 
     func testPlatformToVersionWithMultiLineEnumCaseSpecifiers() {
         let projectGeneratorService = XcodeProjectGeneratorService()
-        let framework = Framework(projectName: "X", libraryName: "X", projectDirectory: testResourcesDir.path, requiredFrameworks: [])
+        let framework = Framework(projectName: "X", libraryName: "X", projectDirectory: testResourcesDir.path, additionalConfiguration: .default, requiredFrameworks: [])
 
         resourcesLoaded([multilineManifestResourceWithEnumCaseSpecifiers]) {
             let platformToVersion: [Platform: String] = try! projectGeneratorService.platformToVersion(framework: framework)

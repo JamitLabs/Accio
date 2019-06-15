@@ -9,6 +9,7 @@ struct Framework {
     let projectName: String
     let libraryName: String
     let projectDirectory: String
+    let additionalConfiguration: AdditionalConfiguration
     let requiredFrameworks: [Framework]
 
     var commitHash: String {
@@ -58,3 +59,30 @@ struct Framework {
         return path.hasSuffix(".xcodeproj") || path.hasSuffix(".xcworkspace")
     }
 }
+
+/// The type of the product to be generated for a dependency
+enum ProductType: String, CaseIterable {
+    /// The default one: generate the product as the author of the dependency has configured it
+    case `default`
+    /// Generate a static framework
+    case staticFramework = "static-framework"
+    /// Generate a dynamic framework
+    case dynamicFramework = "dynamic-framework"
+}
+
+/// The type of integration to be used when adding the dependencies to the Xcode project
+enum IntegrationType: String, CaseIterable {
+    /// The default one: adding the dependencies to the Xcode project
+    case `default`
+    /// Adding the dependencies to a cocoapods setup
+    case cocoapods
+}
+
+/// Additional configuration for the frameworks
+struct AdditionalConfiguration {
+    var productType: ProductType
+    var integrationType: IntegrationType
+
+    static let `default` = AdditionalConfiguration(productType: .default, integrationType: .default)
+}
+

@@ -156,7 +156,7 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
 
     func testWithoutComments() {
         resourcesLoaded([manifestResourceWithoutComments]) {
-            let manifestComments = try! ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).loadManifestComments()
+            let manifestComments = try! ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
             XCTAssertEqual(manifestComments, [])
         }
     }
@@ -168,7 +168,7 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
                 possibleKeys: possibleProductKeys
             )
             do {
-                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).loadManifestComments()
+                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
                 XCTFail("Function was expected to throw")
             } catch {
                 XCTAssertEqual(error as? ManifestCommentsHandlerError, expectedError)
@@ -183,7 +183,7 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
                 possibleKeys: possibleProductKeys
             )
             do {
-                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).loadManifestComments()
+                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
                 XCTFail("Function was expected to throw")
             } catch {
                 XCTAssertEqual(error as? ManifestCommentsHandlerError, expectedError)
@@ -199,7 +199,7 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
                 possibleValues: possibleIntegrationValues
             )
             do {
-                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).loadManifestComments()
+                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
                 XCTFail("Function was expected to throw")
             } catch {
                 XCTAssertEqual(error as? ManifestCommentsHandlerError, expectedError)
@@ -209,7 +209,7 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
 
     func testValidComments() {
         resourcesLoaded([manifestResourceWithValidComments]) {
-            let manifestComments = try! ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).loadManifestComments()
+            let manifestComments = try! ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
             XCTAssertEqual(manifestComments, [
                 ManifestComment.productType(
                     productType: .staticFramework,

@@ -36,8 +36,40 @@ final class ManifestCommentsHandlerService {
         self.workingDirectory = URL(fileURLWithPath: workingDirectory)
     }
 
+    private var cachedManifestComments: [ManifestComment]?
+    /// Manifest comments. Fetched once and cached
+    func manifestComments() throws -> [ManifestComment] {
+        if cachedManifestComments == nil {
+            cachedManifestComments = try loadManifestComments()
+        }
+        return cachedManifestComments!
+    }
+    
+    private var cachedAdditionalConfiguration: [String: AdditionalConfiguration] = [:]
+    /// additional configuration per dependency. Fetched once and cached
+    func additionalConfiguration(for dependencyName: String) throws -> AdditionalConfiguration {
+        if cachedAdditionalConfiguration[dependencyName] == nil {
+            var additionalConfiguration = AdditionalConfiguration.default
+            for manifestComment in try manifestComments() {
+                switch manifestComment {
+                case let .productType(productType, dependencies):
+                    if dependencies.contains(dependencyName) {
+                        additionalConfiguration.productType = productType
+                    }
+
+                case let .integrationType(integrationType, dependencies):
+                    if dependencies.contains(dependencyName) {
+                        additionalConfiguration.integrationType = integrationType
+                    }
+                }
+            }
+            cachedAdditionalConfiguration[dependencyName] = additionalConfiguration
+        }
+        return cachedAdditionalConfiguration[dependencyName]!
+    }
+
     /// Returns all the information from the manifest that is passed as accio comments
-    func loadManifestComments() throws -> [ManifestComment] {
+    private func loadManifestComments() throws -> [ManifestComment] {
         let packageManifestPath = workingDirectory.appendingPathComponent("Package.swift")
         let packageManifestContent = try String(contentsOf: packageManifestPath)
         let matches = packageManifestContent.nestedMatches(for: Regex.accioComment)
@@ -139,24 +171,6 @@ enum ManifestComment: Equatable {
     case productType(productType: ProductType, dependencies: [String])
     /// Integration type to be used when integrating the dependencies in the Xcode project
     case integrationType(integrationType: IntegrationType, dependencies: [String])
-}
-
-/// The type of the product to be generated for a dependency
-enum ProductType: String, CaseIterable {
-    /// The default one: generate the product as the author of the dependency has configured it
-    case `default`
-    /// Generate a static framework
-    case staticFramework = "static-framework"
-    /// Generate a dynamic framework
-    case dynamicFramework = "dynamic-framework"
-}
-
-/// The type of integration to be used when adding the dependencies to the Xcode project
-enum IntegrationType: String, CaseIterable {
-    /// The default one: adding the dependencies to the Xcode project
-    case `default`
-    /// Adding the dependencies to a cocoapods setup
-    case cocoapods
 }
 
 /// MARK: helper extension to match strings with regular expressions
