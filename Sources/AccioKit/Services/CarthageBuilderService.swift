@@ -31,7 +31,12 @@ final class CarthageBuilderService {
             try bash("ln -f -s '\(requiredFrameworkProduct.symbolsFilePath)' '\(productsTargetDirectoryUrl.path)'")
         }
 
+        // remove Cartfile before carthage build as subdependencies have already been built via Accio
+        try bash("rm -rf '\(framework.projectDirectory)/Cartfile'")
+        try bash("rm -rf '\(framework.projectDirectory)/Cartfile.resolved'")
+
         try XcodeProjectSchemeHandlerService.shared.removeUnnecessarySharedSchemes(from: framework, platform: platform)
+
         try bash("/usr/local/bin/carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current --no-use-binaries")
 
         let frameworkProduct = FrameworkProduct(libraryName: framework.libraryName, platformName: platform.rawValue)
