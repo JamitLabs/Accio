@@ -28,6 +28,7 @@ final class XcodeProjectSchemeHandlerService {
 
         guard !librarySchemePaths.isEmpty else {
             print("No shared scheme(s) found; still resuming build.", level: .warning)
+            return
         }
 
         if !matchingSchemePaths.isEmpty {
