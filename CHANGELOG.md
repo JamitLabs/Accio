@@ -13,7 +13,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removed
 - None.
 ### Fixed
-- Redownload dependencies as a fallback when previously checked out repositories are broken.
+- Redownload dependencies as a fallback when previously checked out repositories are broken.  
+  Issue: [#27](https://github.com/JamitLabs/Accio/issues/27) | PR: [#40](https://github.com/JamitLabs/Accio/pull/40) | Author: [Frederick Pietschmann](https://github.com/fredpi)
+- Avoid misleading output when building via Carthage.  
+  Issue: [#56](https://github.com/JamitLabs/Accio/issues/56) | PR: [#57](https://github.com/JamitLabs/Accio/pull/57) | Author: [Frederick Pietschmann](https://github.com/fredpi)
 ### Security
 - None.
 
