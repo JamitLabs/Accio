@@ -31,7 +31,7 @@ final class CarthageBuilderService {
             try bash("ln -f -s '\(requiredFrameworkProduct.symbolsFilePath)' '\(productsTargetDirectoryUrl.path)'")
         }
 
-        // remove Cartfile before carthage build as subdependencies have already been built via Accio
+        // remove Cartfile before `carthage build` command as subdependencies have already been built via Accio
         try bash("rm -rf '\(framework.projectDirectory)/Cartfile'")
         try bash("rm -rf '\(framework.projectDirectory)/Cartfile.resolved'")
 
