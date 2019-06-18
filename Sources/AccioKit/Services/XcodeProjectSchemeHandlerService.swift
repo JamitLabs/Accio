@@ -26,6 +26,11 @@ final class XcodeProjectSchemeHandlerService {
         let matchingSchemePaths: [String] = librarySchemePaths.filter { expectedSchemeNames.contains($0.fileNameWithoutExtension.lowercased()) }
         let matchingSchemeNames: [String] = matchingSchemePaths.map { $0.fileNameWithoutExtension }
 
+        guard !librarySchemePaths.isEmpty else {
+            print("No shared scheme(s) found; still resuming build.", level: .warning)
+            return
+        }
+
         if !matchingSchemePaths.isEmpty {
             let schemePathsToRemove: [String] = sharedSchemePaths.filter { !matchingSchemePaths.contains($0) }
             print("Found shared scheme(s) \(matchingSchemeNames) matching specified library – removing others: \(schemePathsToRemove.map { $0.fileNameWithoutExtension })", level: .verbose)
