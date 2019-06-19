@@ -19,7 +19,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
   Issue: [#56](https://github.com/JamitLabs/Accio/issues/56) | PR: [#57](https://github.com/JamitLabs/Accio/pull/57) | Author: [Frederick Pietschmann](https://github.com/fredpi)
 - Warn properly when no schemes can be found.  
   PR: [#59](https://github.com/JamitLabs/Accio/pull/59) | Author: [Frederick Pietschmann](https://github.com/fredpi)
-
+- Remove duplicated processing of frameworks referenced by multiple other frameworks.  
+  Issue: [#51](https://github.com/JamitLabs/Accio/issues/51) | PR: [#53](https://github.com/JamitLabs/Accio/pull/53) | Author: [Frederick Pietschmann](https://github.com/fredpi)
 ### Security
 - None.
 
