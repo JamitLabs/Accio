@@ -13,6 +13,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removed
 - None.
 ### Fixed
+- None.
+### Security
+- None.
+
+## [0.6.2] - 2019-06-20
+### Added
+- None.
+### Changed
+- None.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
 - Redownload dependencies as a fallback when previously checked out repositories are broken.  
   Issue: [#27](https://github.com/JamitLabs/Accio/issues/27) | PR: [#40](https://github.com/JamitLabs/Accio/pull/40) | Author: [Frederick Pietschmann](https://github.com/fredpi)
 - Avoid misleading output when building via Carthage.  
