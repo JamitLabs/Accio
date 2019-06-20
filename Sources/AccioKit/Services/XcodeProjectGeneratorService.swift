@@ -76,7 +76,7 @@ final class XcodeProjectGeneratorService {
 
     /// Swift 4.2 doesn't support the `platform` parameter in the Package manifest, thus read it from a comment with this method. Also ensure Swift 5 support.
     func platformToVersion(framework: Framework) throws -> [Platform: String] {
-        let platformRegex = Regex(#"\.(iOS|macOS|tvOS|watchOS)\((?:"|.v)(\d+)[\._]?(\d+)?"?\)"#)
+        let platformRegex = try Regex(#"\.(iOS|macOS|tvOS|watchOS)\((?:"|.v)(\d+)[\._]?(\d+)?"?\)"#)
 
         let manifestPath: String = URL(fileURLWithPath: framework.projectDirectory).appendingPathComponent("Package.swift").path
         let manifestContents: String = try String(contentsOfFile: manifestPath)

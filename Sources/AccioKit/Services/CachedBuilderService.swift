@@ -12,7 +12,12 @@ final class CachedBuilderService {
     func frameworkProducts(manifest: Manifest, appTarget: AppTarget, dependencyGraph: DependencyGraph, platform: Platform) throws -> [FrameworkProduct] {
         var frameworkProducts: [FrameworkProduct] = []
 
-        for framework in try appTarget.frameworkDependencies(manifest: manifest, dependencyGraph: dependencyGraph).flattenedDeepFirstOrder() {
+        let frameworks = try appTarget.frameworkDependencies(manifest: manifest, dependencyGraph: dependencyGraph).flattenedDeepFirstOrder()
+        let frameworksWithoutDuplicates: [Framework] = frameworks.reduce(into: []) { result, framework in
+            if !result.contains(framework) { result.append(framework) }
+        }
+
+        for framework in frameworksWithoutDuplicates {
             if let cachedFrameworkProduct = try frameworkCachingService.cachedProduct(framework: framework, platform: platform) {
                 frameworkProducts.append(cachedFrameworkProduct)
             } else {
@@ -27,9 +32,7 @@ final class CachedBuilderService {
                     frameworkProducts.append(frameworkProduct)
 
                 case .carthage:
-                    try bash("git -C '\(framework.projectDirectory)' reset HEAD --hard --quiet")
-                    try bash("git -C '\(framework.projectDirectory)' clean -fd --quiet")
-
+                    try GitResetService.shared.resetGit(atPath: framework.projectDirectory, includeUntrackedFiles: false)
                     let frameworkProduct = try carthageBuilderService.build(
                         framework: framework,
                         platform: platform,

@@ -13,8 +13,8 @@
              alt="Codebeat Badge">
     </a>
     <a href="https://github.com/JamitLabs/Accio/releases">
-        <img src="https://img.shields.io/badge/Version-0.6.1-blue.svg"
-             alt="Version: 0.6.1">
+        <img src="https://img.shields.io/badge/Version-0.6.2-blue.svg"
+             alt="Version: 0.6.2">
     </a>
     <img src="https://img.shields.io/badge/Swift-5.0-FFAC45.svg"
          alt="Swift: 5.0">
@@ -29,6 +29,7 @@
 <p align="center">
     <a href="#installation">Installation</a>
   • <a href="#usage">Usage</a>
+  • <a href="#adding-support-for-accio">Supporting Accio</a>
   • <a href="#contributing">Contributing</a>
   • <a href="#license">License</a>
 </p>
@@ -65,6 +66,14 @@ To **update** it to the latest version, run this instead:
 
 ```bash
 brew upgrade accio
+```
+
+### Via [Mint](https://github.com/yonaskolb/Mint):
+
+To **install** Accio or **update** to the latest version, run this command:
+
+```bash
+mint install JamitLabs/Accio
 ```
 
 ## Why should I use this?
@@ -125,8 +134,6 @@ accio init -p "XcodeProjectName" -t "AppTargetName"
 
 This step will create a template `Package.swift` file and set some `.gitignore` entries to keep your repository clean. Please note that if your source code files aren't placed within directories named after the targets, you will need to explicitly set the `path` parameters within the targets in the `Package.swift` file to the correct paths. Also note that the specified `path` must be a directory recursively containing at least one Swift file – but mixing with other languages like (Objective-)C(++) is not supported, so they shouldn't be within the specified directory. The files in there will not be built, they just need to exist in order for SwifPM to work properly, so you could point this anywhere Swift-only code.
 
-Please note that you should not provide any test targets with the `-t` parameter of the `init` command. Add them manually to the `Package.swift` using `.testTarget` instead of `.target` since integration of frameworks needs to be done a little differently for test targets. See [this example](https://github.com/JamitLabs/NewProjectTemplate-iOS/blob/stable/Package.swift) manifest file for an always up-to-date real world reference. Alternatively, check the Demo projects [manifest file](https://github.com/JamitLabs/Accio/blob/stable/Demo/Package.swift).
-
 Run `accio init help` to get a list of all available options.
 
 #### Adding Dependencies
@@ -150,7 +157,7 @@ let package = Package(
         .package(url: "https://github.com/Flinesoft/HandyUIKit.git", .upToNextMajor(from: "1.9.1")),
         .package(url: "https://github.com/JamitLabs/MungoHealer.git", .upToNextMajor(from: "0.3.2")),
         .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", from: "1.6.2"),
-        .package(url: "https://github.com/radex/SwiftyUserDefaults.git", .branch("master")),
+        .package(url: "https://github.com/radex/SwiftyUserDefaults.git", .upToNextMajor(from: "4.0.0")),
     ],
     targets: [
         .target(

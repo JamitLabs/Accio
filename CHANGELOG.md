@@ -17,6 +17,27 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Security
 - None.
 
+## [0.6.2] - 2019-06-20
+### Added
+- None.
+### Changed
+- None.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- Redownload dependencies as a fallback when previously checked out repositories are broken.  
+  Issue: [#27](https://github.com/JamitLabs/Accio/issues/27) | PR: [#40](https://github.com/JamitLabs/Accio/pull/40) | Author: [Frederick Pietschmann](https://github.com/fredpi)
+- Avoid misleading output when building via Carthage.  
+  Issue: [#56](https://github.com/JamitLabs/Accio/issues/56) | PR: [#57](https://github.com/JamitLabs/Accio/pull/57) | Author: [Frederick Pietschmann](https://github.com/fredpi)
+- Warn properly when no schemes can be found.  
+  PR: [#59](https://github.com/JamitLabs/Accio/pull/59) | Author: [Frederick Pietschmann](https://github.com/fredpi)
+- Remove duplicated processing of frameworks referenced by multiple other frameworks.  
+  Issue: [#51](https://github.com/JamitLabs/Accio/issues/51) | PR: [#53](https://github.com/JamitLabs/Accio/pull/53) | Author: [Frederick Pietschmann](https://github.com/fredpi)
+### Security
+- None.
+
 ## [0.6.1] - 2019-04-26
 ### Added
 - Adds several popular GitHub projects for official integration support testing to the Demo project.  

@@ -31,7 +31,12 @@ final class CarthageBuilderService {
             try bash("ln -f -s '\(requiredFrameworkProduct.symbolsFilePath)' '\(productsTargetDirectoryUrl.path)'")
         }
 
+        // remove Cartfile before `carthage build` command as subdependencies have already been built via Accio
+        try bash("rm -rf '\(framework.projectDirectory)/Cartfile'")
+        try bash("rm -rf '\(framework.projectDirectory)/Cartfile.resolved'")
+
         try XcodeProjectSchemeHandlerService.shared.removeUnnecessarySharedSchemes(from: framework, platform: platform)
+
         try bash("/usr/local/bin/carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current --no-use-binaries")
 
         let frameworkProduct = FrameworkProduct(libraryName: framework.libraryName, platformName: platform.rawValue)
@@ -43,9 +48,7 @@ final class CarthageBuilderService {
 
         // revert any changes to prevent issues when removing checked out dependency
         try bash("rm -rf '\(framework.projectDirectory)/Carthage/Build'")
-        try bash("git -C '\(framework.projectDirectory)' reset HEAD --hard --quiet 2> /dev/null")
-        try bash("git -C '\(framework.projectDirectory)' clean -fd --quiet 2> /dev/null")
-        try bash("git -C '\(framework.projectDirectory)' clean -fdX --quiet 2> /dev/null")
+        try GitResetService.shared.resetGit(atPath: framework.projectDirectory)
 
         guard FileManager.default.fileExists(atPath: frameworkProduct.frameworkDirPath) && FileManager.default.fileExists(atPath: frameworkProduct.symbolsFilePath) else {
             print("Failed to build products to \(platformBuildDir)/\(framework.libraryName).framework(.dSYM).", level: .error)

@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/Flinesoft/HandySwift.git",
         "state": {
           "branch": null,
-          "revision": "f736ec0ab264269cd4df91d6a685b4c78292cd76",
-          "version": "2.8.0"
+          "revision": "4225d7654f87886b09dddf52761fc898e4bfd137",
+          "version": "3.0.0"
         }
       },
       {
@@ -75,10 +75,10 @@
       },
       {
         "package": "XcodeProj",
-        "repositoryURL": "https://github.com/mrylmz/xcodeproj.git",
+        "repositoryURL": "https://github.com/tuist/xcodeproj.git",
         "state": {
           "branch": "master",
-          "revision": "efb45143476117c0e7079fa605516ecb1d118919",
+          "revision": "50cd5c1a6c52f85d040b0ab3d3714233568ee09f",
           "version": null
         }
       }

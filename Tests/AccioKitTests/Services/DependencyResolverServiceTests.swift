@@ -19,7 +19,7 @@ class DependencyResolverServiceTests: XCTestCase {
                         .package(url: "https://github.com/Flinesoft/HandyUIKit.git", .upToNextMajor(from: "1.9.0")),
                         .package(url: "https://github.com/Flinesoft/Imperio.git", .upToNextMajor(from: "3.0.0")),
                         .package(url: "https://github.com/JamitLabs/MungoHealer.git", .upToNextMajor(from: "0.3.0")),
-                        .package(url: "https://github.com/Moya/Moya.git", .revision("43209d6ac45d244d8be08f4cf6df684b96190616")),
+                        .package(url: "https://github.com/Moya/Moya.git", .upToNextMajor(from: "13.0.1")),
                     ],
                     targets: [
                         .target(
