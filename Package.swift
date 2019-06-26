@@ -10,6 +10,7 @@ let package = Package(
         .library(name: "AccioKit", type: .dynamic, targets: ["AccioKit"])
     ],
     dependencies: [
+        .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/Flinesoft/HandySwift.git", .upToNextMajor(from: "3.0.0")),
         .package(url: "https://github.com/onevcat/Rainbow.git", .upToNextMajor(from: "3.1.4")),
         .package(url: "https://github.com/jakeheis/SwiftCLI.git", .upToNextMajor(from: "5.2.2")),
@@ -24,6 +25,7 @@ let package = Package(
         .target(
             name: "AccioKit",
             dependencies: [
+                "CryptoSwift",
                 "HandySwift",
                 "Rainbow",
                 "SwiftCLI",

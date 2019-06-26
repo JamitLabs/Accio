@@ -54,15 +54,15 @@ final class FrameworkCachingService {
         let unzippingUrl: URL = Constants.temporaryUncachingUrl.appendingPathComponent(subpath)
 
         try bash("mkdir -p '\(unzippingUrl.path)'")
-        try run(bash: "unzip -n -q '\(cachedFileUrl.path)' -d '\(unzippingUrl.path)'")
+        try Task.run(bash: "unzip -n -q '\(cachedFileUrl.path)' -d '\(unzippingUrl.path)'")
 
         let unzippedFrameworkDirPath = unzippingUrl.appendingPathComponent("\(libraryName).framework").path
         let unzippedSymbolsFilePath = unzippingUrl.appendingPathComponent("\(libraryName).framework.dSYM").path
 
         try bash("mkdir -p '\(frameworkProduct.frameworkDirUrl.deletingLastPathComponent().path)'")
 
-        try run(bash: "cp -R '\(unzippedFrameworkDirPath)' '\(frameworkProduct.frameworkDirPath)'")
-        try run(bash: "cp -R '\(unzippedSymbolsFilePath)' '\(frameworkProduct.symbolsFilePath)'")
+        try Task.run(bash: "cp -R '\(unzippedFrameworkDirPath)' '\(frameworkProduct.frameworkDirPath)'")
+        try Task.run(bash: "cp -R '\(unzippedSymbolsFilePath)' '\(frameworkProduct.symbolsFilePath)'")
 
         try frameworkProduct.cleanupRecursiveFrameworkIfNeeded()
 
@@ -80,6 +80,6 @@ final class FrameworkCachingService {
         defer { FileManager.default.changeCurrentDirectoryPath(previousCurrentDirectoryPath) }
 
         FileManager.default.changeCurrentDirectoryPath(product.frameworkDirUrl.deletingLastPathComponent().path)
-        try run(bash: "zip -r -q -y '\(targetUrl.path)' '\(product.frameworkDirUrl.lastPathComponent)' '\(product.symbolsFileUrl.lastPathComponent)'")
+        try Task.run(bash: "zip -r -q -y '\(targetUrl.path)' '\(product.frameworkDirUrl.lastPathComponent)' '\(product.symbolsFileUrl.lastPathComponent)'")
     }
 }
