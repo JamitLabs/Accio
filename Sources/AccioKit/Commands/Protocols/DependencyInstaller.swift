@@ -8,8 +8,8 @@ enum DependencyInstallerError: Error {
 protocol DependencyInstaller {
     func loadManifest() throws -> Manifest
     func revertCheckoutChanges(workingDirectory: String) throws
-    func buildFrameworksAndIntegrateWithXcode(manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws
-    func attemptUncachingAllRequiredFrameworks(sharedCachePath: String?) throws -> Bool
+    func buildFrameworksAndIntegrateWithXcode(workingDirectory: String, manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws
+    func attemptUncachingAllRequiredFrameworks(workingDirectory: String, sharedCachePath: String?) throws -> Bool
 }
 
 extension DependencyInstaller {
@@ -48,7 +48,12 @@ extension DependencyInstaller {
         }
     }
 
-    func buildFrameworksAndIntegrateWithXcode(manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws {
+    func buildFrameworksAndIntegrateWithXcode(
+        workingDirectory: String = GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath,
+        manifest: Manifest,
+        dependencyGraph: DependencyGraph,
+        sharedCachePath: String?
+    ) throws {
         if FileManager.default.fileExists(atPath: Constants.temporaryFrameworksUrl.path) {
             try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")
         }
@@ -86,7 +91,7 @@ extension DependencyInstaller {
         try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")
 
         try ResolvedManifestCachingService(sharedCachePath: sharedCachePath).cacheResolvedManifest(
-            at: URL(fileURLWithPath: "Package.resolved"),
+            at: URL(fileURLWithPath: workingDirectory).appendingPathComponent("Package.resolved"),
             with: parsingResults.flatMap {
                 $0.frameworkProducts.map {
                     CachedFrameworkProduct(swiftVersion: Constants.swiftVersion, libraryName: $0.libraryName, commitHash: $0.commitHash, platform: $0.platformName)
@@ -95,10 +100,15 @@ extension DependencyInstaller {
         )
     }
 
-    func attemptUncachingAllRequiredFrameworks(sharedCachePath: String?) throws -> Bool {
+    func attemptUncachingAllRequiredFrameworks(
+        workingDirectory: String = GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath,
+        sharedCachePath: String?
+    ) throws -> Bool {
         let cachingService = ResolvedManifestCachingService(sharedCachePath: sharedCachePath)
 
-        guard let cachedFramworkProducts = try cachingService.cachedFrameworkProducts(forResolvedManifestAt: URL(fileURLWithPath: "Package.resolved")) else {
+        guard let cachedFramworkProducts = try cachingService.cachedFrameworkProducts(
+            forResolvedManifestAt: URL(fileURLWithPath: workingDirectory).appendingPathComponent("Package.resolved")
+        ) else {
             return false
         }
 

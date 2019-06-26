@@ -16,12 +16,18 @@ final class ResolvedManifestCachingService {
             let sharedCachePath = sharedCachePath,
             FileManager.default.fileExists(atPath: URL(fileURLWithPath: sharedCachePath).deletingLastPathComponent().path)
         {
+            let sharedCacheFileUrl = URL(fileURLWithPath: sharedCachePath).appendingPathComponent(subpath)
+            try bash("mkdir -p '\(sharedCacheFileUrl.deletingLastPathComponent().path)'")
+
             let data = try JSONEncoder().encode(cachedFrameworkProducts)
-            try data.write(to: URL(fileURLWithPath: sharedCachePath).appendingPathComponent(subpath))
+            try data.write(to: sharedCacheFileUrl)
             print("Saved resolved manifest in shared cache.", level: .info)
         } else {
+            let localCacheFileUrl = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath)
+            try bash("mkdir -p '\(localCacheFileUrl.deletingLastPathComponent().path)'")
+
             let data = try JSONEncoder().encode(cachedFrameworkProducts)
-            try data.write(to: URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath))
+            try data.write(to: localCacheFileUrl)
             print("Saved resolved manifest in local cache.", level: .info)
         }
     }
