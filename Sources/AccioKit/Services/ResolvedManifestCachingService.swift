@@ -27,6 +27,8 @@ final class ResolvedManifestCachingService {
     }
 
     func cachedFrameworkProducts(forResolvedManifestAt url: URL) throws -> [CachedFrameworkProduct]? {
+        guard FileManager.default.fileExists(atPath: url.path) else { return nil }
+
         let resolvedManifestHash = try fileHash(at: url)
         let subpath = cacheFileSubPath(hash: resolvedManifestHash)
         let localCachedFileUrl = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath)

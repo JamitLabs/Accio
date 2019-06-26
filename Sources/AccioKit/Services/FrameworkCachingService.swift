@@ -44,11 +44,12 @@ final class FrameworkCachingService {
         }
     }
 
-    private func frameworkProduct(forCachedFileAt cachedFileUrl: URL) throws -> FrameworkProduct {
+    public func frameworkProduct(forCachedFileAt cachedFileUrl: URL) throws -> FrameworkProduct {
         let libraryName: String = cachedFileUrl.pathComponents.suffix(3).first!
         let platformName: String = cachedFileUrl.deletingPathExtension().lastPathComponent
+        let commitHash: String = cachedFileUrl.pathComponents.suffix(2).first!
 
-        let frameworkProduct = FrameworkProduct(libraryName: libraryName, platformName: platformName)
+        let frameworkProduct = FrameworkProduct(libraryName: libraryName, platformName: platformName, commitHash: commitHash)
 
         let subpath: String = cachedFileUrl.deletingPathExtension().pathComponents.suffix(3).joined(separator: "/")
         let unzippingUrl: URL = Constants.temporaryUncachingUrl.appendingPathComponent(subpath)

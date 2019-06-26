@@ -14,6 +14,12 @@ public class InstallCommand: Command {
     // MARK: - Instance Methods
     public func execute() throws {
         let config = try Config.load()
+
+        if try attemptUncachingAllRequiredFrameworks(sharedCachePath: sharedCachePath.value ?? config.defaultSharedCachePath) {
+            print("No changes found & successfully copied dependencies from cache.", level: .info)
+            return
+        }
+
         try revertCheckoutChanges()
         try DependencyResolverService.shared.resolveDependencies()
 

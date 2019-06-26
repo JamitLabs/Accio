@@ -39,7 +39,7 @@ final class CarthageBuilderService {
 
         try bash("/usr/local/bin/carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current --no-use-binaries")
 
-        let frameworkProduct = FrameworkProduct(libraryName: framework.libraryName, platformName: platform.rawValue)
+        let frameworkProduct = FrameworkProduct(libraryName: framework.libraryName, platformName: platform.rawValue, commitHash: framework.commitHash)
         let platformBuildDir = "\(framework.projectDirectory)/Carthage/Build/\(platform.carthageBuildFolderName)"
 
         try bash("mkdir -p '\(frameworkProduct.frameworkDirUrl.deletingLastPathComponent().path)'")
