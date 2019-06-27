@@ -106,13 +106,13 @@ extension DependencyInstaller {
     ) throws -> Bool {
         let cachingService = ResolvedManifestCachingService(sharedCachePath: sharedCachePath)
 
-        guard let cachedFramworkProducts = try cachingService.cachedFrameworkProducts(
+        guard let cachedFrameworkProducts = try cachingService.cachedFrameworkProducts(
             forResolvedManifestAt: URL(fileURLWithPath: workingDirectory).appendingPathComponent("Package.resolved")
         ) else {
             return false
         }
 
-        let cachedFrameworkProductUrls: [URL] = cachedFramworkProducts.compactMap { cachedFrameworkProduct in
+        let cachedFrameworkProductUrls: [URL] = cachedFrameworkProducts.compactMap { cachedFrameworkProduct in
             let localCacheFileUrl = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(cachedFrameworkProduct.cacheFileSubPath)
 
             if FileManager.default.fileExists(atPath: localCacheFileUrl.path) {
@@ -130,7 +130,7 @@ extension DependencyInstaller {
             return nil
         }
 
-        guard cachedFrameworkProductUrls.count == cachedFramworkProducts.count else {
+        guard cachedFrameworkProductUrls.count == cachedFrameworkProducts.count else {
             print("Not all required build products specified in resolved manifest are cached – unable to skip checkout/integration process ...")
             return false
         }
