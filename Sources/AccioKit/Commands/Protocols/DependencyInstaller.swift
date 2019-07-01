@@ -9,7 +9,7 @@ protocol DependencyInstaller {
     func loadManifest() throws -> Manifest
     func revertCheckoutChanges(workingDirectory: String) throws
     func buildFrameworksAndIntegrateWithXcode(workingDirectory: String, manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws
-    func attemptUncachingAllRequiredFrameworks(workingDirectory: String, sharedCachePath: String?) throws -> Bool
+    func loadRequiredFrameworksFromCache(workingDirectory: String, sharedCachePath: String?) throws -> Bool
 }
 
 extension DependencyInstaller {
@@ -100,7 +100,7 @@ extension DependencyInstaller {
         )
     }
 
-    func attemptUncachingAllRequiredFrameworks(
+    func loadRequiredFrameworksFromCache(
         workingDirectory: String = GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath,
         sharedCachePath: String?
     ) throws -> Bool {

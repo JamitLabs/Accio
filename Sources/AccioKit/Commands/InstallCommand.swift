@@ -15,7 +15,7 @@ public class InstallCommand: Command {
     public func execute() throws {
         let config = try Config.load()
 
-        if try attemptUncachingAllRequiredFrameworks(sharedCachePath: sharedCachePath.value ?? config.defaultSharedCachePath) {
+        if try loadRequiredFrameworksFromCache(sharedCachePath: sharedCachePath.value ?? config.defaultSharedCachePath) {
             print("No changes found & successfully copied dependencies from cache.", level: .info)
             return
         }
