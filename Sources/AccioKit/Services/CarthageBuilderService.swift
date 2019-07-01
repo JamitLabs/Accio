@@ -12,7 +12,12 @@ final class CarthageBuilderService {
         self.frameworkCachingService = frameworkCachingService
     }
 
-    func build(framework: Framework, platform: Platform, alreadyBuiltFrameworkProducts: [FrameworkProduct]) throws -> FrameworkProduct {
+    func build(
+        framework: Framework,
+        platform: Platform,
+        swiftVersion: String,
+        alreadyBuiltFrameworkProducts: [FrameworkProduct]
+    ) throws -> FrameworkProduct {
         print("Building library \(framework.libraryName) with Carthage ...", level: .info)
 
         // link already built subdependencies from previous calls of this method
@@ -58,7 +63,7 @@ final class CarthageBuilderService {
         try frameworkProduct.cleanupRecursiveFrameworkIfNeeded()
 
         print("Completed building scheme \(framework.libraryName) with Carthage.", level: .info)
-        try frameworkCachingService.cache(product: frameworkProduct, framework: framework, platform: platform)
+        try frameworkCachingService.cache(product: frameworkProduct, framework: framework, platform: platform, swiftVersion: swiftVersion)
 
         return frameworkProduct
     }

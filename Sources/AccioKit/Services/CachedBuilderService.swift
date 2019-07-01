@@ -9,7 +9,13 @@ final class CachedBuilderService {
         carthageBuilderService = CarthageBuilderService(frameworkCachingService: frameworkCachingService)
     }
 
-    func frameworkProducts(manifest: Manifest, appTarget: AppTarget, dependencyGraph: DependencyGraph, platform: Platform) throws -> [FrameworkProduct] {
+    func frameworkProducts(
+        manifest: Manifest,
+        appTarget: AppTarget,
+        dependencyGraph: DependencyGraph,
+        platform: Platform,
+        swiftVersion: String
+    ) throws -> [FrameworkProduct] {
         var frameworkProducts: [FrameworkProduct] = []
 
         let frameworks = try appTarget.frameworkDependencies(manifest: manifest, dependencyGraph: dependencyGraph).flattenedDeepFirstOrder()
@@ -18,7 +24,12 @@ final class CachedBuilderService {
         }
 
         for framework in frameworksWithoutDuplicates {
-            if let cachedFrameworkProduct = try frameworkCachingService.cachedProduct(framework: framework, platform: platform) {
+            if
+                let cachedFrameworkProduct = try frameworkCachingService.cachedProduct(
+                framework: framework,
+                platform: platform,
+                swiftVersion: swiftVersion
+            ) {
                 frameworkProducts.append(cachedFrameworkProduct)
             } else {
                 switch try InstallationTypeDetectorService.shared.detectInstallationType(for: framework) {
@@ -27,6 +38,7 @@ final class CachedBuilderService {
                     let frameworkProduct = try carthageBuilderService.build(
                         framework: framework,
                         platform: platform,
+                        swiftVersion: swiftVersion,
                         alreadyBuiltFrameworkProducts: frameworkProducts
                     )
                     frameworkProducts.append(frameworkProduct)
@@ -36,6 +48,7 @@ final class CachedBuilderService {
                     let frameworkProduct = try carthageBuilderService.build(
                         framework: framework,
                         platform: platform,
+                        swiftVersion: swiftVersion,
                         alreadyBuiltFrameworkProducts: frameworkProducts
                     )
                     frameworkProducts.append(frameworkProduct)
