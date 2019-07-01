@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "CryptoSwift",
+        "repositoryURL": "https://github.com/krzyzanowskim/CryptoSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "3a2acbb32ab68215ee1596ee6004da8e90c3721b",
+          "version": "1.0.0"
+        }
+      },
+      {
         "package": "HandySwift",
         "repositoryURL": "https://github.com/Flinesoft/HandySwift.git",
         "state": {
@@ -60,8 +69,8 @@
         "repositoryURL": "https://github.com/jakeheis/SwiftCLI.git",
         "state": {
           "branch": null,
-          "revision": "5318c37d3cacc8780f50b87a8840a6774320ebdf",
-          "version": "5.2.2"
+          "revision": "a777ece1f36170c53bc9b76485e7d03ff2012300",
+          "version": "5.3.1"
         }
       },
       {
@@ -78,7 +87,7 @@
         "repositoryURL": "https://github.com/tuist/xcodeproj.git",
         "state": {
           "branch": "master",
-          "revision": "50cd5c1a6c52f85d040b0ab3d3714233568ee09f",
+          "revision": "b951777f42e9acbfb8f19da623b43aaa604422f9",
           "version": null
         }
       }

@@ -29,7 +29,8 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
         return testFrameworkNames.map {
             FrameworkProduct(
                 frameworkDirPath: testResourcesDir.appendingPathComponent(Constants.buildPath).appendingPathComponent("iOS/\($0).framework").path,
-                symbolsFilePath: testResourcesDir.appendingPathComponent(Constants.buildPath).appendingPathComponent("iOS/\($0).framework.dSYM").path
+                symbolsFilePath: testResourcesDir.appendingPathComponent(Constants.buildPath).appendingPathComponent("iOS/\($0).framework.dSYM").path,
+                commitHash: "abc"
             )
         }
     }
@@ -38,7 +39,8 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
         return testFrameworkNames.map {
             FrameworkProduct(
                 frameworkDirPath: testResourcesDir.appendingPathComponent(Constants.dependenciesPath).appendingPathComponent("iOS/\($0).framework").path,
-                symbolsFilePath: testResourcesDir.appendingPathComponent(Constants.dependenciesPath).appendingPathComponent("iOS/\($0).framework.dSYM").path
+                symbolsFilePath: testResourcesDir.appendingPathComponent(Constants.dependenciesPath).appendingPathComponent("iOS/\($0).framework.dSYM").path,
+                commitHash: "abc"
             )
         }
     }

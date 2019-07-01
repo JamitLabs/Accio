@@ -85,6 +85,16 @@ final class XcodeProjectIntegrationService {
         try bash("rm -rf \(dependenciesPath)")
     }
 
+    func copy(cachedFrameworkProducts: [FrameworkProduct]) throws {
+        for platform in Platform.allCases {
+            let dependenciesPath = "\(workingDirectory)/\(Constants.dependenciesPath)/\(platform)"
+            let cachedFrameworkProducts = cachedFrameworkProducts.filter { $0.platformName == platform.rawValue }
+
+            print("Copying \(cachedFrameworkProducts.count) cached build products to dependencies folder for platform \(platform.rawValue).")
+            try copy(frameworkProducts: cachedFrameworkProducts, to: dependenciesPath)
+        }
+    }
+
     func updateDependencies(of appTarget: AppTarget, for platform: Platform, with frameworkProducts: [FrameworkProduct]) throws {
         let dependenciesPlatformPath = "\(workingDirectory)/\(Constants.dependenciesPath)/\(platform.rawValue)"
         let copiedFrameworkProducts: [FrameworkProduct] = try copy(frameworkProducts: frameworkProducts, of: appTarget, to: dependenciesPlatformPath)
@@ -93,7 +103,11 @@ final class XcodeProjectIntegrationService {
 
     private func copy(frameworkProducts: [FrameworkProduct], of appTarget: AppTarget, to targetPath: String) throws -> [FrameworkProduct] {
         print("Copying build products of target '\(appTarget.targetName)' into folder '\(Constants.dependenciesPath)' ...", level: .info)
+        return try copy(frameworkProducts: frameworkProducts, to: targetPath)
+    }
 
+    @discardableResult
+    private func copy(frameworkProducts: [FrameworkProduct], to targetPath: String) throws -> [FrameworkProduct] {
         try bash("mkdir -p '\(targetPath)'")
         var copiedFrameworkProducts: [FrameworkProduct] = []
 
@@ -112,7 +126,7 @@ final class XcodeProjectIntegrationService {
             try bash("cp -R '\(frameworkProduct.frameworkDirPath)' '\(frameworkDirPath)'")
             try bash("cp -R '\(frameworkProduct.symbolsFilePath)' '\(symbolsFilePath)'")
 
-            let frameworkProduct = FrameworkProduct(frameworkDirPath: frameworkDirPath, symbolsFilePath: symbolsFilePath)
+            let frameworkProduct = FrameworkProduct(frameworkDirPath: frameworkDirPath, symbolsFilePath: symbolsFilePath, commitHash: frameworkProduct.commitHash)
             try frameworkProduct.cleanupRecursiveFrameworkIfNeeded()
 
             copiedFrameworkProducts.append(frameworkProduct)
