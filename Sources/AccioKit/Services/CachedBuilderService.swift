@@ -5,8 +5,8 @@ final class CachedBuilderService {
     private let carthageBuilderService: CarthageBuilderService
 
     init(sharedCachePath: String?) {
-        self.frameworkCachingService = FrameworkCachingService(sharedCachePath: sharedCachePath)
-        self.carthageBuilderService = CarthageBuilderService(frameworkCachingService: frameworkCachingService)
+        frameworkCachingService = FrameworkCachingService(sharedCachePath: sharedCachePath)
+        carthageBuilderService = CarthageBuilderService(frameworkCachingService: frameworkCachingService)
     }
 
     func frameworkProducts(manifest: Manifest, appTarget: AppTarget, dependencyGraph: DependencyGraph, platform: Platform) throws -> [FrameworkProduct] {
