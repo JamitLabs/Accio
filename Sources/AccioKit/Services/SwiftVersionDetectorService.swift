@@ -16,11 +16,20 @@ class SwiftVersionDetectorService {
             throw SwiftVersionDetectorError.unableToRunSwiftVersionCommand
         }
 
-        let regex = try Regex(#"Apple Swift version ([\d.]*) \(swiftlang"#)
-        guard let versionNumber = regex.firstMatch(in: result.stdout)?.captures.first ?? nil else {
+        return try convertToSwiftVersion(swiftVersionOutput: result.stdout)
+    }
+
+    func convertToSwiftVersion(swiftVersionOutput: String) throws -> String {
+        do {
+            let regex = try Regex(#"Apple Swift version ([\d.]*) \(swiftlang"#)
+            guard let versionNumber = regex.firstMatch(in: swiftVersionOutput)?.captures.first ?? nil else {
+                throw SwiftVersionDetectorError.unableToParseSwiftVerisonCommand
+            }
+
+            return "Swift-\(versionNumber)"
+        }
+        catch {
             throw SwiftVersionDetectorError.unableToParseSwiftVerisonCommand
         }
-
-        return "Swift-\(versionNumber)"
     }
 }
