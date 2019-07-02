@@ -26,10 +26,11 @@ final class CachedBuilderService {
         for framework in frameworksWithoutDuplicates {
             if
                 let cachedFrameworkProduct = try frameworkCachingService.cachedProduct(
-                framework: framework,
-                platform: platform,
-                swiftVersion: swiftVersion
-            ) {
+                    framework: framework,
+                    platform: platform,
+                    swiftVersion: swiftVersion
+                )
+            {
                 frameworkProducts.append(cachedFrameworkProduct)
             } else {
                 switch try InstallationTypeDetectorService.shared.detectInstallationType(for: framework) {
