@@ -41,7 +41,7 @@ final class ResolvedManifestCachingService {
 
         if FileManager.default.fileExists(atPath: localCachedFileUrl.path) {
             print("Found cached resolved manifest results in local cache - trying to reuse cached build products.", level: .info)
-            return try JSONDecoder().decode([CachedFrameworkProduct].self, from: Data(contentsOf: localCachedFileUrl))
+            return try? JSONDecoder().decode([CachedFrameworkProduct].self, from: Data(contentsOf: localCachedFileUrl))
         }
 
         if let sharedCachePath = sharedCachePath {
@@ -49,7 +49,7 @@ final class ResolvedManifestCachingService {
 
             if FileManager.default.fileExists(atPath: sharedCacheFileUrl.path) {
                 print("Found cached resolved manifest results in shared cache - trying to reuse cached build products.", level: .info)
-                return try JSONDecoder().decode([CachedFrameworkProduct].self, from: Data(contentsOf: sharedCacheFileUrl))
+                return try? JSONDecoder().decode([CachedFrameworkProduct].self, from: Data(contentsOf: sharedCacheFileUrl))
             }
         }
 
