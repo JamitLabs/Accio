@@ -144,11 +144,11 @@ extension DependencyInstaller {
         }
 
         guard cachedFrameworkProductUrls.count == cachedFrameworkProducts.count else {
-            print("Not all required build products specified in resolved manifest are cached – unable to skip checkout/integration process ...")
+            print("Not all required build products specified in resolved manifest are cached – unable to skip checkout/integration process ...", level: .info)
             return false
         }
 
-        print("Found all required build products specified in resolved manifest in cache – skipping checkout & integration process ...")
+        print("Found all required build products specified in resolved manifest in cache – skipping checkout & integration process ...", level: .info)
 
         let frameworkProducts: [FrameworkProduct] = try cachedFrameworkProductUrls.map {
             return try FrameworkCachingService(sharedCachePath: sharedCachePath).frameworkProduct(forCachedFileAt: $0)
