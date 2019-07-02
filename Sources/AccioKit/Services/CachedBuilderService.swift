@@ -1,5 +1,22 @@
 import Foundation
 
+enum CachedBuilderServiceError: Error {
+    case unableToRetrieveSwiftVersion
+    case swiftVersionChanged
+}
+
+extension CachedBuilderServiceError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .unableToRetrieveSwiftVersion:
+            return "Unable to retrieve Swift version used for command line."
+
+        case .swiftVersionChanged:
+            return "Swift version used for command line apparently changed during runtime."
+        }
+    }
+}
+
 final class CachedBuilderService {
     private let frameworkCachingService: FrameworkCachingService
     private let carthageBuilderService: CarthageBuilderService
@@ -33,27 +50,44 @@ final class CachedBuilderService {
             {
                 frameworkProducts.append(cachedFrameworkProduct)
             } else {
+                let frameworkProduct: FrameworkProduct
                 switch try InstallationTypeDetectorService.shared.detectInstallationType(for: framework) {
                 case .swiftPackageManager:
                     try XcodeProjectGeneratorService.shared.generateXcodeProject(framework: framework)
-                    let frameworkProduct = try carthageBuilderService.build(
+                    frameworkProduct = try carthageBuilderService.build(
                         framework: framework,
                         platform: platform,
                         swiftVersion: swiftVersion,
                         alreadyBuiltFrameworkProducts: frameworkProducts
                     )
-                    frameworkProducts.append(frameworkProduct)
 
                 case .carthage:
                     try GitResetService.shared.resetGit(atPath: framework.projectDirectory, includeUntrackedFiles: false)
-                    let frameworkProduct = try carthageBuilderService.build(
+                    frameworkProduct = try carthageBuilderService.build(
                         framework: framework,
                         platform: platform,
                         swiftVersion: swiftVersion,
                         alreadyBuiltFrameworkProducts: frameworkProducts
                     )
-                    frameworkProducts.append(frameworkProduct)
                 }
+
+                if
+                    let frameworkSwiftVersion = (
+                        try? SwiftVersionDetectorService.shared.detectSwiftVersion(ofFrameworkProduct: frameworkProduct)
+                    ) ?? (
+                        try? SwiftVersionDetectorService.shared.getCurrentSwiftVersion()
+                    )
+                {
+                    // If detectSwiftVersion doesn't work (e. g. happening for RxAtomic because of missing Swift header file),
+                    // fallback to just retrieving current swift version via bash command.
+                    guard frameworkSwiftVersion == swiftVersion else {
+                        throw CachedBuilderServiceError.swiftVersionChanged
+                    }
+                } else {
+                    throw CachedBuilderServiceError.unableToRetrieveSwiftVersion
+                }
+
+                frameworkProducts.append(frameworkProduct)
             }
         }
 
