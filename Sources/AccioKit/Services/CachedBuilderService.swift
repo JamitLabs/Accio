@@ -62,7 +62,10 @@ final class CachedBuilderService {
                     )
 
                 case .carthage:
-                    try GitResetService.shared.resetGit(atPath: framework.projectDirectory, includeUntrackedFiles: false)
+                    if !framework.isLocalRepo {
+                        try GitResetService.shared.resetGit(atPath: framework.projectDirectory, includeUntrackedFiles: false)
+                    }
+
                     frameworkProduct = try carthageBuilderService.build(
                         framework: framework,
                         platform: platform,
