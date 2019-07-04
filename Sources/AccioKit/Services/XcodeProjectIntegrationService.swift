@@ -90,7 +90,7 @@ final class XcodeProjectIntegrationService {
             let dependenciesPath = "\(workingDirectory)/\(Constants.dependenciesPath)/\(platform)"
             let cachedFrameworkProducts = cachedFrameworkProducts.filter { $0.platformName == platform.rawValue }
 
-            print("Copying \(cachedFrameworkProducts.count) cached build products to dependencies folder for platform \(platform.rawValue).")
+            print("Copying \(cachedFrameworkProducts.count) cached build products to Dependencies folder for platform \(platform.rawValue).", level: .info)
             try copy(frameworkProducts: cachedFrameworkProducts, to: dependenciesPath)
         }
     }

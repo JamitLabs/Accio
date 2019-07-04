@@ -1,12 +1,12 @@
 import Foundation
 
 struct CachedFrameworkProduct: Codable {
-    let swiftVersion: String
     let libraryName: String
     let commitHash: String
     let platform: String
 
-    var cacheFileSubPath: String {
+    func getCacheFileSubPath() throws -> String {
+        let swiftVersion = try SwiftVersionDetectorService.shared.getCurrentSwiftVersion()
         return "\(swiftVersion)/\(libraryName)/\(commitHash)/\(platform).zip"
     }
 }

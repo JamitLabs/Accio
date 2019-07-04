@@ -103,7 +103,6 @@ extension DependencyInstaller {
             with: parsingResults.flatMap {
                 $0.frameworkProducts.map {
                     CachedFrameworkProduct(
-                        swiftVersion: swiftVersion,
                         libraryName: $0.libraryName,
                         commitHash: $0.commitHash,
                         platform: $0.platformName
@@ -126,14 +125,15 @@ extension DependencyInstaller {
         }
 
         let cachedFrameworkProductUrls: [URL] = cachedFrameworkProducts.compactMap { cachedFrameworkProduct in
-            let localCacheFileUrl = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(cachedFrameworkProduct.cacheFileSubPath)
+            guard let cacheFileSubPath = try? cachedFrameworkProduct.getCacheFileSubPath() else { return nil }
 
+            let localCacheFileUrl = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(cacheFileSubPath)
             if FileManager.default.fileExists(atPath: localCacheFileUrl.path) {
                 return localCacheFileUrl
             }
 
             if let sharedCachePath = sharedCachePath {
-                let sharedCacheFileUrl = URL(fileURLWithPath: sharedCachePath).appendingPathComponent(cachedFrameworkProduct.cacheFileSubPath)
+                let sharedCacheFileUrl = URL(fileURLWithPath: sharedCachePath).appendingPathComponent(cacheFileSubPath)
 
                 if FileManager.default.fileExists(atPath: sharedCacheFileUrl.path) {
                     return sharedCacheFileUrl
@@ -144,11 +144,11 @@ extension DependencyInstaller {
         }
 
         guard cachedFrameworkProductUrls.count == cachedFrameworkProducts.count else {
-            print("Not all required build products specified in resolved manifest are cached – unable to skip checkout/integration process ...")
+            print("Not all required build products specified in resolved manifest are cached – unable to skip checkout / integration process ...", level: .info)
             return false
         }
 
-        print("Found all required build products specified in resolved manifest in cache – skipping checkout & integration process ...")
+        print("Found all required build products specified in resolved manifest in cache – skipping checkout & integration process ...", level: .info)
 
         let frameworkProducts: [FrameworkProduct] = try cachedFrameworkProductUrls.map {
             return try FrameworkCachingService(sharedCachePath: sharedCachePath).frameworkProduct(forCachedFileAt: $0)
