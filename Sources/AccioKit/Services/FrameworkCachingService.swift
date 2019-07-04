@@ -8,8 +8,8 @@ final class FrameworkCachingService {
         self.sharedCachePath = sharedCachePath
     }
 
-    func cachedProduct(framework: Framework, platform: Platform) throws -> FrameworkProduct? {
-        let subpath: String = cacheFileSubPath(framework: framework, platform: platform)
+    func cachedProduct(framework: Framework, platform: Platform, swiftVersion: String) throws -> FrameworkProduct? {
+        let subpath: String = cacheFileSubPath(framework: framework, platform: platform, swiftVersion: swiftVersion)
         let localCachedFileUrl = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath)
 
         if FileManager.default.fileExists(atPath: localCachedFileUrl.path) {
@@ -29,8 +29,8 @@ final class FrameworkCachingService {
         return nil
     }
 
-    func cache(product: FrameworkProduct, framework: Framework, platform: Platform) throws {
-        let subpath: String = cacheFileSubPath(framework: framework, platform: platform)
+    func cache(product: FrameworkProduct, framework: Framework, platform: Platform, swiftVersion: String) throws {
+        let subpath: String = cacheFileSubPath(framework: framework, platform: platform, swiftVersion: swiftVersion)
 
         if
             let sharedCachePath = sharedCachePath,
@@ -70,8 +70,8 @@ final class FrameworkCachingService {
         return frameworkProduct
     }
 
-    private func cacheFileSubPath(framework: Framework, platform: Platform) -> String {
-        return "\(Constants.swiftVersion)/\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue).zip"
+    private func cacheFileSubPath(framework: Framework, platform: Platform, swiftVersion: String) -> String {
+        return "\(swiftVersion)/\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue).zip"
     }
 
     private func cache(product: FrameworkProduct, to targetUrl: URL) throws {

@@ -13,7 +13,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removed
 - None.
 ### Fixed
-- None.
+- Fix mixed caching of frameworks with different Swift versions.  
+  Issue: [#61](https://github.com/JamitLabs/Accio/issues/61) | PR: [#62](https://github.com/JamitLabs/Accio/pull/62) | Author: [Frederick Pietschmann](https://github.com/fredpi)
 ### Security
 - None.
 
