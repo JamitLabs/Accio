@@ -251,7 +251,7 @@ final class XcodeProjectIntegrationService {
 
         if plist["CFBundleVersion"] == nil {
             print("CFBundleVersion of framework \(product.libraryName) was not specified and will be set to 1", level: .warning)
-            plist["CFBundleVersion"] = 1
+            plist["CFBundleVersion"] = "1"
 
             let data = try PropertyListSerialization.data(fromPropertyList: plist, format: format, options: 0)
             try data.write(to: plistURL, options: .atomic)
