@@ -13,8 +13,8 @@
              alt="Codebeat Badge">
     </a>
     <a href="https://github.com/JamitLabs/Accio/releases">
-        <img src="https://img.shields.io/badge/Version-0.6.2-blue.svg"
-             alt="Version: 0.6.2">
+        <img src="https://img.shields.io/badge/Version-0.6.3-blue.svg"
+             alt="Version: 0.6.3">
     </a>
     <img src="https://img.shields.io/badge/Swift-5.0-FFAC45.svg"
          alt="Swift: 5.0">

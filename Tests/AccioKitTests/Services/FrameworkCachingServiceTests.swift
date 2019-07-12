@@ -7,7 +7,8 @@ class FrameworkCachingServiceTests: XCTestCase {
     private let testFramework = Framework(projectName: "TestProject", libraryName: "Example", projectDirectory: "", requiredFrameworks: [])
     private let testFrameworkProduct = FrameworkProduct(
         frameworkDirPath: FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework").path,
-        symbolsFilePath: FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework.dSYM").path
+        symbolsFilePath: FileManager.userCacheDirUrl.appendingPathComponent("AccioTestFrameworks/Example.framework.dSYM").path,
+        commitHash: "abc"
     )
 
     override func setUp() {
@@ -33,18 +34,20 @@ class FrameworkCachingServiceTests: XCTestCase {
         TestHelper.shared.isStartedByUnitTests = true
         let frameworkCachingService = FrameworkCachingService(sharedCachePath: nil)
 
-        let testFrameworkLocalCacheFilePath: String = "\(Constants.localCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
-        let testFrameworkSharedCacheFilePath: String = "\(sharedCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
+        let swiftVersion = try! SwiftVersionDetectorService.shared.getCurrentSwiftVersion()
 
-        var cachedProduct: FrameworkProduct? = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
+        let testFrameworkLocalCacheFilePath: String = "\(Constants.localCachePath)/\(swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
+        let testFrameworkSharedCacheFilePath: String = "\(sharedCachePath)/\(swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
+
+        var cachedProduct: FrameworkProduct? = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS, swiftVersion: swiftVersion)
         XCTAssertNil(cachedProduct)
 
         XCTAssert(!FileManager.default.fileExists(atPath: testFrameworkLocalCacheFilePath))
         XCTAssert(!FileManager.default.fileExists(atPath: testFrameworkSharedCacheFilePath))
 
-        try! frameworkCachingService.cache(product: testFrameworkProduct, framework: testFramework, platform: .iOS)
+        try! frameworkCachingService.cache(product: testFrameworkProduct, framework: testFramework, platform: .iOS, swiftVersion: swiftVersion)
 
-        cachedProduct = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
+        cachedProduct = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS, swiftVersion: swiftVersion)
         XCTAssertNotNil(cachedProduct)
 
         XCTAssert(cachedProduct!.frameworkDirPath.hasPrefix(Constants.temporaryFrameworksUrl.path))
@@ -61,18 +64,20 @@ class FrameworkCachingServiceTests: XCTestCase {
         TestHelper.shared.isStartedByUnitTests = true
         let frameworkCachingService = FrameworkCachingService(sharedCachePath: sharedCachePath)
 
-        let testFrameworkLocalCacheFilePath: String = "\(Constants.localCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
-        let testFrameworkSharedCacheFilePath: String = "\(sharedCachePath)/\(Constants.swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
+        let swiftVersion = try! SwiftVersionDetectorService.shared.getCurrentSwiftVersion()
 
-        var cachedProduct: FrameworkProduct? = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
+        let testFrameworkLocalCacheFilePath: String = "\(Constants.localCachePath)/\(swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
+        let testFrameworkSharedCacheFilePath: String = "\(sharedCachePath)/\(swiftVersion)/\(testFramework.libraryName)/\(testFramework.commitHash)/\(Platform.iOS.rawValue).zip"
+
+        var cachedProduct: FrameworkProduct? = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS, swiftVersion: swiftVersion)
         XCTAssertNil(cachedProduct)
 
         XCTAssert(!FileManager.default.fileExists(atPath: testFrameworkLocalCacheFilePath))
         XCTAssert(!FileManager.default.fileExists(atPath: testFrameworkSharedCacheFilePath))
 
-        try! frameworkCachingService.cache(product: testFrameworkProduct, framework: testFramework, platform: .iOS)
+        try! frameworkCachingService.cache(product: testFrameworkProduct, framework: testFramework, platform: .iOS, swiftVersion: swiftVersion)
 
-        cachedProduct = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS)
+        cachedProduct = try! frameworkCachingService.cachedProduct(framework: testFramework, platform: .iOS, swiftVersion: swiftVersion)
         XCTAssertNotNil(cachedProduct)
 
         XCTAssert(cachedProduct!.frameworkDirPath.hasPrefix(Constants.temporaryFrameworksUrl.path))

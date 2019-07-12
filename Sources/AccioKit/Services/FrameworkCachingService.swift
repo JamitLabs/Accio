@@ -8,8 +8,8 @@ final class FrameworkCachingService {
         self.sharedCachePath = sharedCachePath
     }
 
-    func cachedProduct(framework: Framework, platform: Platform) throws -> FrameworkProduct? {
-        let subpath: String = cacheFileSubPath(framework: framework, platform: platform)
+    func cachedProduct(framework: Framework, platform: Platform, swiftVersion: String) throws -> FrameworkProduct? {
+        let subpath: String = cacheFileSubPath(framework: framework, platform: platform, swiftVersion: swiftVersion)
         let localCachedFileUrl = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(subpath)
 
         if FileManager.default.fileExists(atPath: localCachedFileUrl.path) {
@@ -29,8 +29,8 @@ final class FrameworkCachingService {
         return nil
     }
 
-    func cache(product: FrameworkProduct, framework: Framework, platform: Platform) throws {
-        let subpath: String = cacheFileSubPath(framework: framework, platform: platform)
+    func cache(product: FrameworkProduct, framework: Framework, platform: Platform, swiftVersion: String) throws {
+        let subpath: String = cacheFileSubPath(framework: framework, platform: platform, swiftVersion: swiftVersion)
 
         if
             let sharedCachePath = sharedCachePath,
@@ -44,33 +44,34 @@ final class FrameworkCachingService {
         }
     }
 
-    private func frameworkProduct(forCachedFileAt cachedFileUrl: URL) throws -> FrameworkProduct {
+    public func frameworkProduct(forCachedFileAt cachedFileUrl: URL) throws -> FrameworkProduct {
         let libraryName: String = cachedFileUrl.pathComponents.suffix(3).first!
         let platformName: String = cachedFileUrl.deletingPathExtension().lastPathComponent
+        let commitHash: String = cachedFileUrl.pathComponents.suffix(2).first!
 
-        let frameworkProduct = FrameworkProduct(libraryName: libraryName, platformName: platformName)
+        let frameworkProduct = FrameworkProduct(libraryName: libraryName, platformName: platformName, commitHash: commitHash)
 
         let subpath: String = cachedFileUrl.deletingPathExtension().pathComponents.suffix(3).joined(separator: "/")
         let unzippingUrl: URL = Constants.temporaryUncachingUrl.appendingPathComponent(subpath)
 
         try bash("mkdir -p '\(unzippingUrl.path)'")
-        try run(bash: "unzip -n -q '\(cachedFileUrl.path)' -d '\(unzippingUrl.path)'")
+        try Task.run(bash: "unzip -n -q '\(cachedFileUrl.path)' -d '\(unzippingUrl.path)'")
 
         let unzippedFrameworkDirPath = unzippingUrl.appendingPathComponent("\(libraryName).framework").path
         let unzippedSymbolsFilePath = unzippingUrl.appendingPathComponent("\(libraryName).framework.dSYM").path
 
         try bash("mkdir -p '\(frameworkProduct.frameworkDirUrl.deletingLastPathComponent().path)'")
 
-        try run(bash: "cp -R '\(unzippedFrameworkDirPath)' '\(frameworkProduct.frameworkDirPath)'")
-        try run(bash: "cp -R '\(unzippedSymbolsFilePath)' '\(frameworkProduct.symbolsFilePath)'")
+        try Task.run(bash: "cp -R '\(unzippedFrameworkDirPath)' '\(frameworkProduct.frameworkDirPath)'")
+        try Task.run(bash: "cp -R '\(unzippedSymbolsFilePath)' '\(frameworkProduct.symbolsFilePath)'")
 
         try frameworkProduct.cleanupRecursiveFrameworkIfNeeded()
 
         return frameworkProduct
     }
 
-    private func cacheFileSubPath(framework: Framework, platform: Platform) -> String {
-        return "\(Constants.swiftVersion)/\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue).zip"
+    private func cacheFileSubPath(framework: Framework, platform: Platform, swiftVersion: String) -> String {
+        return "\(swiftVersion)/\(framework.libraryName)/\(framework.commitHash)/\(platform.rawValue).zip"
     }
 
     private func cache(product: FrameworkProduct, to targetUrl: URL) throws {
@@ -80,6 +81,6 @@ final class FrameworkCachingService {
         defer { FileManager.default.changeCurrentDirectoryPath(previousCurrentDirectoryPath) }
 
         FileManager.default.changeCurrentDirectoryPath(product.frameworkDirUrl.deletingLastPathComponent().path)
-        try run(bash: "zip -r -q -y '\(targetUrl.path)' '\(product.frameworkDirUrl.lastPathComponent)' '\(product.symbolsFileUrl.lastPathComponent)'")
+        try Task.run(bash: "zip -r -q -y '\(targetUrl.path)' '\(product.frameworkDirUrl.lastPathComponent)' '\(product.symbolsFileUrl.lastPathComponent)'")
     }
 }

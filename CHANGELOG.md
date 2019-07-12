@@ -17,6 +17,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Security
 - None.
 
+## [0.6.3] - 2019-07-12
+### Added
+- None.
+### Changed
+- None.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- Fix mixed caching of frameworks with different Swift versions.  
+  Issue: [#61](https://github.com/JamitLabs/Accio/issues/61) | PR: [#62](https://github.com/JamitLabs/Accio/pull/62) | Author: [Frederick Pietschmann](https://github.com/fredpi)
+- Fix missing CFBundleVersion in Info.plist of build Frameworks by adding it implicity with the default value "1"
+  Issue: [#69](https://github.com/JamitLabs/Accio/issues/69) | PR: [#70](https://github.com/JamitLabs/Accio/pull/70) | Author: [Murat Yilmaz](https://github.com/mrylmz)
+### Security
+- None.
+
 ## [0.6.2] - 2019-06-20
 ### Added
 - None.

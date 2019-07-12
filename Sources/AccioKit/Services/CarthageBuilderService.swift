@@ -12,7 +12,12 @@ final class CarthageBuilderService {
         self.frameworkCachingService = frameworkCachingService
     }
 
-    func build(framework: Framework, platform: Platform, alreadyBuiltFrameworkProducts: [FrameworkProduct]) throws -> FrameworkProduct {
+    func build(
+        framework: Framework,
+        platform: Platform,
+        swiftVersion: String,
+        alreadyBuiltFrameworkProducts: [FrameworkProduct]
+    ) throws -> FrameworkProduct {
         print("Building library \(framework.libraryName) with Carthage ...", level: .info)
 
         // link already built subdependencies from previous calls of this method
@@ -39,7 +44,7 @@ final class CarthageBuilderService {
 
         try bash("/usr/local/bin/carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current --no-use-binaries")
 
-        let frameworkProduct = FrameworkProduct(libraryName: framework.libraryName, platformName: platform.rawValue)
+        let frameworkProduct = FrameworkProduct(libraryName: framework.libraryName, platformName: platform.rawValue, commitHash: framework.commitHash)
         let platformBuildDir = "\(framework.projectDirectory)/Carthage/Build/\(platform.carthageBuildFolderName)"
 
         try bash("mkdir -p '\(frameworkProduct.frameworkDirUrl.deletingLastPathComponent().path)'")
@@ -58,7 +63,7 @@ final class CarthageBuilderService {
         try frameworkProduct.cleanupRecursiveFrameworkIfNeeded()
 
         print("Completed building scheme \(framework.libraryName) with Carthage.", level: .info)
-        try frameworkCachingService.cache(product: frameworkProduct, framework: framework, platform: platform)
+        try frameworkCachingService.cache(product: frameworkProduct, framework: framework, platform: platform, swiftVersion: swiftVersion)
 
         return frameworkProduct
     }

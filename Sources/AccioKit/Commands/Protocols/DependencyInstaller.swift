@@ -8,7 +8,8 @@ enum DependencyInstallerError: Error {
 protocol DependencyInstaller {
     func loadManifest() throws -> Manifest
     func revertCheckoutChanges(workingDirectory: String) throws
-    func buildFrameworksAndIntegrateWithXcode(manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws
+    func buildFrameworksAndIntegrateWithXcode(workingDirectory: String, manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws
+    func loadRequiredFrameworksFromCache(workingDirectory: String, sharedCachePath: String?) throws -> Bool
 }
 
 extension DependencyInstaller {
@@ -47,7 +48,12 @@ extension DependencyInstaller {
         }
     }
 
-    func buildFrameworksAndIntegrateWithXcode(manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws {
+    func buildFrameworksAndIntegrateWithXcode(
+        workingDirectory: String = GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath,
+        manifest: Manifest,
+        dependencyGraph: DependencyGraph,
+        sharedCachePath: String?
+    ) throws {
         if FileManager.default.fileExists(atPath: Constants.temporaryFrameworksUrl.path) {
             try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")
         }
@@ -58,6 +64,8 @@ extension DependencyInstaller {
 
         try bash("mkdir -p '\(Constants.temporaryFrameworksUrl.path)'")
         try bash("mkdir -p '\(Constants.temporaryUncachingUrl.path)'")
+
+        let swiftVersion = try SwiftVersionDetectorService.shared.getCurrentSwiftVersion()
 
         typealias ParsingResult = (target: AppTarget, platform: Platform, frameworkProducts: [FrameworkProduct])
 
@@ -71,7 +79,13 @@ extension DependencyInstaller {
             let platform = try PlatformDetectorService.shared.detectPlatform(of: appTarget)
             print("Resolving dependencies for target '\(appTarget.targetName)' on platform '\(platform.rawValue)' ...", level: .info)
 
-            let frameworkProducts = try CachedBuilderService(sharedCachePath: sharedCachePath).frameworkProducts(manifest: manifest, appTarget: appTarget, dependencyGraph: dependencyGraph, platform: platform)
+            let frameworkProducts = try CachedBuilderService(sharedCachePath: sharedCachePath).frameworkProducts(
+                manifest: manifest,
+                appTarget: appTarget,
+                dependencyGraph: dependencyGraph,
+                platform: platform,
+                swiftVersion: swiftVersion
+            )
             return ParsingResult(target: appTarget, platform: platform, frameworkProducts: frameworkProducts)
         }
 
@@ -83,5 +97,66 @@ extension DependencyInstaller {
 
         try XcodeProjectIntegrationService.shared.handleRemovedTargets(keepingTargets: appTargets)
         try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")
+
+        try ResolvedManifestCachingService(sharedCachePath: sharedCachePath).cacheResolvedManifest(
+            at: URL(fileURLWithPath: workingDirectory).appendingPathComponent("Package.resolved"),
+            with: parsingResults.flatMap {
+                $0.frameworkProducts.map {
+                    CachedFrameworkProduct(
+                        libraryName: $0.libraryName,
+                        commitHash: $0.commitHash,
+                        platform: $0.platformName
+                    )
+                }
+            }
+        )
+    }
+
+    func loadRequiredFrameworksFromCache(
+        workingDirectory: String = GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath,
+        sharedCachePath: String?
+    ) throws -> Bool {
+        let cachingService = ResolvedManifestCachingService(sharedCachePath: sharedCachePath)
+
+        guard let cachedFrameworkProducts = try cachingService.cachedFrameworkProducts(
+            forResolvedManifestAt: URL(fileURLWithPath: workingDirectory).appendingPathComponent("Package.resolved")
+        ) else {
+            return false
+        }
+
+        let cachedFrameworkProductUrls: [URL] = cachedFrameworkProducts.compactMap { cachedFrameworkProduct in
+            guard let cacheFileSubPath = try? cachedFrameworkProduct.getCacheFileSubPath() else { return nil }
+
+            let localCacheFileUrl = URL(fileURLWithPath: Constants.localCachePath).appendingPathComponent(cacheFileSubPath)
+            if FileManager.default.fileExists(atPath: localCacheFileUrl.path) {
+                return localCacheFileUrl
+            }
+
+            if let sharedCachePath = sharedCachePath {
+                let sharedCacheFileUrl = URL(fileURLWithPath: sharedCachePath).appendingPathComponent(cacheFileSubPath)
+
+                if FileManager.default.fileExists(atPath: sharedCacheFileUrl.path) {
+                    return sharedCacheFileUrl
+                }
+            }
+
+            return nil
+        }
+
+        guard cachedFrameworkProductUrls.count == cachedFrameworkProducts.count else {
+            print("Not all required build products specified in resolved manifest are cached – unable to skip checkout / integration process ...", level: .info)
+            return false
+        }
+
+        print("Found all required build products specified in resolved manifest in cache – skipping checkout & integration process ...", level: .info)
+
+        let frameworkProducts: [FrameworkProduct] = try cachedFrameworkProductUrls.map {
+            return try FrameworkCachingService(sharedCachePath: sharedCachePath).frameworkProduct(forCachedFileAt: $0)
+        }
+
+        try XcodeProjectIntegrationService.shared.clearDependenciesFolder()
+        try XcodeProjectIntegrationService.shared.copy(cachedFrameworkProducts: frameworkProducts)
+
+        return true
     }
 }
