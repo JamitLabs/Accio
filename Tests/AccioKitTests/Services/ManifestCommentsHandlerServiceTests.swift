@@ -154,16 +154,17 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
                         .target(
                             name: "TestProject-iOS",
                             dependencies: [
-                              // accio product-type:static-framework
                               "HandySwift",
                               "HandyUIKit",
-                              // accio integration-type:cocoapods
                               "Imperio",
-                              // accio integration-type:default
                               "MungoHealer",
                               "SwiftyBeaver",
                             ],
                             path: "TestProject-iOS"
+                            // defaultLinkage: .static,
+                            // customLinkage: [.dynamic: ["SwiftyBeaver", "SwiftyUserDefaults"]],
+                            // defaultIntegration: .binary,
+                            // customIntegration: [.binary: ["HandySwift", "MungoHealer"], .cocoapods: ["HandyUIKit"]],
                         )
                     ]
                 )
@@ -261,8 +262,8 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
             let manifestComments = try! sut.manifestComments()
             
             XCTAssertEqual(manifestComments, [
-                ManifestComment.productType(
-                    productType: .staticFramework,
+                ManifestComment.linkageType(
+                    linkageType: .static,
                     dependencies: ["HandySwift", "HandyUIKit", "Imperio", "MungoHealer", "SwiftyBeaver"]
                 ),
                 ManifestComment.integrationType(
@@ -275,11 +276,11 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
                 ),
             ])
 
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandySwift"), AdditionalConfiguration(productType: .staticFramework, integrationType: .binary))
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandyUIKit"), AdditionalConfiguration(productType: .staticFramework, integrationType: .binary))
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "Imperio"), AdditionalConfiguration(productType: .staticFramework, integrationType: .cocoapods))
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "MungoHealer"), AdditionalConfiguration(productType: .staticFramework, integrationType: .binary))
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "SwiftyBeaver"), AdditionalConfiguration(productType: .staticFramework, integrationType: .binary))
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandySwift"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandyUIKit"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "Imperio"), AdditionalConfiguration(linkageType: .static, integrationType: .cocoapods))
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "MungoHealer"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
+            XCTAssertEqual(try! sut.additionalConfiguration(for: "SwiftyBeaver"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
         }
     }
 }

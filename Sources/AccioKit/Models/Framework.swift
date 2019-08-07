@@ -60,20 +60,20 @@ struct Framework {
     }
 }
 
-/// The type of the product to be generated for a dependency
-enum ProductType: String, CaseIterable {
-    /// Generate the product as the author of the dependency has configured it
+/// The type of linkage to use
+enum LinkageType: String, CaseIterable {
+    /// Use the linkage that the author of the dependency has configured
     case `default`
-    /// Generate a static framework
-    case staticFramework = "static-framework"
-    /// Generate a dynamic framework
-    case dynamicFramework = "dynamic-framework"
+    /// Use static linkage
+    case `static` = "static"
+    /// Use dynamic linkage
+    case dynamic = "dynamic"
 }
 
 /// The type of integration to be used when adding the dependencies to the Xcode project
 enum IntegrationType: String, CaseIterable {
     /// Adding the dependencies to the Xcode project as already compiled binaries (the option by default)
-    case binary = "default"
+    case binary
     /// Adding the dependencies to the Xcode project as source code
     case source
     /// Adding the dependencies to a cocoapods setup (using the compiled binaries, not source code)
@@ -82,9 +82,9 @@ enum IntegrationType: String, CaseIterable {
 
 /// Additional configuration for the frameworks
 struct AdditionalConfiguration: Equatable {
-    var productType: ProductType
+    var linkageType: LinkageType
     var integrationType: IntegrationType
 
-    static let `default` = AdditionalConfiguration(productType: .default, integrationType: .binary)
+    static let `default` = AdditionalConfiguration(linkageType: .default, integrationType: .binary)
 }
 

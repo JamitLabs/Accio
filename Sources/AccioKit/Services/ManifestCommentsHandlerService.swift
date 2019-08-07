@@ -1,22 +1,51 @@
 import Foundation
-import SwiftShell
 
 /// Possible errors thrown by the ManifestCommentsHandlerService
 enum ManifestCommentsHandlerError: Error, Equatable {
-    case sameKeyAppearsMoreThanOnceInTheSameComment(comment: String, count: Int)
-    case keyWithoutValue(comment: String, key: CommentKey)
-    case invalidValue(comment: String, key: CommentKey, value: String, possibleValues: [String])
-    case commentWithoutKnownKeys(comment: String, possibleKeys: [String])
+    case targetNameCouldNotBeParsed(string: String)
+    case invalidValue(comment: String, key: String, value: String, possibleValues: [String])
+    case dependencyNameWasFoundBeforeEnum(comment: String, dependencyName: String)
+    case multipleSpecificationsForTheSameDependency(comment: String, key: String, dependencyName: String, specifications: [String])
+}
+
+enum CommentParameters: String {
+    case defaultLinkage
+    case customLinkage
+    case defaultIntegration
+    case customIntegration
 }
 
 /// A convenient enum containing logic related with regular expressions
 private enum Regex {
-    /// Pattern to detect an accio comment
-    private static let accioPattern = #"(.*)//\s*accio"#
+    /// Pattern to detect the start of a target
+    static let targetPattern = #"( *)\.target\("#
     /// Capture all text that follows the same level of indentation
-    private static let sameIndentationPattern = #"(\n\1.*)*"#
-    /// Regex matching all text that starts with an accio comment and has the same indentation level
-    static let accioComment = NSRegularExpression("\(accioPattern).*\(sameIndentationPattern)")
+    static let sameIndentationPattern = #"(\n\1.*)*"#
+    /// Regex matching all text at the same indentation level than a target declaration
+    static let targetContent = NSRegularExpression("\(targetPattern).*\(sameIndentationPattern)")
+
+    static let enumGroupPattern = #"\.(\w*)"#
+    static let commentPattern = #" *// *"#
+    static let anythingGroupPattern = #"([^\s].*)"#
+
+    static let targetName = NSRegularExpression(argumentPattern("name") + #""(.*)""#)
+    static let defaultLinkage = NSRegularExpression(
+        commentPattern + argumentPattern(CommentParameters.defaultLinkage.rawValue) + enumGroupPattern
+    )
+    static let defaultIntegration = NSRegularExpression(
+        commentPattern + argumentPattern(CommentParameters.defaultIntegration.rawValue) + enumGroupPattern
+    )
+    static let customLinkage = NSRegularExpression(
+        commentPattern + argumentPattern(CommentParameters.customLinkage.rawValue) + anythingGroupPattern
+    )
+    static let cutomIntegration = NSRegularExpression(
+        commentPattern + argumentPattern(CommentParameters.customIntegration.rawValue) + anythingGroupPattern
+    )
+
+    static func argumentPattern(_ argument: String) -> String {
+        return "\(argument) *: *"
+    }
+    // defaultLinking: .static,
 
     /// Swift string regex. From: https://stackoverflow.com/questions/171480/regex-grabbing-values-between-quotation-marks
     private static let quotedString = NSRegularExpression(#"(["'])(?:(?=(\\?))\2.)*?\1"#)
@@ -37,150 +66,185 @@ final class ManifestCommentsHandlerService {
         self.workingDirectory = URL(fileURLWithPath: workingDirectory)
     }
 
-    private var cachedManifestComments: [ManifestComment]?
-    /// Manifest comments. Fetched once and cached
-    func manifestComments() throws -> [ManifestComment] {
-        if cachedManifestComments == nil {
-            cachedManifestComments = try loadManifestComments()
-        }
-        return cachedManifestComments!
-    }
-    
-    private var cachedAdditionalConfiguration: [String: AdditionalConfiguration] = [:]
     /// Additional configuration per dependency. Fetched once and cached
     func additionalConfiguration(for dependencyName: String) throws -> AdditionalConfiguration {
-        if cachedAdditionalConfiguration[dependencyName] == nil {
-            var additionalConfiguration = AdditionalConfiguration.default
-            for manifestComment in try manifestComments() {
-                switch manifestComment {
-                case let .productType(productType, dependencies):
-                    if dependencies.contains(dependencyName) {
-                        additionalConfiguration.productType = productType
-                    }
-
-                case let .integrationType(integrationType, dependencies):
-                    if dependencies.contains(dependencyName) {
-                        additionalConfiguration.integrationType = integrationType
-                    }
-                }
-            }
-            cachedAdditionalConfiguration[dependencyName] = additionalConfiguration
-        }
-        return cachedAdditionalConfiguration[dependencyName]!
+        return .default
     }
 
-    /// Returns all the information from the manifest that is passed as accio comments
-    private func loadManifestComments() throws -> [ManifestComment] {
+    func manifestComments() throws -> [String] {
+        let rawTargetInformation = try parseComments()
+        let targetInformation = try parseRawTargetInformation(rawTargetInformation)
+        print(targetInformation)
+        return []
+    }
+
+    private func parseComments() throws -> [RawTargetInformation] {
         let packageManifestPath = workingDirectory.appendingPathComponent("Package.swift")
         let packageManifestContent = try String(contentsOf: packageManifestPath)
-        let matches = packageManifestContent.nestedMatches(for: Regex.accioComment)
-        let comments: [RawComment] = matches.map {
-            var lines = $0.lines()
-            let firstLine = lines.removeFirst().trimmingCharacters(in: .whitespaces)
-            return RawComment(header: firstLine, content: lines.joined(separator: "\n"))
-        }
-
-        return try comments.flatMap { comment -> [ManifestComment] in
-            return try parse(comment: comment)
-        }
-    }
-
-    /// Parses a raw comment, returning the information that it contains
-    private func parse(comment: RawComment) throws -> [ManifestComment] {
-        let results: [ManifestComment] = try CommentKey.allCases.compactMap { commentKey in
-            let regex = NSRegularExpression(commentKey.rawValue)
-            if comment.header.matches(regex) {
-                return try commentKey.parse(comment)
-            } else {
-                // Do nothing
-                return nil
+        let targetsContent = packageManifestContent.matches(for: Regex.targetContent)
+        return try targetsContent.map {
+            guard let targetName = $0.groupMatches(for: Regex.targetName).flatMap({ $0 }).first else {
+                throw ManifestCommentsHandlerError.targetNameCouldNotBeParsed(string: $0)
             }
-        }
-        guard !results.isEmpty else {
-            throw ManifestCommentsHandlerError.commentWithoutKnownKeys(
-                comment: comment.header,
-                possibleKeys: CommentKey.allCases.map { $0.rawValue }
+            let defaultLinkage = $0.groupMatches(for: Regex.defaultLinkage).flatMap { $0 }.first
+
+            let defaultIntegration = $0.groupMatches(for: Regex.defaultIntegration).flatMap { $0 }.first
+
+            let rawCustomLinkage = $0.groupMatches(for: Regex.customLinkage).flatMap { $0 }.first
+            let customLinkage = try parseCustomRawValues(rawCustomLinkage)
+
+            let rawCustomIntegration = $0.groupMatches(for: Regex.cutomIntegration).flatMap { $0 }.first
+            let customIntegration = try parseCustomRawValues(rawCustomIntegration)
+
+            return RawTargetInformation(
+                rawComment: $0,
+                targetName: targetName,
+                defaultLinkage: defaultLinkage,
+                customLinkage: customLinkage,
+                defaultIntegration: defaultIntegration,
+                customIntegration: customIntegration
             )
         }
-
-        return results
-    }
-}
-
-/// A raw comment
-struct RawComment {
-    /// The line containing the accio comment
-    let header: String
-    /// The lines at the same indentation level as the header
-    let content: String
-}
-
-/// The possible comment keys accepted in the manifest
-enum CommentKey: String, CaseIterable {
-    case productType = "product-type"
-    case integrationType = "integration-type"
-
-    /// The pattern used to identify key and value
-    var pattern: String {
-        return "\(self.rawValue)" + #":[^\s]+"#
     }
 
-    /// Parses the comment, extracting all the information associated with a key
-    func parse(_ comment: RawComment) throws -> ManifestComment {
-        let value = try getValue(from: comment.header)
+    private func parseCustomRawValues(_ string: String?) throws -> [(enum: String, values: [String])] {
+        guard let string = string else {
+            return []
+        }
 
-        switch self {
-        case .productType:
-            guard let productType = ProductType(rawValue: value) else {
+        let strings = string.components(separatedBy: [",", ":"]).map {
+            $0.replacingOccurrences(of: "\"", with: "")
+                .replacingOccurrences(of: "[", with: "")
+                .replacingOccurrences(of: "]", with: "")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            }.filter { $0.isEmpty == false }
+
+        var result: [(enum: String, values: [String])] = []
+        try strings.forEach {
+            if $0.hasPrefix(".") {
+                result.append((enum: $0.replacingOccurrences(of: ".", with: ""), values: []))
+            } else {
+                if result.isEmpty == false {
+                    result[result.endIndex - 1].values.append($0)
+                } else {
+                    throw ManifestCommentsHandlerError.dependencyNameWasFoundBeforeEnum(comment: string, dependencyName: $0)
+                }
+            }
+        }
+
+        return result
+    }
+
+    private func parseRawTargetInformation(_ rawTargetInformation: [RawTargetInformation]) throws -> [TargetInformation] {
+        return try rawTargetInformation.map { targetInformation in
+            let defaultLinkage: LinkageType? = try initializeFromRaw(
+                rawValue: targetInformation.defaultLinkage,
+                comment: targetInformation.rawComment,
+                key: CommentParameters.defaultLinkage.rawValue
+            )
+
+            let defaultIntegration: IntegrationType? = try initializeFromRaw(
+                rawValue: targetInformation.defaultIntegration,
+                comment: targetInformation.rawComment,
+                key: CommentParameters.defaultIntegration.rawValue
+            )
+
+            let customLinkage: [String: LinkageType] = try parseCustomValues(
+                targetInformation.customLinkage,
+                comment: targetInformation.rawComment,
+                key: CommentParameters.customLinkage.rawValue
+            )
+
+            let customIntegration: [String: IntegrationType] = try parseCustomValues(
+                targetInformation.customIntegration,
+                comment: targetInformation.rawComment,
+                key: CommentParameters.customIntegration.rawValue
+            )
+
+            return TargetInformation(
+                targetName: targetInformation.targetName,
+                defaultLinkage: defaultLinkage,
+                customLinkage: customLinkage,
+                defaultIntegration: defaultIntegration,
+                customIntegration: customIntegration
+            )
+        }
+    }
+
+    func parseCustomValues<T: RawRepresentable & CaseIterable>(
+        _ values: [(enum: String, values: [String])],
+        comment: String,
+        key: String
+        ) throws -> [String: T] where T.RawValue == String {
+        var result: [String: T] = [:]
+        try values.forEach {
+            guard let enumValue = T.init(rawValue: $0.enum) else {
                 throw ManifestCommentsHandlerError.invalidValue(
-                    comment: comment.header,
-                    key: self,
-                    value: value,
-                    possibleValues: ProductType.allCases.map { $0.rawValue }
+                    comment: comment,
+                    key: key,
+                    value: $0.enum,
+                    possibleValues: T.allCases.map { "\($0)" }
                 )
             }
-
-            let dependencies = Regex.parseQuotedStrings(comment.content)
-            return ManifestComment.productType(productType: productType, dependencies: dependencies)
-
-        case .integrationType:
-            guard let integrationType = IntegrationType(rawValue: value) else {
-                throw ManifestCommentsHandlerError.invalidValue(
-                    comment: comment.header,
-                    key: self,
-                    value: value,
-                    possibleValues: IntegrationType.allCases.map { $0.rawValue }
-                )
+            try $0.values.forEach {
+                if let existingValue = result[$0], existingValue == enumValue {
+                    throw ManifestCommentsHandlerError.multipleSpecificationsForTheSameDependency(
+                        comment: comment,
+                        key: key,
+                        dependencyName: $0,
+                        specifications: T.allCases.map { "\($0)" }
+                    )
+                }
+                result[$0] = enumValue
             }
-
-            let dependencies = Regex.parseQuotedStrings(comment.content)
-            return ManifestComment.integrationType(integrationType: integrationType, dependencies: dependencies)
         }
+        return result
     }
 
-    /// Extracts the value for a key from the string
-    private func getValue(from string: String) throws -> String {
-        let regex = NSRegularExpression(pattern)
-        let matches = string.matches(for: regex)
-        guard let match = matches.first else {
-            throw ManifestCommentsHandlerError.keyWithoutValue(comment: string, key: self)
+    private func initializeFromRaw<T: RawRepresentable & CaseIterable>(
+        rawValue: String?,
+        comment: String,
+        key: String
+        ) throws -> T? where T.RawValue == String {
+        if let rawValue = rawValue {
+            if let value = T.init(rawValue: rawValue) {
+                return value
+            } else {
+                throw ManifestCommentsHandlerError.invalidValue(
+                    comment: comment,
+                    key: key,
+                    value: rawValue,
+                    possibleValues: T.allCases.map { "\($0)" }
+                )
+            }
         }
-
-        guard matches.count == 1 else {
-            throw ManifestCommentsHandlerError.sameKeyAppearsMoreThanOnceInTheSameComment(comment: string, count: matches.count)
-        }
-
-        let value = match.components(separatedBy: ":")[1]
-        return value
+        return nil
     }
 }
 
-/// The configuration in the manifest that is passed as comments
-enum ManifestComment: Equatable {
-    /// Product type to be used when generating the dependency products
-    case productType(productType: ProductType, dependencies: [String])
-    /// Integration type to be used when integrating the dependencies in the Xcode project
-    case integrationType(integrationType: IntegrationType, dependencies: [String])
+struct RawTargetInformation {
+    let rawComment: String
+    let targetName: String
+    let defaultLinkage: String?
+    let customLinkage: [(enum: String, values: [String])]
+    let defaultIntegration: String?
+    let customIntegration: [(enum: String, values: [String])]
+}
+
+struct TargetInformation {
+    let targetName: String
+    let defaultLinkage: LinkageType?
+    let customLinkage: [String: LinkageType]
+    let defaultIntegration: IntegrationType?
+    let customIntegration: [String: IntegrationType]
+}
+
+// Extension based on https://stackoverflow.com/questions/25329186/safe-bounds-checked-array-lookup-in-swift-through-optional-bindings
+private extension Collection {
+    /// Returns the element at the specified index if it is within bounds, otherwise nil.
+    subscript (safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
 }
 
 /// MARK: convenient extensions to work with regular expressions
@@ -204,6 +268,7 @@ private extension String {
         return results.flatMap { result -> [String] in
             let string = String(self[Range(result.range, in: self)!])
             let firstLineRange = string.lineRange(for: string.startIndex ..< string.index(after: string.startIndex))
+            print(firstLineRange)
             // Match nested text after the first line, that is where the accio comment is
             let newRange = string.index(after: firstLineRange.upperBound) ..< string.endIndex
             let newNSRange = NSRange(newRange, in: string)
@@ -216,9 +281,23 @@ private extension String {
         let results = regex.matches(in: self, range: NSRange(self.startIndex..., in: self))
         return !results.isEmpty
     }
+
+    /// Returns the strings matching inside the regex groups
+    func groupMatches(for regex: NSRegularExpression) -> [[String]] {
+        let result = regex.matches(in: self, range: NSRange(self.startIndex..., in: self))
+        return result.map { match in
+            (1 ..< match.numberOfRanges).map {
+                let rangeBounds = match.range(at: $0)
+                guard let range = Range(rangeBounds, in: self) else {
+                    return ""
+                }
+                return String(self[range])
+            }
+        }
+    }
 }
 
-extension NSRegularExpression {
+private extension NSRegularExpression {
     convenience init(_ pattern: String) {
         do {
             try self.init(pattern: pattern, options: [.caseInsensitive])
