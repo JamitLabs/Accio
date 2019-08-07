@@ -183,30 +183,23 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
     func testValidComments() {
         resourcesLoaded([manifestResourceWithValidComments]) {
             let sut = ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path)
-            let manifestComments = try! sut.parseManifestComments()
-            
-            XCTAssertEqual(manifestComments, [
-                Information(
-                    targetName: "TestProject-iOS",
-                    defaultLinkage: LinkageType.default,
-                    customLinkage: [
-                        "SwiftyBeaver": .default,
-                        "Imperio" : .default
-                    ],
-                    defaultIntegration: IntegrationType.binary,
-                    customIntegration: [
-                        "HandySwift": .binary,
-                        "MungoHealer": .binary,
-                        "HandyUIKit": .binary
-                    ]
-                )
-            ])
+            let result = try! sut.parseManifestComments()
 
-//            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandySwift"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
-//            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandyUIKit"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
-//            XCTAssertEqual(try! sut.additionalConfiguration(for: "Imperio"), AdditionalConfiguration(linkageType: .static, integrationType: .cocoapods))
-//            XCTAssertEqual(try! sut.additionalConfiguration(for: "MungoHealer"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
-//            XCTAssertEqual(try! sut.additionalConfiguration(for: "SwiftyBeaver"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
+            let expectedResult = Information(
+                targetName: "TestProject-iOS",
+                defaultLinkage: LinkageType.default,
+                customLinkage: [
+                    "SwiftyBeaver": .default,
+                    "Imperio" : .default
+                ],
+                defaultIntegration: IntegrationType.binary,
+                customIntegration: [
+                    "HandySwift": .binary,
+                    "MungoHealer": .binary,
+                    "HandyUIKit": .binary
+                ]
+            )
+            XCTAssertEqual(result, [expectedResult])
         }
     }
 }
