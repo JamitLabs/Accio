@@ -9,7 +9,6 @@ struct Framework {
     let projectName: String
     let libraryName: String
     let projectDirectory: String
-    let additionalConfiguration: AdditionalConfiguration
     let requiredFrameworks: [Framework]
 
     var commitHash: String {
@@ -59,32 +58,3 @@ struct Framework {
         return path.hasSuffix(".xcodeproj") || path.hasSuffix(".xcworkspace")
     }
 }
-
-/// The type of linkage to use
-enum LinkageType: String, CaseIterable {
-    /// Use the linkage that the author of the dependency has configured
-    case `default`
-    /// Use static linkage
-    case `static` = "static"
-    /// Use dynamic linkage
-    case dynamic = "dynamic"
-}
-
-/// The type of integration to be used when adding the dependencies to the Xcode project
-enum IntegrationType: String, CaseIterable {
-    /// Adding the dependencies to the Xcode project as already compiled binaries (the option by default)
-    case binary
-    /// Adding the dependencies to the Xcode project as source code
-    case source
-    /// Adding the dependencies to a cocoapods setup (using the compiled binaries, not source code)
-    case cocoapods
-}
-
-/// Additional configuration for the frameworks
-struct AdditionalConfiguration: Equatable {
-    var linkageType: LinkageType
-    var integrationType: IntegrationType
-
-    static let `default` = AdditionalConfiguration(linkageType: .default, integrationType: .binary)
-}
-

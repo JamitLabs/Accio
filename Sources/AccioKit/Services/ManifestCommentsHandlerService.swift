@@ -3,12 +3,12 @@ import Foundation
 /// Possible errors thrown by the ManifestCommentsHandlerService
 enum ManifestCommentsHandlerError: Error, Equatable {
     case targetNameCouldNotBeParsed(string: String)
-    case invalidValue(comment: String, key: String, value: String, possibleValues: [String])
+    case invalidValue(key: CommentKey, value: String, possibleValues: [String])
     case dependencyNameWasFoundBeforeEnum(comment: String, dependencyName: String)
-    case multipleSpecificationsForTheSameDependency(comment: String, key: String, dependencyName: String, specifications: [String])
+    case multipleSpecificationsForTheSameDependency(key: CommentKey, dependencyName: String, specifications: [String])
 }
 
-enum CommentParameters: String {
+enum CommentKey: String {
     case defaultLinkage
     case customLinkage
     case defaultIntegration
@@ -30,16 +30,16 @@ private enum Regex {
 
     static let targetName = NSRegularExpression(argumentPattern("name") + #""(.*)""#)
     static let defaultLinkage = NSRegularExpression(
-        commentPattern + argumentPattern(CommentParameters.defaultLinkage.rawValue) + enumGroupPattern
+        commentPattern + argumentPattern(CommentKey.defaultLinkage.rawValue) + enumGroupPattern
     )
     static let defaultIntegration = NSRegularExpression(
-        commentPattern + argumentPattern(CommentParameters.defaultIntegration.rawValue) + enumGroupPattern
+        commentPattern + argumentPattern(CommentKey.defaultIntegration.rawValue) + enumGroupPattern
     )
     static let customLinkage = NSRegularExpression(
-        commentPattern + argumentPattern(CommentParameters.customLinkage.rawValue) + anythingGroupPattern
+        commentPattern + argumentPattern(CommentKey.customLinkage.rawValue) + anythingGroupPattern
     )
     static let cutomIntegration = NSRegularExpression(
-        commentPattern + argumentPattern(CommentParameters.customIntegration.rawValue) + anythingGroupPattern
+        commentPattern + argumentPattern(CommentKey.customIntegration.rawValue) + anythingGroupPattern
     )
 
     static func argumentPattern(_ argument: String) -> String {
@@ -61,24 +61,41 @@ final class ManifestCommentsHandlerService {
     static let shared = ManifestCommentsHandlerService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
 
     private let workingDirectory: URL
+    private var targetsInformation: [Information]?
+    private func getTargetsInformation() throws -> [Information] {
+        if let targetsInformation = targetsInformation {
+            return targetsInformation
+        } else {
+            let targetsInformation = try parseManifestComments()
+            self.targetsInformation = targetsInformation
+            return targetsInformation
+        }
+    }
 
     init(workingDirectory: String) {
         self.workingDirectory = URL(fileURLWithPath: workingDirectory)
     }
 
-    /// Additional configuration per dependency. Fetched once and cached
-    func additionalConfiguration(for dependencyName: String) throws -> AdditionalConfiguration {
-        return .default
+    func linkage(for dependencyName: String, in targetName: String) throws -> LinkageType {
+        let targetInformation = try getTargetsInformation()
+            .filter { $0.targetName == targetName }
+            .first
+        return targetInformation?.customLinkage[dependencyName] ?? targetInformation?.defaultLinkage ?? .default
     }
 
-    func manifestComments() throws -> [String] {
-        let rawTargetInformation = try parseComments()
-        let targetInformation = try parseRawTargetInformation(rawTargetInformation)
-        print(targetInformation)
-        return []
+    func integration(for dependencyName: String, in targetName: String) throws -> IntegrationType {
+        let targetInformation = try getTargetsInformation()
+            .filter { $0.targetName == targetName }
+            .first
+        return targetInformation?.customIntegration[dependencyName] ?? targetInformation?.defaultIntegration ?? .binary
     }
 
-    private func parseComments() throws -> [RawTargetInformation] {
+    func parseManifestComments() throws -> [Information] {
+        let rawTargetInformation = try getRawInformation()
+        return try getInformation(rawTargetInformation)
+    }
+
+    private func getRawInformation() throws -> [RawInformation] {
         let packageManifestPath = workingDirectory.appendingPathComponent("Package.swift")
         let packageManifestContent = try String(contentsOf: packageManifestPath)
         let targetsContent = packageManifestContent.matches(for: Regex.targetContent)
@@ -96,8 +113,7 @@ final class ManifestCommentsHandlerService {
             let rawCustomIntegration = $0.groupMatches(for: Regex.cutomIntegration).flatMap { $0 }.first
             let customIntegration = try parseCustomRawValues(rawCustomIntegration)
 
-            return RawTargetInformation(
-                rawComment: $0,
+            return RawInformation(
                 targetName: targetName,
                 defaultLinkage: defaultLinkage,
                 customLinkage: customLinkage,
@@ -135,33 +151,29 @@ final class ManifestCommentsHandlerService {
         return result
     }
 
-    private func parseRawTargetInformation(_ rawTargetInformation: [RawTargetInformation]) throws -> [TargetInformation] {
-        return try rawTargetInformation.map { targetInformation in
+    private func getInformation(_ rawInformation: [RawInformation]) throws -> [Information] {
+        return try rawInformation.map { targetInformation in
             let defaultLinkage: LinkageType? = try initializeFromRaw(
                 rawValue: targetInformation.defaultLinkage,
-                comment: targetInformation.rawComment,
-                key: CommentParameters.defaultLinkage.rawValue
+                key: .defaultLinkage
             )
 
             let defaultIntegration: IntegrationType? = try initializeFromRaw(
                 rawValue: targetInformation.defaultIntegration,
-                comment: targetInformation.rawComment,
-                key: CommentParameters.defaultIntegration.rawValue
+                key: .defaultIntegration
             )
 
             let customLinkage: [String: LinkageType] = try parseCustomValues(
                 targetInformation.customLinkage,
-                comment: targetInformation.rawComment,
-                key: CommentParameters.customLinkage.rawValue
+                key: .customLinkage
             )
 
             let customIntegration: [String: IntegrationType] = try parseCustomValues(
                 targetInformation.customIntegration,
-                comment: targetInformation.rawComment,
-                key: CommentParameters.customIntegration.rawValue
+                key: .customIntegration
             )
 
-            return TargetInformation(
+            return Information(
                 targetName: targetInformation.targetName,
                 defaultLinkage: defaultLinkage,
                 customLinkage: customLinkage,
@@ -173,14 +185,12 @@ final class ManifestCommentsHandlerService {
 
     func parseCustomValues<T: RawRepresentable & CaseIterable>(
         _ values: [(enum: String, values: [String])],
-        comment: String,
-        key: String
+        key: CommentKey
         ) throws -> [String: T] where T.RawValue == String {
         var result: [String: T] = [:]
         try values.forEach {
             guard let enumValue = T.init(rawValue: $0.enum) else {
                 throw ManifestCommentsHandlerError.invalidValue(
-                    comment: comment,
                     key: key,
                     value: $0.enum,
                     possibleValues: T.allCases.map { "\($0)" }
@@ -189,7 +199,6 @@ final class ManifestCommentsHandlerService {
             try $0.values.forEach {
                 if let existingValue = result[$0], existingValue == enumValue {
                     throw ManifestCommentsHandlerError.multipleSpecificationsForTheSameDependency(
-                        comment: comment,
                         key: key,
                         dependencyName: $0,
                         specifications: T.allCases.map { "\($0)" }
@@ -203,15 +212,13 @@ final class ManifestCommentsHandlerService {
 
     private func initializeFromRaw<T: RawRepresentable & CaseIterable>(
         rawValue: String?,
-        comment: String,
-        key: String
+        key: CommentKey
         ) throws -> T? where T.RawValue == String {
         if let rawValue = rawValue {
             if let value = T.init(rawValue: rawValue) {
                 return value
             } else {
                 throw ManifestCommentsHandlerError.invalidValue(
-                    comment: comment,
                     key: key,
                     value: rawValue,
                     possibleValues: T.allCases.map { "\($0)" }
@@ -222,8 +229,7 @@ final class ManifestCommentsHandlerService {
     }
 }
 
-struct RawTargetInformation {
-    let rawComment: String
+private struct RawInformation {
     let targetName: String
     let defaultLinkage: String?
     let customLinkage: [(enum: String, values: [String])]
@@ -231,12 +237,32 @@ struct RawTargetInformation {
     let customIntegration: [(enum: String, values: [String])]
 }
 
-struct TargetInformation {
+struct Information: Equatable {
     let targetName: String
     let defaultLinkage: LinkageType?
     let customLinkage: [String: LinkageType]
     let defaultIntegration: IntegrationType?
     let customIntegration: [String: IntegrationType]
+}
+
+/// The type of linkage to use
+enum LinkageType: String, CaseIterable {
+    /// Use the linkage that the author of the dependency has configured
+    case `default`
+    /// Use static linkage
+    // case `static` = "static" // TODO: implentation in the future
+    /// Use dynamic linkage
+    // case dynamic = "dynamic" // TODO: implentation in the future
+}
+
+/// The type of integration to be used when adding the dependencies to the Xcode project
+enum IntegrationType: String, CaseIterable {
+    /// Adding the dependencies to the Xcode project as already compiled binaries (the option by default)
+    case binary
+    /// Adding the dependencies to the Xcode project as source code
+    // case source // TODO: implentation in the future
+    /// Adding the dependencies to a cocoapods setup (using the compiled binaries, not source code)
+    // case cocoapods // TODO: implentation in the future
 }
 
 // Extension based on https://stackoverflow.com/questions/25329186/safe-bounds-checked-array-lookup-in-swift-through-optional-bindings

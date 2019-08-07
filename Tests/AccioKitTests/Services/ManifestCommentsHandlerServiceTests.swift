@@ -3,8 +3,8 @@ import XCTest
 
 class ManifestCommentsHandlerServiceTests: XCTestCase {
     private let testResourcesDir: URL = FileManager.userCacheDirUrl.appendingPathComponent("AccioTestResources")
-    private let possibleProductKeys = ["product-type", "integration-type"]
-    private let possibleIntegrationValues = ["default", "source", "cocoapods"]
+    private let possibleLinkageValues = ["default"]
+    private let possibleIntegrationValues = ["binary"]
     private let manifestResourceTopContent = """
                 // swift-tools-version:4.2
                 import PackageDescription
@@ -45,7 +45,7 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
         )
     }
 
-    private var manifestResourceWithEmptyComment: Resource {
+    private var manifestResourceWithArbitraryComment: Resource {
         return Resource(
             url: testResourcesDir.appendingPathComponent("Package.swift"),
             contents: """
@@ -57,36 +57,11 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
                               "HandySwift",
                               "HandyUIKit",
                               "Imperio",
-                              // accio
                               "MungoHealer",
                               "SwiftyBeaver",
                             ],
                             path: "TestProject-iOS"
-                        )
-                    ]
-                )
-
-                """
-        )
-    }
-
-    private var manifestResourceWithUnknownKey: Resource {
-        return Resource(
-            url: testResourcesDir.appendingPathComponent("Package.swift"),
-            contents: """
-                \(manifestResourceTopContent)
-                    targets: [
-                        .target(
-                            name: "TestProject-iOS",
-                            dependencies: [
-                              "HandySwift",
-                              "HandyUIKit",
-                              "Imperio",
-                              // accio unknown-key
-                              "MungoHealer",
-                              "SwiftyBeaver",
-                            ],
-                            path: "TestProject-iOS"
+                            // This is an arbitrary comment
                         )
                     ]
                 )
@@ -107,36 +82,11 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
                               "HandySwift",
                               "HandyUIKit",
                               "Imperio",
-                              // accio integration-type:invalid-value
                               "MungoHealer",
                               "SwiftyBeaver",
                             ],
                             path: "TestProject-iOS"
-                        )
-                    ]
-                )
-
-                """
-        )
-    }
-
-    private var manifestResourceWithSameKeyMultipleTimesInTheSameComment: Resource {
-        return Resource(
-            url: testResourcesDir.appendingPathComponent("Package.swift"),
-            contents: """
-                \(manifestResourceTopContent)
-                    targets: [
-                        .target(
-                            name: "TestProject-iOS",
-                            dependencies: [
-                              // accio product-type:static-framework product-type:dynamic-framework
-                              "HandySwift",
-                              "HandyUIKit",
-                              "Imperio",
-                              "MungoHealer",
-                              "SwiftyBeaver",
-                            ],
-                            path: "TestProject-iOS"
+                            // defaultLinkage: .someInvalidVale,
                         )
                     ]
                 )
@@ -161,10 +111,10 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
                               "SwiftyBeaver",
                             ],
                             path: "TestProject-iOS"
-                            // defaultLinkage: .static,
-                            // customLinkage: [.dynamic: ["SwiftyBeaver", "SwiftyUserDefaults"]],
+                            // defaultLinkage: .default,
+                            // customLinkage: [.default: ["SwiftyBeaver", "Imperio"]],
                             // defaultIntegration: .binary,
-                            // customIntegration: [.binary: ["HandySwift", "MungoHealer"], .cocoapods: ["HandyUIKit"]],
+                            // customIntegration: [.binary: ["HandySwift", "MungoHealer"], .binary: ["HandyUIKit"]],
                         )
                     ]
                 )
@@ -183,72 +133,46 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
     func testWithoutComments() {
         resourcesLoaded([manifestResourceWithoutComments]) {
             let sut = ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path)
-            let manifestComments = try! sut.manifestComments()
-            XCTAssertEqual(manifestComments, [])
-
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandySwift"), .default)
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandyUIKit"), .default)
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "Imperio"), .default)
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "MungoHealer"), .default)
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "SwiftyBeaver"), .default)
+            let result = try! sut.parseManifestComments()
+            let expectedResult = [
+                Information(
+                    targetName: "TestProject-iOS",
+                    defaultLinkage: nil,
+                    customLinkage: [:],
+                    defaultIntegration: nil,
+                    customIntegration: [:]
+                )
+            ]
+            XCTAssertEqual(result, expectedResult)
         }
     }
 
-    func testWithEmptyComment() {
-        resourcesLoaded([manifestResourceWithEmptyComment]) {
-            let expectedError = ManifestCommentsHandlerError.commentWithoutKnownKeys(
-                comment: "// accio",
-                possibleKeys: possibleProductKeys
-            )
-            do {
-                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
-                XCTFail("Function was expected to throw")
-            } catch {
-                XCTAssertEqual(error as? ManifestCommentsHandlerError, expectedError)
-            }
-        }
-    }
-
-    func testWithUnknownKey() {
-        resourcesLoaded([manifestResourceWithUnknownKey]) {
-            let expectedError = ManifestCommentsHandlerError.commentWithoutKnownKeys(
-                comment: "// accio unknown-key",
-                possibleKeys: possibleProductKeys
-            )
-            do {
-                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
-                XCTFail("Function was expected to throw")
-            } catch {
-                XCTAssertEqual(error as? ManifestCommentsHandlerError, expectedError)
-            }
+    func testWithArbitraryComment() {
+        resourcesLoaded([manifestResourceWithArbitraryComment]) {
+            let sut = ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path)
+            let result = try! sut.parseManifestComments()
+            let expectedResult = [
+                Information(
+                    targetName: "TestProject-iOS",
+                    defaultLinkage: nil,
+                    customLinkage: [:],
+                    defaultIntegration: nil,
+                    customIntegration: [:]
+                )
+            ]
+            XCTAssertEqual(result, expectedResult)
         }
     }
 
     func testWithInvalidValue() {
         resourcesLoaded([manifestResourceWithInvalidValue]) {
             let expectedError = ManifestCommentsHandlerError.invalidValue(
-                comment: "// accio integration-type:invalid-value",
-                key: .integrationType,
-                value: "invalid-value",
-                possibleValues: possibleIntegrationValues
+                key: .defaultLinkage,
+                value: "someInvalidVale",
+                possibleValues: possibleLinkageValues
             )
             do {
-                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
-                XCTFail("Function was expected to throw")
-            } catch {
-                XCTAssertEqual(error as? ManifestCommentsHandlerError, expectedError)
-            }
-        }
-    }
-
-    func testWithSameKeyMultipleTimesInTheSameComment() {
-        resourcesLoaded([manifestResourceWithSameKeyMultipleTimesInTheSameComment]) {
-            let expectedError = ManifestCommentsHandlerError.sameKeyAppearsMoreThanOnceInTheSameComment(
-                comment: "// accio product-type:static-framework product-type:dynamic-framework",
-                count: 2
-            )
-            do {
-                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).manifestComments()
+                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).parseManifestComments()
                 XCTFail("Function was expected to throw")
             } catch {
                 XCTAssertEqual(error as? ManifestCommentsHandlerError, expectedError)
@@ -259,28 +183,30 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
     func testValidComments() {
         resourcesLoaded([manifestResourceWithValidComments]) {
             let sut = ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path)
-            let manifestComments = try! sut.manifestComments()
+            let manifestComments = try! sut.parseManifestComments()
             
             XCTAssertEqual(manifestComments, [
-                ManifestComment.linkageType(
-                    linkageType: .static,
-                    dependencies: ["HandySwift", "HandyUIKit", "Imperio", "MungoHealer", "SwiftyBeaver"]
-                ),
-                ManifestComment.integrationType(
-                    integrationType: .cocoapods,
-                    dependencies: ["Imperio", "MungoHealer", "SwiftyBeaver"]
-                ),
-                ManifestComment.integrationType(
-                    integrationType: .binary,
-                    dependencies: ["MungoHealer", "SwiftyBeaver"]
-                ),
+                Information(
+                    targetName: "TestProject-iOS",
+                    defaultLinkage: LinkageType.default,
+                    customLinkage: [
+                        "SwiftyBeaver": .default,
+                        "Imperio" : .default
+                    ],
+                    defaultIntegration: IntegrationType.binary,
+                    customIntegration: [
+                        "HandySwift": .binary,
+                        "MungoHealer": .binary,
+                        "HandyUIKit": .binary
+                    ]
+                )
             ])
 
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandySwift"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandyUIKit"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "Imperio"), AdditionalConfiguration(linkageType: .static, integrationType: .cocoapods))
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "MungoHealer"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
-            XCTAssertEqual(try! sut.additionalConfiguration(for: "SwiftyBeaver"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
+//            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandySwift"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
+//            XCTAssertEqual(try! sut.additionalConfiguration(for: "HandyUIKit"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
+//            XCTAssertEqual(try! sut.additionalConfiguration(for: "Imperio"), AdditionalConfiguration(linkageType: .static, integrationType: .cocoapods))
+//            XCTAssertEqual(try! sut.additionalConfiguration(for: "MungoHealer"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
+//            XCTAssertEqual(try! sut.additionalConfiguration(for: "SwiftyBeaver"), AdditionalConfiguration(linkageType: .static, integrationType: .binary))
         }
     }
 }

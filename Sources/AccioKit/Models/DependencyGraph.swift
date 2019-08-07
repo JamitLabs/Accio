@@ -56,7 +56,6 @@ extension DependencyGraph {
             projectName: dependency.name,
             libraryName: libraryName,
             projectDirectory: dependency.path,
-            additionalConfiguration: try ManifestCommentsHandlerService.shared.additionalConfiguration(for: dependency.name),
             requiredFrameworks: try dependency.manifest().frameworkDependencies(ofLibrary: libraryName, dependencyGraph: self)
         )
     }
