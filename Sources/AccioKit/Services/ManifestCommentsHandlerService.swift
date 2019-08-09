@@ -3,12 +3,13 @@ import Foundation
 /// Possible errors thrown by the ManifestCommentsHandlerService
 enum ManifestCommentsHandlerError: Error, Equatable {
     case targetNameCouldNotBeParsed(string: String)
-    case invalidValue(key: CommentKey, value: String, possibleValues: [String])
+    case invalidValue(key: CommentArgument, value: String, possibleValues: [String])
     case dependencyNameWasFoundBeforeEnum(comment: String, dependencyName: String)
-    case multipleSpecificationsForTheSameDependency(key: CommentKey, dependencyName: String, specifications: [String])
+    case multipleSpecificationsForTheSameDependency(key: CommentArgument, dependencyName: String, specifications: [String])
 }
 
-enum CommentKey: String {
+/// The possible commented arguments that are supported
+enum CommentArgument: String {
     case defaultLinkage
     case customLinkage
     case defaultIntegration
@@ -19,40 +20,37 @@ enum CommentKey: String {
 private enum Regex {
     /// Pattern to detect the start of a target
     static let targetPattern = #"( *)\.target\("#
-    /// Capture all text that follows the same level of indentation
+    /// Pattern that matches all text that follows the same level of indentation
     static let sameIndentationPattern = #"(\n\1.*)*"#
+    /// Pattern that matches a comment
+    static let commentPattern = #" *// *"#
+    /// Pattern with a group that, when matching, returns the textual part of an enum object
+    static let enumGroupPattern = #"\.(\w*)"#
+    /// Pattern with a group that, when matching, returns all the matched content
+    static let anythingGroupPattern = #"([^\s].*)"#
     /// Regex matching all text at the same indentation level than a target declaration
     static let targetContent = NSRegularExpression("\(targetPattern).*\(sameIndentationPattern)")
-
-    static let enumGroupPattern = #"\.(\w*)"#
-    static let commentPattern = #" *// *"#
-    static let anythingGroupPattern = #"([^\s].*)"#
-
+    /// Regex with a group that, when matching, returns the target name
     static let targetName = NSRegularExpression(argumentPattern("name") + #""(.*)""#)
+    /// Regex that matches the defaultLinkage comment
     static let defaultLinkage = NSRegularExpression(
-        commentPattern + argumentPattern(CommentKey.defaultLinkage.rawValue) + enumGroupPattern
+        commentPattern + argumentPattern(CommentArgument.defaultLinkage.rawValue) + enumGroupPattern
     )
+    /// Regex that matches the defaultIntegration comment
     static let defaultIntegration = NSRegularExpression(
-        commentPattern + argumentPattern(CommentKey.defaultIntegration.rawValue) + enumGroupPattern
+        commentPattern + argumentPattern(CommentArgument.defaultIntegration.rawValue) + enumGroupPattern
     )
+    /// Regex that matches the customLinkage comment
     static let customLinkage = NSRegularExpression(
-        commentPattern + argumentPattern(CommentKey.customLinkage.rawValue) + anythingGroupPattern
+        commentPattern + argumentPattern(CommentArgument.customLinkage.rawValue) + anythingGroupPattern
     )
+    /// Regex that matches the cutomIntegration comment
     static let cutomIntegration = NSRegularExpression(
-        commentPattern + argumentPattern(CommentKey.customIntegration.rawValue) + anythingGroupPattern
+        commentPattern + argumentPattern(CommentArgument.customIntegration.rawValue) + anythingGroupPattern
     )
-
+    /// Function that generates a pattern to match a swift function argument
     static func argumentPattern(_ argument: String) -> String {
         return "\(argument) *: *"
-    }
-    // defaultLinking: .static,
-
-    /// Swift string regex. From: https://stackoverflow.com/questions/171480/regex-grabbing-values-between-quotation-marks
-    private static let quotedString = NSRegularExpression(#"(["'])(?:(?=(\\?))\2.)*?\1"#)
-    /// Parses multiple quoted strings
-    static func parseQuotedStrings(_ string: String) -> [String] {
-        return string.matches(for: quotedString)
-            .map { $0.replacingOccurrences(of: "\"|'", with: "", options: .regularExpression) }
     }
 }
 
@@ -61,14 +59,18 @@ final class ManifestCommentsHandlerService {
     static let shared = ManifestCommentsHandlerService(workingDirectory: GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath)
 
     private let workingDirectory: URL
-    private var targetsInformation: [Information]?
-    private func getTargetsInformation() throws -> [Information] {
-        if let targetsInformation = targetsInformation {
-            return targetsInformation
+
+    /// A property that stores the result from parsing the comments on the manifest
+    private var commentsInformation: [CommentInformation]?
+
+    /// A function that fetches result from parsing the comments on the manifest
+    func getCommentsInformation() throws -> [CommentInformation] {
+        if let commentsInformation = commentsInformation {
+            return commentsInformation
         } else {
-            let targetsInformation = try parseManifestComments()
-            self.targetsInformation = targetsInformation
-            return targetsInformation
+            let commentsInformation = try parseManifestComments()
+            self.commentsInformation = commentsInformation
+            return commentsInformation
         }
     }
 
@@ -76,26 +78,30 @@ final class ManifestCommentsHandlerService {
         self.workingDirectory = URL(fileURLWithPath: workingDirectory)
     }
 
+    /// Convenient function to obtain the linkage information for a dependency
     func linkage(for dependencyName: String, in targetName: String) throws -> LinkageType {
-        let targetInformation = try getTargetsInformation()
+        let targetInformation = try getCommentsInformation()
             .filter { $0.targetName == targetName }
             .first
         return targetInformation?.customLinkage[dependencyName] ?? targetInformation?.defaultLinkage ?? .default
     }
 
+    /// Convenient function to obtain the integration information for a dependency
     func integration(for dependencyName: String, in targetName: String) throws -> IntegrationType {
-        let targetInformation = try getTargetsInformation()
+        let targetInformation = try getCommentsInformation()
             .filter { $0.targetName == targetName }
             .first
         return targetInformation?.customIntegration[dependencyName] ?? targetInformation?.defaultIntegration ?? .binary
     }
 
-    func parseManifestComments() throws -> [Information] {
-        let rawTargetInformation = try getRawInformation()
-        return try getInformation(rawTargetInformation)
+    /// Main entry point for the parsing process
+    private func parseManifestComments() throws -> [CommentInformation] {
+        let rawCommentInformation = try parsingStepOne()
+        return try parsingStepTwo(rawCommentInformation)
     }
 
-    private func getRawInformation() throws -> [RawInformation] {
+    /// Step one of the parsing: get a type safe representation of the information in the comments
+    private func parsingStepOne() throws -> [RawCommentInformation] {
         let packageManifestPath = workingDirectory.appendingPathComponent("Package.swift")
         let packageManifestContent = try String(contentsOf: packageManifestPath)
         let targetsContent = packageManifestContent.matches(for: Regex.targetContent)
@@ -113,7 +119,7 @@ final class ManifestCommentsHandlerService {
             let rawCustomIntegration = $0.groupMatches(for: Regex.cutomIntegration).flatMap { $0 }.first
             let customIntegration = try parseCustomRawValues(rawCustomIntegration)
 
-            return RawInformation(
+            return RawCommentInformation(
                 targetName: targetName,
                 defaultLinkage: defaultLinkage,
                 customLinkage: customLinkage,
@@ -123,6 +129,7 @@ final class ManifestCommentsHandlerService {
         }
     }
 
+    /// Parses a string containing the value for the custom parameters
     private func parseCustomRawValues(_ string: String?) throws -> [(enum: String, values: [String])] {
         guard let string = string else {
             return []
@@ -151,30 +158,31 @@ final class ManifestCommentsHandlerService {
         return result
     }
 
-    private func getInformation(_ rawInformation: [RawInformation]) throws -> [Information] {
-        return try rawInformation.map { targetInformation in
-            let defaultLinkage: LinkageType? = try initializeFromRaw(
-                rawValue: targetInformation.defaultLinkage,
+    /// Step two of the parsing: get the final type safe representation of the information in the comments
+    private func parsingStepTwo(_ rawCommentInformations: [RawCommentInformation]) throws -> [CommentInformation] {
+        return try rawCommentInformations.map { rawCommentInformation in
+            let defaultLinkage: LinkageType? = try initializeEnumFrom(
+                string: rawCommentInformation.defaultLinkage,
                 key: .defaultLinkage
             )
 
-            let defaultIntegration: IntegrationType? = try initializeFromRaw(
-                rawValue: targetInformation.defaultIntegration,
+            let defaultIntegration: IntegrationType? = try initializeEnumFrom(
+                string: rawCommentInformation.defaultIntegration,
                 key: .defaultIntegration
             )
 
             let customLinkage: [String: LinkageType] = try parseCustomValues(
-                targetInformation.customLinkage,
+                rawCommentInformation.customLinkage,
                 key: .customLinkage
             )
 
             let customIntegration: [String: IntegrationType] = try parseCustomValues(
-                targetInformation.customIntegration,
+                rawCommentInformation.customIntegration,
                 key: .customIntegration
             )
 
-            return Information(
-                targetName: targetInformation.targetName,
+            return CommentInformation(
+                targetName: rawCommentInformation.targetName,
                 defaultLinkage: defaultLinkage,
                 customLinkage: customLinkage,
                 defaultIntegration: defaultIntegration,
@@ -183,38 +191,41 @@ final class ManifestCommentsHandlerService {
         }
     }
 
+    /// Parses the raw information about custom parameters, returning a dictionary that matches the dependency
+    /// name with the corresponding enum
     func parseCustomValues<T: RawRepresentable & CaseIterable>(
-        _ values: [(enum: String, values: [String])],
-        key: CommentKey
+        _ rawCustomValues: [(enum: String, values: [String])],
+        key: CommentArgument
         ) throws -> [String: T] where T.RawValue == String {
         var result: [String: T] = [:]
-        try values.forEach {
-            guard let enumValue = T.init(rawValue: $0.enum) else {
+        try rawCustomValues.forEach { rawCustomValue in
+            guard let enumValue = T.init(rawValue: rawCustomValue.enum) else {
                 throw ManifestCommentsHandlerError.invalidValue(
                     key: key,
-                    value: $0.enum,
+                    value: rawCustomValue.enum,
                     possibleValues: T.allCases.map { "\($0)" }
                 )
             }
-            try $0.values.forEach {
-                if let existingValue = result[$0], existingValue == enumValue {
+            try rawCustomValue.values.forEach { dependencyName in
+                if let existingValue = result[dependencyName], existingValue == enumValue {
                     throw ManifestCommentsHandlerError.multipleSpecificationsForTheSameDependency(
                         key: key,
-                        dependencyName: $0,
+                        dependencyName: dependencyName,
                         specifications: T.allCases.map { "\($0)" }
                     )
                 }
-                result[$0] = enumValue
+                result[dependencyName] = enumValue
             }
         }
         return result
     }
 
-    private func initializeFromRaw<T: RawRepresentable & CaseIterable>(
-        rawValue: String?,
-        key: CommentKey
+    /// Initializes an enum from a string, and throws if the operation fails
+    private func initializeEnumFrom<T: RawRepresentable & CaseIterable>(
+        string: String?,
+        key: CommentArgument
         ) throws -> T? where T.RawValue == String {
-        if let rawValue = rawValue {
+        if let rawValue = string {
             if let value = T.init(rawValue: rawValue) {
                 return value
             } else {
@@ -229,20 +240,24 @@ final class ManifestCommentsHandlerService {
     }
 }
 
-private struct RawInformation {
-    let targetName: String
-    let defaultLinkage: String?
-    let customLinkage: [(enum: String, values: [String])]
-    let defaultIntegration: String?
-    let customIntegration: [(enum: String, values: [String])]
-}
+// MARK: types used during the comment parsing process
 
-struct Information: Equatable {
+/// A struct holding the information in the comments inside the manifest
+struct CommentInformation: Equatable {
     let targetName: String
     let defaultLinkage: LinkageType?
     let customLinkage: [String: LinkageType]
     let defaultIntegration: IntegrationType?
     let customIntegration: [String: IntegrationType]
+}
+
+/// A struct holding the information in the comments inside the manifest, in primitive types (String)
+private struct RawCommentInformation {
+    let targetName: String
+    let defaultLinkage: String?
+    let customLinkage: [(enum: String, values: [String])]
+    let defaultIntegration: String?
+    let customIntegration: [(enum: String, values: [String])]
 }
 
 /// The type of linkage to use
@@ -265,9 +280,11 @@ enum IntegrationType: String, CaseIterable {
     // case cocoapods // TODO: implentation in the future
 }
 
+// MARK: convenient extensions
+
 // Extension based on https://stackoverflow.com/questions/25329186/safe-bounds-checked-array-lookup-in-swift-through-optional-bindings
 private extension Collection {
-    /// Returns the element at the specified index if it is within bounds, otherwise nil.
+    /// Returns the element at the specified index if it is within bounds, otherwise nil
     subscript (safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
     }

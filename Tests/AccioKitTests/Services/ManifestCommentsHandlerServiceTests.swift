@@ -133,9 +133,9 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
     func testWithoutComments() {
         resourcesLoaded([manifestResourceWithoutComments]) {
             let sut = ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path)
-            let result = try! sut.parseManifestComments()
+            let result = try! sut.getCommentsInformation()
             let expectedResult = [
-                Information(
+                CommentInformation(
                     targetName: "TestProject-iOS",
                     defaultLinkage: nil,
                     customLinkage: [:],
@@ -150,9 +150,9 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
     func testWithArbitraryComment() {
         resourcesLoaded([manifestResourceWithArbitraryComment]) {
             let sut = ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path)
-            let result = try! sut.parseManifestComments()
+            let result = try! sut.getCommentsInformation()
             let expectedResult = [
-                Information(
+                CommentInformation(
                     targetName: "TestProject-iOS",
                     defaultLinkage: nil,
                     customLinkage: [:],
@@ -172,7 +172,7 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
                 possibleValues: possibleLinkageValues
             )
             do {
-                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).parseManifestComments()
+                _ = try ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path).getCommentsInformation()
                 XCTFail("Function was expected to throw")
             } catch {
                 XCTAssertEqual(error as? ManifestCommentsHandlerError, expectedError)
@@ -183,9 +183,9 @@ class ManifestCommentsHandlerServiceTests: XCTestCase {
     func testValidComments() {
         resourcesLoaded([manifestResourceWithValidComments]) {
             let sut = ManifestCommentsHandlerService(workingDirectory: testResourcesDir.path)
-            let result = try! sut.parseManifestComments()
+            let result = try! sut.getCommentsInformation()
 
-            let expectedResult = Information(
+            let expectedResult = CommentInformation(
                 targetName: "TestProject-iOS",
                 defaultLinkage: LinkageType.default,
                 customLinkage: [
