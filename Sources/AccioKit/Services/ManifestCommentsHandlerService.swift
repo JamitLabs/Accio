@@ -301,30 +301,6 @@ private extension String {
         }
     }
 
-    func nestedMatches(for regex: NSRegularExpression) -> [String] {
-        return nestedMatches(for: regex, in: fullNSRange)
-    }
-
-    /// Get all matches of the regex from the string, including nested matching patterns
-    private func nestedMatches(for regex: NSRegularExpression, in range: NSRange) -> [String] {
-        let results = regex.matches(in: self, range: range)
-        return results.flatMap { result -> [String] in
-            let string = String(self[Range(result.range, in: self)!])
-            let firstLineRange = string.lineRange(for: string.startIndex ..< string.index(after: string.startIndex))
-            print(firstLineRange)
-            // Match nested text after the first line, that is where the accio comment is
-            let newRange = string.index(after: firstLineRange.upperBound) ..< string.endIndex
-            let newNSRange = NSRange(newRange, in: string)
-            return [string] + string.nestedMatches(for: regex, in: newNSRange)
-        }
-    }
-
-    /// Tells is the string matches the regex
-    func matches(_ regex: NSRegularExpression) -> Bool {
-        let results = regex.matches(in: self, range: NSRange(self.startIndex..., in: self))
-        return !results.isEmpty
-    }
-
     /// Returns the strings matching inside the regex groups
     func groupMatches(for regex: NSRegularExpression) -> [[String]] {
         let result = regex.matches(in: self, range: NSRange(self.startIndex..., in: self))
@@ -332,7 +308,7 @@ private extension String {
             (1 ..< match.numberOfRanges).map {
                 let rangeBounds = match.range(at: $0)
                 guard let range = Range(rangeBounds, in: self) else {
-                    return ""
+                    fatalError("The range did not match the string that generated it. This must never happen")
                 }
                 return String(self[range])
             }
