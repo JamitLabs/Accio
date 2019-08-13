@@ -175,6 +175,21 @@ let package = Package(
 )
 ```
 
+#### Adding custom configuration
+It is possible to add Accio comments to the `Package.swift` file. They are used for passing to Accio additional configuration that can not be specified using the official manifest format. The available configurable options are:
+
+- `defaultLinkage`: specifies the linkage for all the dependencies of the target.
+- `customLinkage`: specifies the linkage for each of the dependencies of the target. 
+- `defaultIntegration`: specifies how all the dependencies of a target are integrated into the Xcode project.
+- `customIntegration`: specifies how each of the dependencies of a target are integrated into the Xcode project.
+
+The supported values for this options are:
+
+- For linkage: `dynamic`.
+- For integration: `binary`.
+
+The end goal is to add support for other values, for example, `static` linkage, or `source` integration.
+
 ### Installing Dependencies
 
 To install the dependencies, you can use either the `install` or `update` command. The only difference is, that `install` won't update any dependency versions if they were already previously resolved. `update` will always update to the latest version within the specified range. For example:
