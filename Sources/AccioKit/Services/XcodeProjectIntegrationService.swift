@@ -244,7 +244,7 @@ final class XcodeProjectIntegrationService {
     }
 
     private func verifyBundleVersion(of product: FrameworkProduct) throws {
-        let plistURL = product.frameworkDirUrl.appendingPathComponent("Info.plist")
+        let plistURL = product.frameworkDirUrl.appendingPathComponent("Resources").appendingPathComponent("Info.plist")
         let data = try Data(contentsOf: plistURL)
         var format: PropertyListSerialization.PropertyListFormat = .binary
         var plist = try PropertyListSerialization.propertyList(from: data, options: [.mutableContainersAndLeaves], format: &format) as! [String: Any]

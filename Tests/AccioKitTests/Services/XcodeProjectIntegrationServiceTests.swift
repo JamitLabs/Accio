@@ -55,7 +55,9 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
     }
 
     private func createInfoPlist(frameworkName: String, includeBundleVersion: Bool) {
-        let plistURL = testResourcesDir.appendingPathComponent(Constants.buildPath).appendingPathComponent("iOS/\(frameworkName).framework/Info.plist")
+        let resourcesURL = testResourcesDir.appendingPathComponent(Constants.buildPath).appendingPathComponent("iOS/\(frameworkName).framework/Resources")
+         try! FileManager.default.createDirectory(atPath: resourcesURL.path, withIntermediateDirectories: true, attributes: nil)
+        let plistURL = resourcesURL.appendingPathComponent("Info.plist")
         let plist = includeBundleVersion ? ["CFBundleVersion": "1"] : [:]
         let data = try! PropertyListSerialization.data(fromPropertyList: plist, format: .binary, options: 0)
         try! data.write(to: plistURL, options: .atomic)
@@ -96,7 +98,7 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
                 // test CFBundleVersion in Info.plist
                 frameworkProducts.forEach { product in
                     let frameworkPath = product.frameworkDirPath.replacingOccurrences(of: "/.accio/", with: "/Dependencies/")
-                    let plistURL = URL(fileURLWithPath: frameworkPath).appendingPathComponent("Info.plist")
+                    let plistURL = URL(fileURLWithPath: frameworkPath).appendingPathComponent("Resources").appendingPathComponent("Info.plist")
                     let data = try! Data(contentsOf: plistURL)
                     var format: PropertyListSerialization.PropertyListFormat = .binary
                     var plist = try! PropertyListSerialization.propertyList(from: data, options: [.mutableContainersAndLeaves], format: &format) as! [String: Any]
