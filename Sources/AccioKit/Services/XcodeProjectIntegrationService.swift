@@ -128,7 +128,7 @@ final class XcodeProjectIntegrationService {
 
             let frameworkProduct = FrameworkProduct(frameworkDirPath: frameworkDirPath, symbolsFilePath: symbolsFilePath, commitHash: frameworkProduct.commitHash)
             try frameworkProduct.cleanupRecursiveFrameworkIfNeeded()
-            try verifyBundleVersion(of: frameworkProduct)
+            try ensureBundleVersionExistence(of: frameworkProduct)
 
             copiedFrameworkProducts.append(frameworkProduct)
         }
@@ -243,7 +243,7 @@ final class XcodeProjectIntegrationService {
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
     }
 
-    private func verifyBundleVersion(of product: FrameworkProduct) throws {
+    private func ensureBundleVersionExistence(of product: FrameworkProduct) throws {
         let plistURLs = [
             product.frameworkDirUrl.appendingPathComponent("Resources").appendingPathComponent("Info.plist"),
             product.frameworkDirUrl.appendingPathComponent("Info.plist"),
