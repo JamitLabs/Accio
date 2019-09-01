@@ -54,8 +54,13 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
         clean()
     }
 
-    private func createInfoPlist(frameworkName: String, includeBundleVersion: Bool) {
-        let plistURL = testResourcesDir.appendingPathComponent(Constants.buildPath).appendingPathComponent("iOS/\(frameworkName).framework/Info.plist")
+    private func createInfoPlist(platform: Platform, frameworkName: String, includeBundleVersion: Bool) {
+        let resourcesURL = testResourcesDir.appendingPathComponent(Constants.buildPath)
+            .appendingPathComponent(platform.rawValue)
+            .appendingPathComponent("\(frameworkName).framework")
+            .appendingPathComponent(platform.pathToPlist)
+        try! FileManager.default.createDirectory(atPath: resourcesURL.path, withIntermediateDirectories: true, attributes: nil)
+        let plistURL = resourcesURL.appendingPathComponent("Info.plist")
         let plist = includeBundleVersion ? ["CFBundleVersion": "1"] : [:]
         let data = try! PropertyListSerialization.data(fromPropertyList: plist, format: .binary, options: 0)
         try! data.write(to: plistURL, options: .atomic)
@@ -66,6 +71,9 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
     }
 
     func testUpdateDependencies() {
+
+        let platform: Platform = .iOS
+
         let xcodeProjectIntegrationService = XcodeProjectIntegrationService(workingDirectory: testResourcesDir.path)
 
         for appTarget in [regularTarget, testTarget] {
@@ -88,21 +96,21 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
                 XCTAssert(!targetObject.buildPhases.contains { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript })
 
                 testFrameworks.forEach { frameworkName, includeBundleVersion in
-                    createInfoPlist(frameworkName: frameworkName, includeBundleVersion: includeBundleVersion)
+                    createInfoPlist(platform:platform, frameworkName: frameworkName, includeBundleVersion: includeBundleVersion)
                 }
 
-                try! xcodeProjectIntegrationService.updateDependencies(of: appTarget, for: .iOS, with: frameworkProducts)
+                try! xcodeProjectIntegrationService.updateDependencies(of: appTarget, for: platform, with: frameworkProducts)
 
                 // test CFBundleVersion in Info.plist
                 frameworkProducts.forEach { product in
                     let frameworkPath = product.frameworkDirPath.replacingOccurrences(of: "/.accio/", with: "/Dependencies/")
-                    let plistURL = URL(fileURLWithPath: frameworkPath).appendingPathComponent("Info.plist")
+                    let plistURL = URL(fileURLWithPath: frameworkPath).appendingPathComponent(platform.pathToPlist).appendingPathComponent("Info.plist")
                     let data = try! Data(contentsOf: plistURL)
                     var format: PropertyListSerialization.PropertyListFormat = .binary
                     var plist = try! PropertyListSerialization.propertyList(from: data, options: [.mutableContainersAndLeaves], format: &format) as! [String: Any]
 
-                    print(plistURL)
-                    print(plist)
+                    print("\(product.platformName) \(product.libraryName) \(plist)")
+
                     XCTAssertNotNil(plist["CFBundleVersion"])
                 }
 
@@ -127,7 +135,7 @@ class XcodeProjectIntegrationServiceTests: XCTestCase {
                     let accioBuildScript = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript } as! PBXShellScriptBuildPhase
 
                     XCTAssertEqual(accioBuildScript.inputPaths.count, testFrameworks.count)
-                    XCTAssertEqual(accioBuildScript.inputPaths, testFrameworks.map { "$(SRCROOT)/\(Constants.dependenciesPath)/iOS/\($0.name).framework" })
+                    XCTAssertEqual(accioBuildScript.inputPaths, testFrameworks.map { "$(SRCROOT)/\(Constants.dependenciesPath)/\(platform.rawValue)/\($0.name).framework" })
 
                 case .test, .appExtension:
                     let accioBuildScript = targetObject.buildPhases.first { $0.type() == .runScript && ($0 as! PBXShellScriptBuildPhase).name == Constants.copyBuildScript }
