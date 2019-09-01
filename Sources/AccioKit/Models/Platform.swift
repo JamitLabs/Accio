@@ -66,4 +66,21 @@ enum Platform: String, CaseIterable {
             return [rawValue, "Apple Watch", "AppleWatch"]
         }
     }
+
+    var pathToPlist: String {
+        switch self {
+        case .iOS:
+            return ""
+
+        case .macOS:
+            return "Resources"
+
+        case .tvOS:
+            return ""
+
+        case .watchOS:
+            return ""
+        }
+    }
+
 }

@@ -13,7 +13,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removed
 - None.
 ### Fixed
-- None.
+- Adjusted the bundle version fallback to support both macOS and iOS frameworks
+  Issue: [#76](https://github.com/JamitLabs/Accio/issues/76) | PR: [#77](https://github.com/JamitLabs/Accio/pull/77) | Author: [Torsten Curdt](https://github.com/tcurdti)
 ### Security
 - None.
 

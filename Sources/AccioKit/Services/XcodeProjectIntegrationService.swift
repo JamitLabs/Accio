@@ -128,7 +128,7 @@ final class XcodeProjectIntegrationService {
 
             let frameworkProduct = FrameworkProduct(frameworkDirPath: frameworkDirPath, symbolsFilePath: symbolsFilePath, commitHash: frameworkProduct.commitHash)
             try frameworkProduct.cleanupRecursiveFrameworkIfNeeded()
-            try verifyBundleVersion(of: frameworkProduct)
+            try ensureBundleVersionExistence(of: frameworkProduct)
 
             copiedFrameworkProducts.append(frameworkProduct)
         }
@@ -243,18 +243,26 @@ final class XcodeProjectIntegrationService {
         try projectFile.write(path: Path(xcodeProjectPath), override: true)
     }
 
-    private func verifyBundleVersion(of product: FrameworkProduct) throws {
-        let plistURL = product.frameworkDirUrl.appendingPathComponent("Info.plist")
-        let data = try Data(contentsOf: plistURL)
-        var format: PropertyListSerialization.PropertyListFormat = .binary
-        var plist = try PropertyListSerialization.propertyList(from: data, options: [.mutableContainersAndLeaves], format: &format) as! [String: Any]
+    private func ensureBundleVersionExistence(of product: FrameworkProduct) throws {
+        let plistURLs = [
+            product.frameworkDirUrl.appendingPathComponent("Resources").appendingPathComponent("Info.plist"),
+            product.frameworkDirUrl.appendingPathComponent("Info.plist"),
+        ]
+        for plistURL in plistURLs {
+            if FileManager.default.fileExists(atPath: plistURL.path) {
+                let data = try Data(contentsOf: plistURL)
+                var format: PropertyListSerialization.PropertyListFormat = .binary
+                var plist = try PropertyListSerialization.propertyList(from: data, options: [.mutableContainersAndLeaves], format: &format) as! [String: Any]
 
-        if plist["CFBundleVersion"] == nil {
-            print("CFBundleVersion of framework \(product.libraryName) was not specified and will be set to 1", level: .warning)
-            plist["CFBundleVersion"] = "1"
+                // add CFBundleVersion if missing
+                if plist["CFBundleVersion"] == nil {
+                    print("CFBundleVersion of framework \(product.libraryName) was not specified and will be set to 1", level: .warning)
+                    plist["CFBundleVersion"] = "1"
 
-            let data = try PropertyListSerialization.data(fromPropertyList: plist, format: format, options: 0)
-            try data.write(to: plistURL, options: .atomic)
+                    let data = try PropertyListSerialization.data(fromPropertyList: plist, format: format, options: 0)
+                    try data.write(to: plistURL, options: .atomic)
+                }
+            }
         }
     }
 }
