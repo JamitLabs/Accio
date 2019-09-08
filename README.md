@@ -133,7 +133,7 @@ To configure Accio in a new project, simply run the `init` command and provide b
 accio init -p "XcodeProjectName" -t "AppTargetName"
 ```
 
-This step will create a template `Package.swift` file and set some `.gitignore` entries to keep your repository clean. Please note that if your source code files aren't placed within directories named after the targets, you will need to explicitly set the `path` parameters within the targets in the `Package.swift` file to the correct paths. Also note that the specified `path` must be a directory recursively containing at least one Swift file – but mixing with other languages like (Objective-)C(++) is not supported, so they shouldn't be within the specified directory. The files in there will not be built, they just need to exist in order for SwifPM to work properly, so you could point this anywhere Swift-only code.
+This step will create a template `Package.swift` file and set some `.gitignore` entries to keep your repository clean. Please note that if your source code files aren't placed within directories named after the targets, you will need to explicitly set the `path` parameters within the targets in the `Package.swift` file to the correct paths. Also note that the specified `path` must be a directory recursively containing at least one Swift file – but mixing with other languages like (Objective-)C(++) is not supported, so they shouldn't be within the specified directory. The files in there will not be built, they just need to exist in order for SwiftPM to work properly, so you could point this anywhere Swift-only code.
 
 Run `accio init help` to get a list of all available options.
 
