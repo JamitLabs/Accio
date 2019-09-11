@@ -7,8 +7,8 @@ enum ManifestError: Error {
 class Manifest: Decodable {
     // MARK: - Sub Types
     struct Target: Decodable {
-        struct Dependency: Decodable {
-            let byName: [String]
+        struct Dependency {
+            let names: [String]
         }
 
         let name: String
@@ -50,7 +50,7 @@ extension Manifest {
                 }
             }
 
-            return AppTarget(projectName: name, targetName: $0.name, dependentLibraryNames: $0.dependencies.flatMap { $0.byName }, targetType: targetType!)
+            return AppTarget(projectName: name, targetName: $0.name, dependentLibraryNames: $0.dependencies.flatMap { $0.names }, targetType: targetType!)
         }
     }
 
@@ -63,15 +63,38 @@ extension Manifest {
         }
 
         let productsTargets: [Target] = targets.filter { product.targets.contains($0.name) }
-        let dependencyTargetNames: [String] = Array(Set(productsTargets.flatMap { $0.dependencies.flatMap { $0.byName } })).sorted()
+        let dependencyNames: [String] = Array(Set(productsTargets.flatMap { $0.dependencies.flatMap { $0.names } })).sorted()
 
         let projectTargetNames: [String] = targets.map { $0.name }
         let projectProductNames: [String] = products.map { $0.name }
 
-        let dependencyInternalLibraryNames: [String] = dependencyTargetNames.filter { projectProductNames.contains($0) }
-        let dependencyExternalLibraryNames: [String] = dependencyTargetNames.filter { !projectTargetNames.contains($0) }
+        let dependencyInternalLibraryNames: [String] = dependencyNames.filter { projectProductNames.contains($0) }
+        let dependencyExternalLibraryNames: [String] = dependencyNames.filter { !projectTargetNames.contains($0) }
 
         let libraryNames: [String] = dependencyInternalLibraryNames + dependencyExternalLibraryNames
         return try libraryNames.map { try dependencyGraph.framework(libraryName: $0) }
+    }
+}
+
+extension Manifest.Target.Dependency: Decodable {
+    enum ManifestTargetDependencyParsingError: Error { case error }
+    enum CodingKeys: String, CodingKey {
+        case byName
+        case target
+        case product
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        if let byName = try container.decodeIfPresent([String?].self, forKey: .byName) {
+            names = byName.compactMap { $0 }
+        } else if let target = try container.decodeIfPresent([String?].self, forKey: .target) {
+            names = target.compactMap { $0 }
+        } else if let product = try container.decodeIfPresent([String?].self, forKey: .product) {
+            names = product.compactMap { $0 }
+        } else {
+            throw ManifestTargetDependencyParsingError.error
+        }
     }
 }
