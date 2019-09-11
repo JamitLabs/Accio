@@ -13,10 +13,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removed
 - None.
 ### Fixed
-- Improve compatibility with rare "non-standard" Package.swift configurations  
-  Issue: [#79](https://github.com/JamitLabs/Accio/issues/79) | PR: [#80](https://github.com/JamitLabs/Accio/pull/80) | Author: [Frederick Pietschmann](https://github.com/fredpi)
+- None.
 ### Security
 - None.
+
+## [0.6.5] - 2019-09-11
+### Fixed
+- Improve compatibility with rare "non-standard" Package.swift configurations  
+Issue: [#79](https://github.com/JamitLabs/Accio/issues/79) | PR: [#80](https://github.com/JamitLabs/Accio/pull/80) | Author: [Frederick Pietschmann](https://github.com/fredpi)
 
 ## [0.6.4] - 2019-09-01
 ### Fixed
