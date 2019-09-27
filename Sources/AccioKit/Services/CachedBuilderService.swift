@@ -31,7 +31,8 @@ final class CachedBuilderService {
         appTarget: AppTarget,
         dependencyGraph: DependencyGraph,
         platform: Platform,
-        swiftVersion: String
+        swiftVersion: String,
+        toolchain: String? = nil
     ) throws -> [FrameworkProduct] {
         var frameworkProducts: [FrameworkProduct] = []
 
@@ -67,7 +68,8 @@ final class CachedBuilderService {
                         framework: framework,
                         platform: platform,
                         swiftVersion: swiftVersion,
-                        alreadyBuiltFrameworkProducts: frameworkProducts
+                        alreadyBuiltFrameworkProducts: frameworkProducts,
+                        toolchain: toolchain
                     )
                 }
 
@@ -80,7 +82,7 @@ final class CachedBuilderService {
                 {
                     // If detectSwiftVersion doesn't work (e. g. happening for RxAtomic because of missing Swift header file),
                     // fallback to just retrieving current swift version via bash command.
-                    guard frameworkSwiftVersion == swiftVersion else {
+                    guard frameworkSwiftVersion == swiftVersion || toolchain != nil else {
                         throw CachedBuilderServiceError.swiftVersionChanged
                     }
                 } else {

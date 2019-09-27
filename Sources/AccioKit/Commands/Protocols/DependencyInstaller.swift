@@ -8,7 +8,7 @@ enum DependencyInstallerError: Error {
 protocol DependencyInstaller {
     func loadManifest() throws -> Manifest
     func revertCheckoutChanges(workingDirectory: String) throws
-    func buildFrameworksAndIntegrateWithXcode(workingDirectory: String, manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?) throws
+    func buildFrameworksAndIntegrateWithXcode(workingDirectory: String, manifest: Manifest, dependencyGraph: DependencyGraph, sharedCachePath: String?, toolchain: String?) throws
     func loadRequiredFrameworksFromCache(workingDirectory: String, sharedCachePath: String?) throws -> Bool
 }
 
@@ -52,7 +52,8 @@ extension DependencyInstaller {
         workingDirectory: String = GlobalOptions.workingDirectory.value ?? FileManager.default.currentDirectoryPath,
         manifest: Manifest,
         dependencyGraph: DependencyGraph,
-        sharedCachePath: String?
+        sharedCachePath: String?,
+        toolchain: String? = nil
     ) throws {
         if FileManager.default.fileExists(atPath: Constants.temporaryFrameworksUrl.path) {
             try bash("rm -rf '\(Constants.temporaryFrameworksUrl.path)'")
@@ -84,7 +85,8 @@ extension DependencyInstaller {
                 appTarget: appTarget,
                 dependencyGraph: dependencyGraph,
                 platform: platform,
-                swiftVersion: swiftVersion
+                swiftVersion: swiftVersion,
+                toolchain: toolchain
             )
             return ParsingResult(target: appTarget, platform: platform, frameworkProducts: frameworkProducts)
         }

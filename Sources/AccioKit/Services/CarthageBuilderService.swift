@@ -16,7 +16,8 @@ final class CarthageBuilderService {
         framework: Framework,
         platform: Platform,
         swiftVersion: String,
-        alreadyBuiltFrameworkProducts: [FrameworkProduct]
+        alreadyBuiltFrameworkProducts: [FrameworkProduct],
+        toolchain: String? = nil
     ) throws -> FrameworkProduct {
         print("Building library \(framework.libraryName) with Carthage ...", level: .info)
 
@@ -42,7 +43,20 @@ final class CarthageBuilderService {
 
         try XcodeProjectSchemeHandlerService.shared.removeUnnecessarySharedSchemes(from: framework, platform: platform)
 
-        try bash("/usr/local/bin/carthage build --project-directory '\(framework.projectDirectory)' --platform \(platform.rawValue) --no-skip-current --no-use-binaries")
+        var carthageArguments = [
+            "/usr/local/bin/carthage", "build",
+            "--project-directory", framework.projectDirectory,
+            "--platform", platform.rawValue,
+            "--no-skip-current",
+            "--no-use-binaries"
+        ]
+
+        if let toolchain = toolchain {
+            carthageArguments.append("--toolchain")
+            carthageArguments.append(toolchain)
+        }
+
+        try bash(carthageArguments.joined(separator: " "))
 
         let frameworkProduct = FrameworkProduct(libraryName: framework.libraryName, platformName: platform.rawValue, commitHash: framework.commitHash)
         let platformBuildDir = "\(framework.projectDirectory)/Carthage/Build/\(platform.carthageBuildFolderName)"
