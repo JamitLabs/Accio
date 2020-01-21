@@ -13,7 +13,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removed
 - None.
 ### Fixed
-- None.
+- Fix git reset when using SwiftPM local repos.  
+Issue: [#67](https://github.com/JamitLabs/Accio/issues/67) | PR: [#68](https://github.com/JamitLabs/Accio/pull/68) | Author: [Frederick Pietschmann](https://github.com/fredpi)
+
 ### Security
 - None.
 
