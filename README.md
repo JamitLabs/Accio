@@ -57,7 +57,7 @@ While [different opinions](https://scifi.stackexchange.com/questions/192022/what
 
 ## Requirements
 
-- Xcode 10.x and Swift 5.0-5.2
+- Xcode 10.0-11.7 and Swift 5.0-5.2
 - Xcode Command Line Tools (see [here](http://stackoverflow.com/a/9329325/3451975) for installation instructions)
 - Carthage 0.32+ (install from [here](https://github.com/Carthage/Carthage))
 
