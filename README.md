@@ -13,8 +13,8 @@
              alt="Codebeat Badge">
     </a>
     <a href="https://github.com/JamitLabs/Accio/releases">
-        <img src="https://img.shields.io/badge/Version-0.6.5-blue.svg"
-             alt="Version: 0.6.5">
+        <img src="https://img.shields.io/badge/Version-0.6.6-blue.svg"
+             alt="Version: 0.6.6">
     </a>
     <img src="https://img.shields.io/badge/Swift-5.0-FFAC45.svg"
          alt="Swift: 5.0">
@@ -34,6 +34,16 @@
   • <a href="#license">License</a>
 </p>
 
+> :warning: **Deprecation Notice** :warning:
+> 
+> 
+> With the **release of Xcode 12 which includes Swift 5.3**, we feel like there is no gap left to fill by Accio on the move to SwiftPM anymore, thus we are deprecating support for Accio in those versions, instead please use the [built-in SwiftPM feature in Xcode](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app). Namely, these features were added to SwiftPM recently:
+>
+> * [SE-0271: Package Manager Resources](https://github.com/apple/swift-evolution/blob/master/proposals/0271-package-manager-resources.md)
+> * [SE-0272: Package Manager Binary Dependencies](https://github.com/apple/swift-evolution/blob/master/proposals/0272-swiftpm-binary-dependencies.md)
+> * [SE-0273: Package Manager Conditional Target Dependencies](https://github.com/apple/swift-evolution/blob/master/proposals/0273-swiftpm-conditional-target-dependencies.md)
+> * [SE-0278: Package Manager Localized Resources](https://github.com/apple/swift-evolution/blob/master/proposals/0278-package-manager-localized-resources.md)
+
 # Accio
 
 A dependency manager driven by SwiftPM that works for iOS/tvOS/watchOS/macOS projects.
@@ -47,7 +57,7 @@ While [different opinions](https://scifi.stackexchange.com/questions/192022/what
 
 ## Requirements
 
-- Xcode 10.2+ and Swift 5.0+
+- Xcode 10.0-11.7 and Swift 5.0-5.2
 - Xcode Command Line Tools (see [here](http://stackoverflow.com/a/9329325/3451975) for installation instructions)
 - Carthage 0.32+ (install from [here](https://github.com/Carthage/Carthage))
 

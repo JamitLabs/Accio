@@ -23,6 +23,11 @@ struct Framework: Equatable {
         return URL(fileURLWithPath: projectDirectory).appendingPathComponent("\(projectName).xcodeproj").path
     }
 
+    // Returns whether the framework is a local repo (instead of a checked out repo stored in the `.accio/` folder)
+    var isLocalRepo: Bool {
+        return !projectDirectory.contains("/\(Constants.buildPath)/")
+    }
+
     func xcodeProjectPaths(in directory: String) throws -> [String] {
         let directoryUrl: URL = URL(fileURLWithPath: directory)
         let visibleContentNames: [String] = try FileManager.default.contentsOfDirectory(atPath: directoryUrl.path).filter { !$0.hasPrefix(".") }

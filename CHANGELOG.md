@@ -17,6 +17,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Security
 - None.
 
+## [0.6.6] - 2020-10-22
+### Added
+- None.
+### Changed
+- None.
+### Deprecated
+- None.
+### Removed
+- None.
+### Fixed
+- Fix Xcode 12 installation issues.  
+Issue: [#91](https://github.com/JamitLabs/Accio/issues/91) | PR: [#93](https://github.com/JamitLabs/Accio/pull/93) | Author: [Frederick Pietschmann](https://github.com/fredpi)
+- Fix git reset when using SwiftPM local repos.  
+Issue: [#67](https://github.com/JamitLabs/Accio/issues/67) | PR: [#68](https://github.com/JamitLabs/Accio/pull/68) | Author: [Frederick Pietschmann](https://github.com/fredpi)
+
+### Security
+- None.
+
 ## [0.6.5] - 2019-09-11
 ### Fixed
 - Improve compatibility with rare "non-standard" Package.swift configurations  
